@@ -1,23 +1,61 @@
-# Compiled class file
-*.class
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+class TechnicalQuestionnaire
+{
+    static void Main ()
+    {
+        //Read the File and find the count of lines
+        var lineCount = File.ReadAllLines ("inputs.txt").Length;
+        
+        //Create a Array with lineCount
+        int[,] variableArray = new int[lineCount,lineCount];
+        
+        //Read the File and set the variableArray with inputs
+        using (var readFile = new StreamReader("inputs.txt"))
+        {
+            int row = 1;
+            
+            while (!readFile.EndOfStream)
+            {
+                var line = readFile.ReadLine().Trim();
+                var values = line.Split(' ');
+                
+                for(int i = 0; i<row; i++){
+                    variableArray[(row-1),i]=Int32.Parse(values.GetValue(i).ToString());
+                }
+                row++;
+            }
+        }
+        
+        //Find the maximum sum of the numbers according to given rules
+        for (int i = (lineCount-2); i >= 0; i--) {
+			for (int j = 0; j < (lineCount-1); j++) {
+			    if(IsThisPrimeNumber(variableArray[i,j])){
+			        variableArray[i,j]=0;
+			    }else{
+			        variableArray[i,j] = Math.Max(variableArray[i, j] + variableArray[i+1, j], variableArray[i,j] + variableArray[i+1, j+1]);
+			    }
+			}
+		}
+		
+		//Print result on the screen
+		Console.WriteLine (variableArray [0, 0]);
+    }
+    
+    //Prime number check function
+    public static bool IsThisPrimeNumber(int number)
+    {
+        for (int i=2; i<number; i++)
+        {
+            if (number %i == 0){
+                return false;
+            }
+        }
+        if(number == 1 || number == 0){
+            return false;
+        }
+        return true;
+    }
+}
