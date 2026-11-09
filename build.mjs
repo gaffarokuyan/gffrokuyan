@@ -16,7 +16,7 @@ await build({
   outfile: `${out}/app.js`,
 });
 
-for (const f of ["index.html", "styles.css", "sw.js", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"]) {
+for (const f of ["_headers", "index.html", "styles.css", "sw.js", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"]) {
   copyFileSync(`src/${f}`, `${out}/${f}`);
 }
 
