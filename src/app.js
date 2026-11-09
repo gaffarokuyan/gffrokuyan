@@ -10,6 +10,8 @@ const inClaude = typeof window.claude?.use === "function";
 let sample = null;
 if (inClaude) {
   document.documentElement.classList.add("in-claude");
+  // Claude uygulaması doğrudan kamera açmayı engelleyebiliyor; sistem seçicisi "Fotoğraf çek" seçeneğini sunar.
+  document.querySelectorAll("input[capture]").forEach((i) => i.removeAttribute("capture"));
   window.claude.use("sample").then((s) => { sample = s; updateModeHint(); }).catch(() => {});
 }
 

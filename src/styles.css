@@ -151,3 +151,6 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
 /* Claude içinde: yazdırma ve API anahtarı ayarı yok */
 .in-claude #btnPrint, .in-claude #btnSettings { display: none; }
 .in-claude .mode-switch { display: none; }
+/* Dosya seçici görünmez ama "display:none" değil: bazı uygulama içi tarayıcılar gizli seçiciyi açmıyor */
+.btn { position: relative; overflow: hidden; }
+.file-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font-size: 0; }
