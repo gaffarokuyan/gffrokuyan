@@ -7,6 +7,12 @@ const state = { form: [], general: [], detail: [] };
 let lastReport = null;
 // Claude içinde (artifact) açıldıysa: kullanıcının Claude hesabıyla kontrol, API anahtarı gerekmez.
 const inClaude = typeof window.claude?.use === "function";
+// Android uygulaması (APK) içinde mi?
+const inApp = typeof window.AndroidApp?.shareText === "function";
+if (inApp) {
+  document.documentElement.classList.add("in-app");
+  document.getElementById("btnShare").textContent = "📤 Raporu paylaş (WhatsApp)";
+}
 let sample = null;
 if (inClaude) {
   document.documentElement.classList.add("in-claude");
@@ -127,7 +133,8 @@ $("#btnShare").onclick = async () => {
   if (!lastReport) return;
   const text = reportAsText(lastReport);
   try {
-    if (navigator.share && !inClaude) await navigator.share({ title: "Koli baskı kontrol raporu", text });
+    if (inApp) window.AndroidApp.shareText(text);
+    else if (navigator.share && !inClaude) await navigator.share({ title: "Koli baskı kontrol raporu", text });
     else { await navigator.clipboard.writeText(text); toast("Rapor kopyalandı. WhatsApp'a yapıştırabilirsiniz."); }
   } catch { toast("Kopyalanamadı."); }
 };
@@ -174,13 +181,7 @@ async function consumeSharedFiles() {
       await cache.delete(req);
     }
     history.replaceState(null, "", location.pathname);
-    if (!files.length) return;
-    // PDF veya ilk dosya form yoksa form olur; geri kalanlar koli fotoğrafı.
-    const pdfs = files.filter((f) => f.type === "application/pdf");
-    const imgs = files.filter((f) => f.type !== "application/pdf");
-    if (pdfs.length) await addFiles("form", pdfs.slice(0, 1));
-    else if (!state.form.length && imgs.length) await addFiles("form", [imgs.shift()]);
-    if (imgs.length) await addFiles("general", imgs);
+    await distributeShared(files);
   } catch (e) {
     console.warn("Paylaşılan dosyalar alınamadı", e);
   }
@@ -195,7 +196,30 @@ function toast(msg) {
   toast._t = setTimeout(() => { t.hidden = true; }, 3500);
 }
 
-if ("serviceWorker" in navigator && !inClaude) {
+// APK: paylaşımla gelen dosyalar (MainActivity bu fonksiyonu çağırır)
+window.__receiveShared = async (list) => {
+  const files = [];
+  for (const f of list) {
+    try {
+      const blob = await (await fetch(f.url)).blob();
+      files.push(new File([blob], f.name, { type: f.type || blob.type }));
+    } catch (e) { console.warn("Paylaşılan dosya okunamadı", e); }
+  }
+  await distributeShared(files);
+};
+
+async function distributeShared(files) {
+  if (!files.length) return;
+  // PDF veya (form yoksa) ilk görsel baskı formu olur; geri kalanlar koli fotoğrafı.
+  const pdfs = files.filter((f) => f.type === "application/pdf" || /\.pdf$/i.test(f.name));
+  const imgs = files.filter((f) => !pdfs.includes(f));
+  if (pdfs.length) await addFiles("form", pdfs.slice(0, 1));
+  else if (!state.form.length && imgs.length) await addFiles("form", [imgs.shift()]);
+  if (imgs.length) await addFiles("general", imgs);
+  toast(`${files.length} dosya eklendi`);
+}
+
+if ("serviceWorker" in navigator && !inClaude && !inApp) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 render();

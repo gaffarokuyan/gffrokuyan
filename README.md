@@ -33,6 +33,26 @@ Uygulama bir **PWA (web uygulaması)**dır; tek bir APK'ya bağlı değildir:
 - Android'de yüklendikten sonra WhatsApp'ta bir PDF ya da fotoğrafa **Paylaş → Koli Kontrol** denebilir; dosya doğrudan uygulamaya gelir.
 - Mağazaya koymak ya da APK dağıtmak istenirse aynı kod Capacitor / TWA ile APK'ya sarılabilir.
 
+## Android uygulaması (APK)
+
+Hazır APK: [`release/KoliKontrol.apk`](release/KoliKontrol.apk)
+
+Telefona kurmak: APK'yı telefona indirin, açın, "Bilinmeyen kaynaklardan yüklemeye izin ver" sorulursa izin verin.
+
+- "Kamera ile çek" doğrudan kamerayı açar; "Galeri / Dosya" seçicisinde PDF de seçilebilir.
+- WhatsApp'ta bir PDF'e veya fotoğrafa **Paylaş → Koli Kontrol** denince dosya uygulamaya gelir (PDF → baskı formu, fotoğraflar → koli).
+- Rapor "Raporu paylaş" ile WhatsApp'a gönderilir.
+- Yapay zekâ kontrolü için ⚙︎ Ayarlar'a Anthropic API anahtarı girilir; internetsiz hızlı kontrol anahtarsız çalışır.
+
+Yeniden derlemek (Ubuntu, Gradle gerekmez):
+
+```bash
+sudo apt-get install -y android-sdk-platform-23 aapt dalvik-exchange zipalign apksigner
+android/build.sh          # → release/KoliKontrol.apk
+```
+
+İmza anahtarı (`android/koli-kontrol.keystore`) depoya konmaz. Güncellemeler aynı anahtarla imzalanmalı; anahtar değişirse telefonda eski uygulama silinip yenisi kurulur.
+
 ## Geliştirme
 
 ```bash

@@ -63,3 +63,5 @@ class TechnicalQuestionnaire
 # Koli Baskı Kontrol
 node_modules/
 dist/
+android/build/
+*.keystore
