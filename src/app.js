@@ -1,10 +1,17 @@
 import { fileToCanvases, thumbUrl, openCropDialog } from "./images.js";
-import { runAiCheck, describeApiError } from "./ai-check.js";
+import { runAiCheck, describeApiError, runSampleCheck, describeSampleError } from "./ai-check.js";
 import { runLocalCheck } from "./local-check.js";
 import { renderReport, reportAsText } from "./report.js";
 
 const state = { form: [], general: [], detail: [] };
 let lastReport = null;
+// Claude içinde (artifact) açıldıysa: kullanıcının Claude hesabıyla kontrol, API anahtarı gerekmez.
+const inClaude = typeof window.claude?.use === "function";
+let sample = null;
+if (inClaude) {
+  document.documentElement.classList.add("in-claude");
+  window.claude.use("sample").then((s) => { sample = s; updateModeHint(); }).catch(() => {});
+}
 
 const $ = (s) => document.querySelector(s);
 const store = {
@@ -22,7 +29,7 @@ async function addFiles(slot, files) {
         state[slot].push({ canvas, crop: null, name: canvases.length > 1 ? `${file.name} s.${i + 1}` : file.name || "fotoğraf" })
       );
     } catch (e) {
-      alert(`"${file.name}" açılamadı: ${e.message}`);
+      toast(`"${file.name}" açılamadı: ${e.message}`);
     }
   }
   render();
@@ -68,6 +75,8 @@ function updateModeHint() {
   const h = $("#modeHint");
   if (!state.form.length || !state.general.length) {
     h.textContent = "Önce baskı formunu ve en az bir koli fotoğrafını ekleyin.";
+  } else if (mode() === "ai" && sample) {
+    h.textContent = "Claude hesabınızla karşılaştırılacak: yazılar, konumlar, renkler ve semboller.";
   } else if (mode() === "ai" && !store.get("apiKey")) {
     h.innerHTML = 'Yapay zekâ kontrolü için <a href="#" id="lnkSettings">Ayarlar</a>\'dan API anahtarı girin ya da hızlı ön kontrolü seçin.';
     $("#lnkSettings").onclick = (e) => { e.preventDefault(); openSettings(); };
@@ -88,12 +97,14 @@ function setProgress(p, text) {
 
 $("#btnRun").onclick = async () => {
   const m = mode();
-  if (m === "ai" && !store.get("apiKey")) { openSettings(); return; }
+  if (m === "ai" && !sample && !store.get("apiKey")) { openSettings(); return; }
   $("#btnRun").disabled = true;
   $("#secReport").hidden = true;
   try {
     const args = { form: state.form, general: state.general, detail: state.detail, onProgress: setProgress };
-    lastReport = m === "ai"
+    lastReport = m === "ai" && sample
+      ? await runSampleCheck({ ...args, sample })
+      : m === "ai"
       ? await runAiCheck({ ...args, apiKey: store.get("apiKey"), model: store.get("model", "claude-opus-5-5"), effort: store.get("effort", "high") })
       : await runLocalCheck(args);
     lastReport._meta.date = new Date().toLocaleString("tr-TR");
@@ -103,7 +114,7 @@ $("#btnRun").onclick = async () => {
     $("#progress").hidden = true;
   } catch (e) {
     console.error(e);
-    setProgress(0, "Hata: " + (m === "ai" ? describeApiError(e) : e.message));
+    setProgress(0, "Hata: " + (m === "ai" ? (sample ? describeSampleError(e) : describeApiError(e)) : e.message));
   } finally {
     $("#btnRun").disabled = false;
   }
@@ -114,9 +125,9 @@ $("#btnShare").onclick = async () => {
   if (!lastReport) return;
   const text = reportAsText(lastReport);
   try {
-    if (navigator.share) await navigator.share({ title: "Koli baskı kontrol raporu", text });
-    else { await navigator.clipboard.writeText(text); alert("Rapor panoya kopyalandı."); }
-  } catch {}
+    if (navigator.share && !inClaude) await navigator.share({ title: "Koli baskı kontrol raporu", text });
+    else { await navigator.clipboard.writeText(text); toast("Rapor kopyalandı. WhatsApp'a yapıştırabilirsiniz."); }
+  } catch { toast("Kopyalanamadı."); }
 };
 $("#btnReset").onclick = () => {
   state.form = []; state.general = []; state.detail = [];
@@ -173,7 +184,16 @@ async function consumeSharedFiles() {
   }
 }
 
-if ("serviceWorker" in navigator) {
+function toast(msg) {
+  let t = document.getElementById("toast");
+  if (!t) { t = document.createElement("div"); t.id = "toast"; t.className = "toast"; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.hidden = false;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { t.hidden = true; }, 3500);
+}
+
+if ("serviceWorker" in navigator && !inClaude) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
 render();

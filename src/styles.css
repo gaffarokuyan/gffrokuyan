@@ -15,7 +15,7 @@
   --radius: 14px;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #111513;
     --card: #1b211e;
     --text: #e8eeea;
@@ -28,7 +28,23 @@
     --bad-bg: #3a1c1a;
     --warn: #f0b545;
     --warn-bg: #3a2e14;
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+    --bg: #111513;
+    --card: #1b211e;
+    --text: #e8eeea;
+    --muted: #9aa8a0;
+    --line: #2d3631;
+    --brand: #22a56a;
+    --ok: #4cd08a;
+    --ok-bg: #173325;
+    --bad: #ff7a70;
+    --bad-bg: #3a1c1a;
+    --warn: #f0b545;
+    --warn-bg: #3a2e14;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -39,14 +55,15 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 .topbar {
-  position: sticky; top: 0; z-index: 5;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
   display: flex; align-items: center; justify-content: space-between;
-  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   background: var(--brand); color: var(--brand-ink);
 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--brand); }
 .brand { display: flex; gap: 10px; align-items: center; font-weight: 700; font-size: 18px; }
 .icon-btn { background: transparent; border: 0; color: inherit; font-size: 24px; padding: 4px 8px; cursor: pointer; }
-main { max-width: 760px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
+main { max-width: 760px; margin: 0 auto; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
 .card-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
 .card-head h2 { margin: 0; font-size: 19px; }
@@ -130,3 +147,7 @@ dialog::backdrop { background: rgba(0,0,0,.5); }
   body { background: #fff; color: #000; }
   .card { border: 0; }
 }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--text); color: var(--card); padding: 10px 16px; border-radius: 10px; font-size: 14px; z-index: 20; max-width: calc(100vw - 32px); }
+/* Claude içinde: yazdırma ve API anahtarı ayarı yok */
+.in-claude #btnPrint, .in-claude #btnSettings { display: none; }
+.in-claude .mode-switch { display: none; }

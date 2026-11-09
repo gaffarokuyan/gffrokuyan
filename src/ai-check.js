@@ -135,3 +135,67 @@ export function describeApiError(err) {
   if (err?.name === "APIConnectionError" || /fetch|network/i.test(String(err?.message))) return "İnternet bağlantısı yok ya da kesildi.";
   return err?.message || String(err);
 }
+
+// ---- Claude içinde (artifact) çalışırken: API anahtarı yerine kullanıcının kendi Claude hesabı ----
+const canvasToBlob = (c) => new Promise((res) => c.toBlob(res, "image/jpeg", 0.9));
+
+export async function runSampleCheck({ sample, form, general, detail, onProgress }) {
+  onProgress?.(10, "Görseller hazırlanıyor…");
+  const limits = await sample.limits().catch(() => null);
+  const max = limits?.images?.maxCount ?? 8;
+
+  const items = [];
+  form.forEach((f, i) => {
+    if (f.crop) items.push({ label: `BASKI FORMU — koli çizimi alanı (yakın görünüm)${form.length > 1 ? `, sayfa ${i + 1}` : ""}`, canvas: f.canvas, crop: f.crop, prio: 0 });
+    items.push({ label: `BASKI FORMU — sayfanın tamamı (teknik tablo için)${form.length > 1 ? `, sayfa ${i + 1}` : ""}`, canvas: f.canvas, crop: null, prio: f.crop ? 3 : 0 });
+  });
+  general.forEach((g, i) => items.push({ label: `BASILAN KOLİ — genel fotoğraf ${i + 1}`, ...g, prio: 1 }));
+  detail.forEach((d, i) => items.push({ label: `BASILAN KOLİ — küçük yazılar için yakın çekim ${i + 1}`, ...d, prio: 2 }));
+
+  // Sınırı aşarsa önce formun tam sayfa görüntüsü, sonra son yakın çekimler çıkarılır.
+  let chosen = items;
+  if (items.length > max) {
+    const order = [...items].sort((a, b) => a.prio - b.prio).slice(0, max);
+    chosen = items.filter((x) => order.includes(x));
+  }
+  const images = [];
+  for (const it of chosen) images.push(await canvasToBlob(cropCanvas(it.canvas, it.crop, AI_MAX_SIDE)));
+
+  const prompt = `${SYSTEM}
+
+Ekli görseller bu sırayla:
+${chosen.map((it, i) => `${i + 1}. ${it.label}`).join("\n")}
+${chosen.length < items.length ? `(Sınır nedeniyle ${items.length - chosen.length} görsel gönderilemedi.)\n` : ""}
+Baskı formu ile basılan koliyi bu kurallara göre karşılaştır.
+Yalnızca şu yapıda TEK bir JSON nesnesi döndür, başka metin yazma:
+{"genel_sonuc":"UYGUN|SORUNLU|KONTROL_GEREKLI","ozet":"...","formdaki_baski_renkleri":"...","kontroller":[{"kategori":"yazi|konum|renk|logo_sembol|yon|baski_kalitesi|diger","oge":"...","beklenen":"...","bulunan":"...","durum":"UYGUN|HATALI|BELIRSIZ","aciklama":"..."}],"eksik_ogeler":["..."],"fazladan_ogeler":["..."],"fotograf_kalitesi_notu":"..."}`;
+
+  onProgress?.(30, "Claude karşılaştırıyor… (1-2 dakika sürebilir)");
+  let chars = 0;
+  const report = await sample.json(prompt, {
+    images,
+    modelTier: "complex",
+    onText: ({ text }) => { chars = text.length; onProgress?.(Math.min(95, 40 + chars / 80), "Rapor yazılıyor…"); },
+  });
+  if (!report || !Array.isArray(report.kontroller)) throw new Error("Claude'un yanıtı okunamadı. Tekrar deneyin.");
+  for (const k of ["eksik_ogeler", "fazladan_ogeler"]) if (!Array.isArray(report[k])) report[k] = [];
+  report.kontroller = report.kontroller.map((c) => ({ ...c, durum: STATUS.includes(c.durum) ? c.durum : "BELIRSIZ" }));
+  if (!["UYGUN", "SORUNLU", "KONTROL_GEREKLI"].includes(report.genel_sonuc)) report.genel_sonuc = "KONTROL_GEREKLI";
+  report._meta = { mode: "ai", model: "Claude hesabınız" };
+  onProgress?.(100, "Tamamlandı");
+  return report;
+}
+
+export function describeSampleError(e) {
+  switch (e?.code) {
+    case "not_granted": return "Claude kullanımına izin verilmedi. Sayfayı yenileyip izin verin ya da hızlı ön kontrolü kullanın.";
+    case "sampling_disabled": return "Bu hesapta Claude kullanılamıyor.";
+    case "rate_limited": return "Kullanım sınırına ulaşıldı. Biraz sonra tekrar deneyin.";
+    case "image_rejected": return "Bir fotoğraf kabul edilmedi (çok büyük ya da bozuk). Başka fotoğraf deneyin.";
+    case "images_unavailable": return "Bu görünümde fotoğraf gönderilemiyor.";
+    case "invalid_json": return "Claude'un yanıtı okunamadı. Tekrar deneyin.";
+    case "refused": return "Claude bu isteği yanıtlamadı. Farklı fotoğraflarla deneyin.";
+    case "session_expired": return "Oturum süresi doldu, tekrar giriş yapın.";
+    default: return e?.message || "Bağlantı sorunu. Tekrar deneyin.";
+  }
+}
