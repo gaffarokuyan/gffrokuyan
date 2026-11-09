@@ -59,3 +59,7 @@ class TechnicalQuestionnaire
         return true;
     }
 }
+
+# Koli Baskı Kontrol
+node_modules/
+dist/

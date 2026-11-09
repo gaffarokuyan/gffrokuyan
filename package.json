@@ -1,0 +1,33 @@
+{
+  "name": "koli-baski-kontrol",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "npx --yes http-server dist -p 8080 -c-1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaffarokuyan/gffrokuyan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gaffarokuyan/gffrokuyan/issues"
+  },
+  "homepage": "https://github.com/gaffarokuyan/gffrokuyan#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.2.0",
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@tesseract.js-data/tur": "^1.0.0",
+    "pdfjs-dist": "^4.10.38",
+    "tesseract.js": "^5.1.1",
+    "tesseract.js-core": "^5.1.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "private": true,
+  "type": "module"
+}

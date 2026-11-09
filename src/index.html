@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b7a4b">
+<title>Koli Baskı Kontrol</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icon.svg" alt="" width="28" height="28">
+    <span>Koli Baskı Kontrol</span>
+  </div>
+  <button id="btnSettings" class="icon-btn" aria-label="Ayarlar">⚙︎</button>
+</header>
+
+<main id="app">
+  <!-- 1. Baskı formu -->
+  <section class="card" id="secForm">
+    <div class="card-head">
+      <span class="step">1</span>
+      <div>
+        <h2>Baskı formu</h2>
+        <p class="hint">İmalat / baskı formunu çekin ya da PDF, görsel yükleyin.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <label class="btn primary">📷 Kamera ile çek
+        <input type="file" accept="image/*" capture="environment" data-slot="form" hidden>
+      </label>
+      <label class="btn">📄 PDF / Dosya / Galeri
+        <input type="file" accept="image/*,application/pdf" data-slot="form" hidden>
+      </label>
+    </div>
+    <div class="thumbs" data-list="form"></div>
+    <p class="hint small">İpucu: Formu yükledikten sonra <b>✂︎ Alan seç</b> ile sadece koli çizimini işaretlemek sonucu iyileştirir.</p>
+  </section>
+
+  <!-- 2. Koli fotoğrafları -->
+  <section class="card" id="secBox">
+    <div class="card-head">
+      <span class="step">2</span>
+      <div>
+        <h2>Basılan koli</h2>
+        <p class="hint">Koliyi açık (serilmiş) halde, tüm yüzleri görünecek şekilde çekin.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <label class="btn primary">📷 Koliyi çek
+        <input type="file" accept="image/*" capture="environment" data-slot="general" hidden>
+      </label>
+      <label class="btn">🖼️ Galeriden seç
+        <input type="file" accept="image/*" multiple data-slot="general" hidden>
+      </label>
+    </div>
+    <div class="thumbs" data-list="general"></div>
+
+    <div class="sub">
+      <h3>Küçük yazılar için yakın çekim <span class="opt">(isteğe bağlı)</span></h3>
+      <p class="hint">Uzaktan okunmayan küçük yazıları, sembolleri ve kodları yakından çekin.</p>
+      <div class="actions">
+        <label class="btn">🔍 Yakın çekim yap
+          <input type="file" accept="image/*" capture="environment" data-slot="detail" hidden>
+        </label>
+        <label class="btn">🖼️ Galeriden ekle
+          <input type="file" accept="image/*" multiple data-slot="detail" hidden>
+        </label>
+      </div>
+      <div class="thumbs" data-list="detail"></div>
+    </div>
+  </section>
+
+  <!-- 3. Kontrol -->
+  <section class="card" id="secRun">
+    <div class="card-head">
+      <span class="step">3</span>
+      <div>
+        <h2>Karşılaştır</h2>
+        <p class="hint" id="modeHint"></p>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btnRun" class="btn primary big" disabled>✅ Kontrol et</button>
+    </div>
+    <div class="mode-switch">
+      <label><input type="radio" name="mode" value="ai" checked> Yapay zekâ ile (detaylı)</label>
+      <label><input type="radio" name="mode" value="local"> Hızlı ön kontrol (internetsiz)</label>
+    </div>
+    <div id="progress" class="progress" hidden>
+      <div class="bar"><div class="fill"></div></div>
+      <p class="progress-text"></p>
+    </div>
+  </section>
+
+  <!-- Rapor -->
+  <section class="card" id="secReport" hidden>
+    <div id="report"></div>
+    <div class="actions no-print">
+      <button id="btnPrint" class="btn">🖨️ Raporu kaydet / yazdır</button>
+      <button id="btnShare" class="btn">📤 Paylaş</button>
+      <button id="btnReset" class="btn ghost">↺ Yeni kontrol</button>
+    </div>
+  </section>
+</main>
+
+<!-- Ayarlar -->
+<dialog id="dlgSettings">
+  <form method="dialog" class="dlg">
+    <h2>Ayarlar</h2>
+    <label class="field">Anthropic API anahtarı
+      <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-...">
+      <span class="hint small">Anahtar yalnızca bu cihazda saklanır ve doğrudan Anthropic'e gönderilir.</span>
+    </label>
+    <label class="field">Model
+      <select id="model">
+        <option value="claude-opus-5-5">Claude Opus 5.5 (en iyi sonuç)</option>
+        <option value="claude-sonnet-5-5">Claude Sonnet 5.5 (daha hızlı / ucuz)</option>
+      </select>
+    </label>
+    <label class="field">Titizlik
+      <select id="effort">
+        <option value="medium">Normal</option>
+        <option value="high" selected>Yüksek</option>
+        <option value="xhigh">Çok yüksek (yavaş)</option>
+      </select>
+    </label>
+    <div class="actions">
+      <button class="btn primary" value="save">Kaydet</button>
+      <button class="btn ghost" value="cancel">Vazgeç</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Alan seçme -->
+<dialog id="dlgCrop">
+  <div class="dlg crop-dlg">
+    <h2>Kontrol edilecek alanı seçin</h2>
+    <p class="hint">Parmağınızla sürükleyerek sadece koli çizimini / koliyi işaretleyin.</p>
+    <div class="crop-wrap"><canvas id="cropCanvas"></canvas></div>
+    <div class="actions">
+      <button class="btn primary" id="cropSave">Kaydet</button>
+      <button class="btn" id="cropClear">Tamamını kullan</button>
+      <button class="btn ghost" id="cropCancel">Vazgeç</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="vendor/tesseract.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
