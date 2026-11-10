@@ -96,6 +96,7 @@ b { font-variant-numeric: tabular-nums; }
 #tab-store h2 { font-size: 16px; color: var(--gold); }
 .packs, .skin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .pack, .scard { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px 10px; background: var(--panel); border: 1px solid var(--line); text-align: center; }
+.pack:disabled { opacity: .45; }
 .pack .big { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .pack .bn { font-size: 12px; color: var(--ok); min-height: 17px; }
 .pack .price, .scard .price { width: 100%; padding: 7px; background: var(--panel-2); border: 1px solid var(--gold-2); color: var(--gold); font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 6px; }

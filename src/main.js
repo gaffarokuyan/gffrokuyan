@@ -1,4 +1,17 @@
+import '@fontsource/cinzel/latin-600.css';
+import '@fontsource/cinzel/latin-ext-600.css';
+import '@fontsource/cinzel/latin-800.css';
+import '@fontsource/cinzel/latin-ext-800.css';
+import '@fontsource/chakra-petch/latin-400.css';
+import '@fontsource/chakra-petch/latin-ext-400.css';
+import '@fontsource/chakra-petch/latin-500.css';
+import '@fontsource/chakra-petch/latin-ext-500.css';
+import '@fontsource/chakra-petch/latin-600.css';
+import '@fontsource/chakra-petch/latin-ext-600.css';
+import '@fontsource/chakra-petch/latin-700.css';
+import '@fontsource/chakra-petch/latin-ext-700.css';
 import './style.css';
+import { shop, PRODUCT, initBilling, buy } from './billing.js';
 import * as THREE from 'three';
 import { HEROES, HERO_IDS, SKINS, GEM_PACKS, PASSIVES, skinPalette } from './data.js';
 import { t, loc, setLang, getLang, LANGS, abilDesc } from './i18n.js';
@@ -72,7 +85,7 @@ function renderWallet() {
 function renderStatic() {
   document.documentElement.lang = getLang();
   const tabs = $('tabs').children; tabs[0].textContent = t('play'); tabs[1].textContent = t('store'); tabs[2].textContent = t('settings');
-  $('tagline').textContent = t('tagline'); $('storeNote').textContent = t('storeNote');
+  $('tagline').textContent = t('tagline');
   $('packsTitle').textContent = t('gemPacks'); $('skinsTitle').textContent = t('skins');
   $('lblLang').textContent = t('language'); $('lblQuality').textContent = t('quality'); $('lblSound').textContent = t('sound');
   $('resetBtn').textContent = t('resetData');
@@ -136,11 +149,18 @@ function renderHero() {
 
 function renderStore() {
   const packs = $('packs'); packs.innerHTML = '';
+  $('storeNote').textContent = t(shop.mode === 'live' ? 'storeLive' : shop.mode === 'off' ? 'storeOff' : 'storeNote');
   for (const p of GEM_PACKS) {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'pack';
-    b.innerHTML = `<span class="demo-badge">${t('demoBadge')}</span><span class="big"><i class="gem"></i>${p.gems}</span><span class="bn">${p.bonus ? `+${p.bonus} ${t('bonus')}` : ''}</span><span class="price">${p.price}</span>`;
-    b.addEventListener('click', () => {
+    const pid = PRODUCT[p.id], live = shop.mode === 'live', price = live ? shop.prices[pid] : p.price;
+    if (live && !price) continue;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'pack'; b.disabled = shop.mode === 'off';
+    b.innerHTML = `${live ? '' : `<span class="demo-badge">${t('demoBadge')}</span>`}<span class="big"><i class="gem"></i>${p.gems}</span><span class="bn">${p.bonus ? `+${p.bonus} ${t('bonus')}` : ''}</span><span class="price">${price}</span>`;
+    b.addEventListener('click', async () => {
       const n = p.gems + (p.bonus || 0);
+      if (live) {
+        try { grantProduct(await buy(pid)); } catch (e) { if (!/cancel/i.test(e?.message || '')) { audio.play('error'); toast(t('purchaseFailed')); } }
+        return;
+      }
       dialog(t('demoTitle'), t('demoBody', { n, p: p.price }), () => { save.gems += n; persist(); renderWallet(); audio.play('coin'); toast(t('purchased', { n })); }, true);
     });
     packs.appendChild(b);
@@ -160,6 +180,13 @@ function renderStore() {
     });
     grid.appendChild(b);
   }
+}
+
+// hand over the gems for a completed Play purchase
+function grantProduct(productId) {
+  const p = GEM_PACKS.find((x) => PRODUCT[x.id] === productId); if (!p) return;
+  const n = p.gems + (p.bonus || 0);
+  save.gems += n; persist(); renderWallet(); audio.play('coin'); toast(t('purchased', { n }));
 }
 
 function showTab(name) {
@@ -264,5 +291,6 @@ function boot() {
   }
   resize(); renderAll(); showTab('play');
   requestAnimationFrame(loop);
+  initBilling(grantProduct).then(() => renderStore());
 }
 boot();

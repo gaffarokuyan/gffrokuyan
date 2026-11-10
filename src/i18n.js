@@ -1,6 +1,7 @@
 // English / Türkçe / Kurdî (Kurmancî)
 const S = {
   en: {
+    storeLive: 'Purchases are processed by Google Play.', storeOff: 'The store is not available right now.', purchaseFailed: 'The purchase could not be completed',
     mr: 'Magic resist', pingHelp: 'Allies are on their way!', ping: 'Call for help',
     ace: 'Team wiped out!', shutdown: 'Shut down!', emberBuff: 'Ember Brand: your attacks burn and slow', tideBuff: 'Tide Crest: mana and cooldowns restored faster', ward: 'Watchstone', ward_d: 'Plant a hidden watchstone that reveals the area for 90s.', mvp: 'MVP', dmgCol: 'Damage', vs: 'VS',
     talent: 'Talisman', tal_fury: 'Fury', tal_fury_d: '+8% attack', tal_guard: 'Guard', tal_guard_d: '+10% health', tal_haste: 'Haste', tal_haste_d: '+8% cooldown reduction, +0.3 speed', tal_leech: 'Leech', tal_leech_d: '+6% lifesteal',
@@ -43,6 +44,7 @@ const S = {
     free: 'Free', ally: 'Ally', enemy: 'Enemy', attack: 'Attack',
   },
   tr: {
+    storeLive: 'Satın almalar Google Play üzerinden yapılır.', storeOff: 'Mağaza şu an kullanılamıyor.', purchaseFailed: 'Satın alma tamamlanamadı',
     mr: 'Büyü direnci', pingHelp: 'Takım arkadaşların geliyor!', ping: 'Yardım çağır',
     ace: 'Takım silindi!', shutdown: 'Seri bozuldu!', emberBuff: 'Kor Damgası: saldırıların yakar ve yavaşlatır', tideBuff: 'Dalga Arması: mana ve beklemeler hızlı dolar', ward: 'Gözcü Taşı', ward_d: 'Bölgeyi 90 sn gösteren gizli bir gözcü taşı dik.', mvp: 'MVP', dmgCol: 'Hasar', vs: 'VS',
     talent: 'Tılsım', tal_fury: 'Öfke', tal_fury_d: '+%8 saldırı', tal_guard: 'Muhafız', tal_guard_d: '+%10 can', tal_haste: 'Çeviklik', tal_haste_d: '+%8 bekleme azaltma, +0.3 hız', tal_leech: 'Sülük', tal_leech_d: '+%6 can çalma',
@@ -85,6 +87,7 @@ const S = {
     free: 'Ücretsiz', ally: 'Dost', enemy: 'Düşman', attack: 'Saldır',
   },
   ku: {
+    storeLive: 'Kirîn bi rêya Google Play tên kirin.', storeOff: 'Dikan niha nayê bikaranîn.', purchaseFailed: 'Kirîn temam nebû',
     mr: 'Berxwedana efsûnê', pingHelp: 'Hevalên te tên!', ping: 'Alîkarî bixwaze',
     ace: 'Tîm hat tunekirin!', shutdown: 'Rêz hat şikandin!', emberBuff: 'Nîşana Pêtê: êrîşên te dişewitînin û hêdî dikin', tideBuff: 'Nîşana Pêlê: mana û bendewarî zûtir tije dibin', ward: 'Kevirê Nobedar', ward_d: 'Kevirekî nobedar ê veşartî deyne ku 90 çirke herêmê nîşan dide.', mvp: 'MVP', dmgCol: 'Ziyan', vs: 'VS',
     talent: 'Nivişt', tal_fury: 'Hêrs', tal_fury_d: '+%8 êrîş', tal_guard: 'Parêzvan', tal_guard_d: '+%10 can', tal_haste: 'Lezgînî', tal_haste_d: '+%8 kêmkirina bendewariyê, +0.3 lez', tal_leech: 'Zûrî', tal_leech_d: '+%6 candizî',
