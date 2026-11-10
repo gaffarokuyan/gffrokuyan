@@ -40,7 +40,7 @@ const S = {
     tipDesktop: 'Right-click: move / attack · Q W E R: abilities (Shift+key: rank up) · D F: spells · 4: watchstone · G: call for help · B: recall · P: shop · Tab: scoreboard · hold the minimap to look around',
     tipTouch: 'Left thumb moves · tap abilities to cast at the nearest enemy',
     pause: 'Paused', resume: 'Resume', surrender: 'Leave match', menu: 'Menu',
-    loading: 'Raising the arena…', storeNote: 'All purchases here are simulated for the demo. Real billing will be wired in the Android release.',
+    loading: 'Raising the arena…', storeNote: 'All purchases here are simulated for the demo. In the Android app, real purchases go through Google Play.',
     free: 'Free', ally: 'Ally', enemy: 'Enemy', attack: 'Attack',
   },
   tr: {
@@ -83,7 +83,7 @@ const S = {
     tipDesktop: 'Sağ tık: yürü / saldır · Q W E R: yetenekler (Shift+tuş: kademe artır) · D F: büyüler · 4: gözcü taşı · G: yardım çağır · B: üsse dön · P: dükkân · Tab: skor tablosu · etrafa bakmak için haritaya basılı tut',
     tipTouch: 'Sol başparmak yürütür · yeteneğe dokun, en yakın düşmana atılır',
     pause: 'Duraklatıldı', resume: 'Devam et', surrender: 'Maçtan çık', menu: 'Menü',
-    loading: 'Arena kuruluyor…', storeNote: 'Buradaki tüm satın almalar demo amaçlı simüle edilir. Gerçek ödeme Android sürümünde bağlanacak.',
+    loading: 'Arena kuruluyor…', storeNote: 'Buradaki tüm satın almalar demo amaçlı simüle edilir. Android uygulamasında gerçek satın alma Google Play üzerinden yapılır.',
     free: 'Ücretsiz', ally: 'Dost', enemy: 'Düşman', attack: 'Saldır',
   },
   ku: {
@@ -126,7 +126,7 @@ const S = {
     tipDesktop: 'Tikandina rastê: here / êrîş bike · Q W E R: şiyan (Shift+bişkok: pile zêde bike) · D F: efsûn · 4: kevirê nobedar · G: alîkarî bixwaze · B: vegere bingehê · P: dikan · Tab: tabloya encaman · ji bo nêrînê nexşeyê bigire',
     tipTouch: 'Tiliya çepê dimeşîne · li şiyanê bixe, ber bi dijminê herî nêzîk ve tê avêtin',
     pause: 'Hat rawestandin', resume: 'Bidomîne', surrender: 'Ji şer derkeve', menu: 'Menû',
-    loading: 'Qad tê avakirin…', storeNote: 'Hemû kirînên li vir ji bo demoyê tên teqlîdkirin. Dayîna rastîn di guhertoya Androidê de tê girêdan.',
+    loading: 'Qad tê avakirin…', storeNote: 'Hemû kirînên li vir ji bo demoyê tên teqlîdkirin. Di sepana Androidê de kirîna rastîn bi rêya Google Play tê kirin.',
     free: 'Belaş', ally: 'Heval', enemy: 'Dijmin', attack: 'Êrîş',
   },
 };
