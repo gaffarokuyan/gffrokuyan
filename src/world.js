@@ -18,8 +18,8 @@ export const TOWERS = [
   ['bot', 0, 24, 40], ['bot', 1, 54, 40],
 ];
 export const CAMPS = [
-  { x: -30, z: -18, big: false }, { x: 30, z: -18, big: false },
-  { x: -30, z: 18, big: false }, { x: 30, z: 18, big: false },
+  { x: -30, z: -18, big: false, buff: 'ember' }, { x: 30, z: -18, big: false, buff: 'tide' },
+  { x: -30, z: 18, big: false, buff: 'tide' }, { x: 30, z: 18, big: false, buff: 'ember' },
   { x: 0, z: -19, big: true },
   { x: 0, z: 19, big: true, spirit: true },
 ];

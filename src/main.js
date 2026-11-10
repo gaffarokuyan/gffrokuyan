@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { HEROES, HERO_IDS, SKINS, GEM_PACKS, PASSIVES, skinPalette } from './data.js';
 import { t, loc, setLang, getLang, LANGS, abilDesc } from './i18n.js';
 import { audio } from './audio.js';
-import { Game, UNLOCK } from './game.js';
+import { Game, UNLOCK, TALENTS } from './game.js';
 import { MenuScene } from './menu3d.js';
 import { Hud } from './hud.js';
 
@@ -12,7 +12,7 @@ const hex = (n) => '#' + n.toString(16).padStart(6, '0');
 const KEY = 'sterk-arena-v1';
 
 // ---------- persistent profile ----------
-const fresh = () => ({ lang: null, quality: 'high', sound: true, coins: 500, gems: 50, xp: 0, level: 1, owned: ['rubar', 'zerya', 'bahoz'], skins: {}, equipped: {}, hero: 'rubar' });
+const fresh = () => ({ lang: null, quality: 'high', sound: true, coins: 500, gems: 50, xp: 0, level: 1, owned: ['rubar', 'zerya', 'bahoz'], skins: {}, equipped: {}, hero: 'rubar', talent: 'fury', diff: 'normal', rp: 0 });
 let save = fresh();
 try { const raw = localStorage.getItem(KEY); if (raw) save = { ...save, ...JSON.parse(raw) }; } catch (e) { /* storage unavailable */ }
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) { /* ignore */ } };
@@ -64,6 +64,8 @@ function toast(msg) { hud.toast(msg); }
 
 function renderWallet() {
   $('coins').textContent = save.coins; $('gems').textContent = save.gems; $('acctLv').textContent = save.level;
+  const tier = Math.min(5, Math.floor(save.rp / 100));
+  $('rankBox').innerHTML = `<b>${t('rank' + tier)}</b><span>${save.rp} ${t('rankPts')}</span>`;
   $('acctXp').style.width = Math.min(100, save.xp / acctNeed(save.level) * 100) + '%';
 }
 
@@ -78,6 +80,14 @@ function renderStatic() {
   $('pauseTitle').textContent = t('pause'); $('resumeBtn').textContent = t('resume'); $('leaveBtn').textContent = t('surrender');
   $('pauseTip').textContent = document.body.classList.contains('touch') ? t('tipTouch') : t('tipDesktop');
   $('loadTxt').textContent = t('loading'); $('endBtn').textContent = t('continue');
+  $('lblTalent').textContent = t('talent'); $('lblDiff').textContent = t('difficulty');
+  const tb = $('talents'); tb.innerHTML = '';
+  for (const id of TALENTS) {
+    const b = document.createElement('button'); b.type = 'button'; if (save.talent === id) b.className = 'on';
+    b.innerHTML = `${t('tal_' + id)}<small>${t('tal_' + id + '_d')}</small>`;
+    b.addEventListener('click', () => { audio.play('click'); save.talent = id; persist(); renderStatic(); }); tb.appendChild(b);
+  }
+  seg('segDiff', [['easy', t('easy')], ['normal', t('normal')], ['hard', t('hard')]], save.diff, (v) => { save.diff = v; persist(); renderStatic(); });
   seg('segLang', LANGS, getLang(), (v) => { save.lang = v; setLang(v); persist(); renderAll(); });
   seg('segQuality', [['high', t('high')], ['low', t('low')]], save.quality, (v) => { save.quality = v; prCap = 2; persist(); resize(); renderStatic(); });
   seg('segSound', [[true, t('on')], [false, t('off')]], save.sound, (v) => { save.sound = v; audio.setEnabled(v); persist(); renderStatic(); });
@@ -173,14 +183,19 @@ function startMatch() {
   audio.unlock(); audio.music(true);
   setTimeout(() => {
     game = new Game({
-      renderer, overlay: $('overlay'), heroId: save.hero, skin: skinOf(save.hero), quality: save.quality, audio,
+      renderer, overlay: $('overlay'), heroId: save.hero, skin: skinOf(save.hero), quality: save.quality, talent: save.talent, diff: save.diff, audio,
       ui: { announce: (a, b) => hud.announce(a, b), feed: (a, b, c) => hud.feed(a, b, c), pause: () => togglePause(), shop: () => hud.toggleShop(), board: () => hud.toggleBoard() },
       onEnd: endMatch,
     });
     window.__game = game;
     renderer.setScissorTest(false);
     resize(); hud.attach(game);
-    $('hud').hidden = false; $('loading').hidden = true; acc = 0; frames = 0; slowT = 0;
+    // short line-up card before the gates open
+    const g0 = game, row = (u) => `<span class="t${u.team}${u.isPlayer ? ' me' : ''}">${u.name} <small>${t(HEROES[u.heroId].role)}</small></span>`;
+    const A = g0.heroes.filter((u) => u.team === 0), B = g0.heroes.filter((u) => u.team === 1);
+    $('lineup').innerHTML = A.map((u, i) => row(u) + (i === 0 ? `<span class="vs">${t('vs')}</span>` : '') + row(B[i])).join('');
+    g0.paused = true; $('hud').hidden = false; acc = 0; frames = 0; slowT = 0;
+    setTimeout(() => { $('loading').hidden = true; $('lineup').innerHTML = ''; if (game === g0 && $('pause').hidden) g0.paused = false; }, 2400);
   }, 60);
 }
 
@@ -200,14 +215,17 @@ function leaveMatch() {
 
 function endMatch(r) {
   const coins = (r.win ? 120 : 50) + r.k * 6 + r.a * 3 + Math.floor(r.cs / 4), xp = (r.win ? 100 : 45) + r.k * 3 + r.a;
+  const rpD = r.win ? Math.round(25 * { easy: 0.5, normal: 1, hard: 1.5 }[r.diff]) : -(r.diff === 'easy' ? 5 : 15);
+  save.rp = Math.max(0, save.rp + rpD);
   save.coins += coins; save.xp += xp;
   let up = false;
   while (save.xp >= acctNeed(save.level)) { save.xp -= acctNeed(save.level); save.level++; save.gems += 10; up = true; }
   persist();
-  $('end').firstElementChild.className = 'sheet narrow end ' + (r.win ? 'win' : 'lose');
+  $('endBoard').innerHTML = hud.boardHTML(r.win ? 0 : 1);
+  $('end').firstElementChild.className = 'sheet end ' + (r.win ? 'win' : 'lose');
   $('endTitle').textContent = t(r.win ? 'victory' : 'defeat');
   $('endStats').innerHTML = `<div><b>${r.k}</b>${t('kills')}</div><div><b>${r.d}</b>${t('deaths')}</div><div><b>${r.a}</b>${t('assists')}</div><div><b>${r.cs}</b>${t('minions')}</div><div><b>${r.level}</b>${t('level')}</div>`;
-  $('endRewards').innerHTML = `<span><i class="coin"></i>+${coins}</span><span>✦ +${xp} ${t('xp')}</span>${up ? `<span><i class="gem"></i>+10 · ${t('accountLevelUp', { n: save.level })}</span>` : ''}`;
+  $('endRewards').innerHTML = `<span><i class="coin"></i>+${coins}</span><span>✦ +${xp} ${t('xp')}</span><span>${rpD > 0 ? '+' : ''}${rpD} ${t('rankPts')}</span>${up ? `<span><i class="gem"></i>+10 · ${t('accountLevelUp', { n: save.level })}</span>` : ''}`;
   $('shop').hidden = true; $('pause').hidden = true; $('board').hidden = true; $('end').hidden = false;
 }
 

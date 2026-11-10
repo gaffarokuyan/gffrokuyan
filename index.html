@@ -16,6 +16,7 @@
 <div id="menu" class="screen">
   <header class="topbar">
     <div class="brand"><span class="star">✦</span><span class="brand-name">STÊRK ARENA</span></div>
+    <div class="rank" id="rankBox"></div>
     <div class="acct">
       <div class="acct-lv"><span id="acctLv">1</span></div>
       <div class="acct-xp"><div id="acctXp"></div></div>
@@ -41,6 +42,7 @@
     <aside class="info">
       <div class="stats" id="heroStats"></div>
       <div class="abils" id="heroAbils"></div>
+      <div class="pre"><span class="pre-l" id="lblTalent"></span><div class="talents" id="talents"></div><span class="pre-l" id="lblDiff"></span><div class="seg" id="segDiff"></div></div>
       <button type="button" class="cta" id="startBtn"></button>
       <p class="tip" id="tagline"></p>
     </aside>
@@ -75,6 +77,7 @@
   <div id="feed"></div>
   <div id="respawn" hidden></div>
   <div class="status">
+    <div class="buffs" id="buffs"></div>
     <div class="items" id="items"></div>
     <div class="bars">
       <div class="lvl" id="lvl">1</div>
@@ -104,7 +107,7 @@
 
 <div id="board" class="modal" hidden><div class="sheet">
   <div class="sheet-head"><h2 id="boardTitle"></h2><button type="button" class="x" id="boardClose">✕</button></div>
-  <div id="boardBody"></div>
+  <div class="bgrid" id="boardBody"></div>
 </div></div>
 
 <div id="pause" class="modal" hidden><div class="sheet narrow">
@@ -121,10 +124,11 @@
   <button type="button" class="ghost" id="dlgCancel"></button>
 </div></div>
 
-<div id="end" class="modal" hidden><div class="sheet narrow end">
+<div id="end" class="modal" hidden><div class="sheet end">
   <h1 id="endTitle"></h1>
   <div class="kilim"></div>
   <div class="end-stats" id="endStats"></div>
+  <div class="bgrid" id="endBoard"></div>
   <div class="end-rewards" id="endRewards"></div>
   <button type="button" class="cta" id="endBtn"></button>
 </div></div>
@@ -135,7 +139,7 @@
   <div class="lang-list" id="langList"></div>
 </div></div>
 
-<div id="loading" class="modal" hidden><div class="loader"><span class="star spin">✦</span><p id="loadTxt"></p></div></div>
+<div id="loading" class="modal" hidden><div class="loader"><span class="star spin">✦</span><p id="loadTxt"></p><div class="lineup" id="lineup"></div></div></div>
 <div id="toast" hidden></div>
 
 <script type="module" src="/src/main.js"></script>

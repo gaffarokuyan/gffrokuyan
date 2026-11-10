@@ -20,6 +20,11 @@ export class Hud {
     $('scoreBtn').addEventListener('click', () => this.toggleBoard());
     $('boardClose').addEventListener('click', () => this.toggleBoard(false));
     $('board').addEventListener('pointerdown', (e) => { if (e.target.id === 'board') this.toggleBoard(false); });
+    $('minimap').addEventListener('pointerdown', (e) => {
+      const g = this.game; if (!g || g.paused || g.player.dead) return;
+      const r = e.currentTarget.getBoundingClientRect(), p = g.player;
+      p.attackTarget = null; p.recallT = 0; p.moveTo = { x: Math.max(-96, Math.min(96, ((e.clientX - r.left) / r.width - 0.5) * 200)), z: Math.max(-54, Math.min(54, ((e.clientY - r.top) / r.height - 0.5) * 116)) };
+    });
     this.bindJoystick();
   }
 
@@ -71,6 +76,12 @@ export class Hud {
       srow.appendChild(b);
       return { b, cd: b.querySelector('.cd') };
     });
+    const wb = document.createElement('button'); wb.type = 'button'; wb.className = 'act spell'; wb.style.setProperty('--c', '#7dffb0');
+    wb.innerHTML = '👁<span class="cd"></span><span class="key">4</span>';
+    wb.addEventListener('pointerdown', (e) => { e.preventDefault(); game.playerWard(); });
+    wb.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { const el = $('tooltip'); el.innerHTML = `<h3>${t('ward')} · 4</h3><p>${t('ward_d')}</p>`; el.hidden = false; } });
+    wb.addEventListener('pointerleave', () => { $('tooltip').hidden = true; });
+    srow.appendChild(wb); this.wardBtn = wb; this.wardN = -1;
     this.spHint = false; $('board').hidden = true;
     $('rotate').textContent = t('rotate');
     $('announce').innerHTML = ''; $('feed').innerHTML = ''; $('respawn').hidden = true;
@@ -126,18 +137,24 @@ export class Hud {
     }
   }
   toggleBoard(on) { const el = $('board'); const show = on ?? el.hidden; el.hidden = !show; if (show) this.renderBoard(); }
-  renderBoard() {
-    const g = this.game; if (!g) return;
-    $('boardTitle').textContent = `${t('board')}  ·  ${g.kills[0]} – ${g.kills[1]}`;
-    let h = `<span class="th"></span><span class="th">${t('lv')}</span><span class="th">K / D / A</span><span class="th">${t('minions')}</span><span class="th"></span>`;
+  boardHTML(mvpOf) {
+    const g = this.game;
+    const score = (u) => u.k * 3 + u.a * 1.5 - u.d + u.dmg / 900;
+    const mvp = mvpOf === undefined ? null : g.heroes.filter((u) => u.team === mvpOf).sort((a, b) => score(b) - score(a))[0];
+    let h = `<span class="th"></span><span class="th">${t('lv')}</span><span class="th">K / D / A</span><span class="th">${t('minions')}</span><span class="th">${t('dmgCol')}</span><span class="th"></span>`;
     for (const team of [0, 1]) {
       h += '<span class="sep"></span>';
       for (const u of g.heroes.filter((x) => x.team === team)) {
-        const c = (u.isPlayer ? 'me' : 't' + team) + (u.dead ? ' dead' : '');
-        h += `<span class="nm ${c}">${u.name} <small>${t(HEROES[u.heroId].role)}</small></span><span>${u.level}</span><span>${u.k} / ${u.d} / ${u.a}</span><span>${u.cs}</span><span>${u.items.map((id) => ITEM[id].icon).join(' ')}</span>`;
+        const c = (u.isPlayer ? 'me' : 't' + team) + (u.dead && !g.over ? ' dead' : '');
+        h += `<span class="nm ${c}">${u.name} <small>${t(HEROES[u.heroId].role)}</small>${u === mvp ? `<span class="mvp">${t('mvp')}</span>` : ''}</span><span>${u.level}</span><span>${u.k} / ${u.d} / ${u.a}</span><span>${u.cs}</span><span>${Math.round(u.dmg)}</span><span>${u.items.map((id) => ITEM[id].icon).join(' ')}</span>`;
       }
     }
-    $('boardBody').innerHTML = h;
+    return h;
+  }
+  renderBoard() {
+    const g = this.game; if (!g) return;
+    $('boardTitle').textContent = `${t('board')}  ·  ${g.kills[0]} – ${g.kills[1]}`;
+    $('boardBody').innerHTML = this.boardHTML();
   }
   toast(msg) { const el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(this._tt); this._tt = setTimeout(() => (el.hidden = true), 2200); }
 
@@ -160,6 +177,8 @@ export class Hud {
     if (this.tick % 6 === 0) {
       if (!$('board').hidden && this.tick % 30 === 0) this.renderBoard();
       $('hpTxt').textContent = `${Math.ceil(Math.max(0, p.hp))} / ${Math.round(p.maxHp)}`; $('mpTxt').textContent = `${Math.floor(p.mp)} / ${Math.round(p.maxMp)}`;
+      if (this.wardN !== p.wardN) { this.wardN = p.wardN; this.wardBtn.querySelector('.cd').textContent = p.wardN; this.wardBtn.classList.toggle('off', !p.wardN); }
+      const bk = g.playerBuffs().map((b) => `<span>${b[0]} ${b[1]}</span>`).join(''); if (bk !== this.buffKey) { this.buffKey = bk; $('buffs').innerHTML = bk; }
       $('lvl').textContent = p.level; $('gold').textContent = Math.floor(p.gold);
       $('scBlue').textContent = g.kills[0]; $('scRed').textContent = g.kills[1];
       const s = Math.floor(g.time); $('clock').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;

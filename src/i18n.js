@@ -1,6 +1,9 @@
 // English / Türkçe / Kurdî (Kurmancî)
 const S = {
   en: {
+    ace: 'Team wiped out!', shutdown: 'Shut down!', emberBuff: 'Ember Brand: your attacks burn and slow', tideBuff: 'Tide Crest: mana and cooldowns restored faster', ward: 'Watchstone', ward_d: 'Plant a hidden watchstone that reveals the area for 90s.', mvp: 'MVP', dmgCol: 'Damage', vs: 'VS',
+    talent: 'Talisman', tal_fury: 'Fury', tal_fury_d: '+8% attack', tal_guard: 'Guard', tal_guard_d: '+10% health', tal_haste: 'Haste', tal_haste_d: '+8% cooldown reduction, +0.3 speed', tal_leech: 'Leech', tal_leech_d: '+6% lifesteal',
+    difficulty: 'Opponents', easy: 'Easy', normal: 'Normal', hard: 'Hard', rankPts: 'rank points', rank0: 'Stone', rank1: 'Iron', rank2: 'Silver', rank3: 'Gold', rank4: 'Diamond', rank5: 'Star',
     passive: 'Passive', p_third: 'Every third basic attack deals 60% more damage.', p_execute: 'Deals 25% more damage to enemies below 35% health.', p_regen: 'Out of combat for 5s: regenerates 2% max health per second.', p_spellheal: 'Heals for 12% of ability damage dealt.', p_healboost: 'Healing abilities are 25% stronger.', crit: 'crit', builds: 'Builds from', rotate: 'Turn your phone sideways for the best view',
     multi2: 'Double kill!', multi3: 'Triple kill!', multi4: 'Quadra kill!', multi5: 'Unstoppable!', spiritDown: 'The River Spirit yields — your team grows stronger for good!', spiritDownEnemy: 'The enemy claimed the River Spirit!',
     sp_blink: 'Starstep', sp_blink_d: 'Teleport a short distance.', sp_mend: 'Mend', sp_mend_d: 'Heal yourself and nearby allies.', board: 'Scoreboard', assists: 'Assists', rank: 'Rank', skillPoint: 'Skill point ready — tap + on an ability',
@@ -39,6 +42,9 @@ const S = {
     free: 'Free', ally: 'Ally', enemy: 'Enemy', attack: 'Attack',
   },
   tr: {
+    ace: 'Takım silindi!', shutdown: 'Seri bozuldu!', emberBuff: 'Kor Damgası: saldırıların yakar ve yavaşlatır', tideBuff: 'Dalga Arması: mana ve beklemeler hızlı dolar', ward: 'Gözcü Taşı', ward_d: 'Bölgeyi 90 sn gösteren gizli bir gözcü taşı dik.', mvp: 'MVP', dmgCol: 'Hasar', vs: 'VS',
+    talent: 'Tılsım', tal_fury: 'Öfke', tal_fury_d: '+%8 saldırı', tal_guard: 'Muhafız', tal_guard_d: '+%10 can', tal_haste: 'Çeviklik', tal_haste_d: '+%8 bekleme azaltma, +0.3 hız', tal_leech: 'Sülük', tal_leech_d: '+%6 can çalma',
+    difficulty: 'Rakipler', easy: 'Kolay', normal: 'Normal', hard: 'Zor', rankPts: 'sıralama puanı', rank0: 'Taş', rank1: 'Demir', rank2: 'Gümüş', rank3: 'Altın', rank4: 'Elmas', rank5: 'Yıldız',
     passive: 'Pasif', p_third: 'Her üçüncü temel saldırı %60 fazla hasar verir.', p_execute: 'Canı %35 altındaki düşmanlara %25 fazla hasar verir.', p_regen: '5 sn savaş dışında: saniyede azami canın %2\'sini yeniler.', p_spellheal: 'Verdiği yetenek hasarının %12\'si kadar iyileşir.', p_healboost: 'İyileştirme yetenekleri %25 daha güçlüdür.', crit: 'kritik', builds: 'Bileşenler', rotate: 'En iyi görünüm için telefonu yan çevir',
     multi2: 'Çifte öldürme!', multi3: 'Üçlü öldürme!', multi4: 'Dörtlü öldürme!', multi5: 'Durdurulamıyor!', spiritDown: 'Nehir Ruhu boyun eğdi — takımın kalıcı olarak güçlendi!', spiritDownEnemy: 'Düşman Nehir Ruhunu aldı!',
     sp_blink: 'Yıldız Adımı', sp_blink_d: 'Kısa mesafeye ışınlan.', sp_mend: 'Onar', sp_mend_d: 'Kendini ve yakındaki dostları iyileştir.', board: 'Skor tablosu', assists: 'Asist', rank: 'Kademe', skillPoint: 'Yetenek puanın var — bir yeteneğin + düğmesine dokun',
@@ -77,6 +83,9 @@ const S = {
     free: 'Ücretsiz', ally: 'Dost', enemy: 'Düşman', attack: 'Saldır',
   },
   ku: {
+    ace: 'Tîm hat tunekirin!', shutdown: 'Rêz hat şikandin!', emberBuff: 'Nîşana Pêtê: êrîşên te dişewitînin û hêdî dikin', tideBuff: 'Nîşana Pêlê: mana û bendewarî zûtir tije dibin', ward: 'Kevirê Nobedar', ward_d: 'Kevirekî nobedar ê veşartî deyne ku 90 çirke herêmê nîşan dide.', mvp: 'MVP', dmgCol: 'Ziyan', vs: 'VS',
+    talent: 'Nivişt', tal_fury: 'Hêrs', tal_fury_d: '+%8 êrîş', tal_guard: 'Parêzvan', tal_guard_d: '+%10 can', tal_haste: 'Lezgînî', tal_haste_d: '+%8 kêmkirina bendewariyê, +0.3 lez', tal_leech: 'Zûrî', tal_leech_d: '+%6 candizî',
+    difficulty: 'Hevrik', easy: 'Hêsan', normal: 'Normal', hard: 'Dijwar', rankPts: 'xalên rêzê', rank0: 'Kevir', rank1: 'Hesin', rank2: 'Zîv', rank3: 'Zêr', rank4: 'Elmas', rank5: 'Stêrk',
     passive: 'Pasîf', p_third: 'Her êrîşa sêyemîn %60 zêdetir ziyan dide.', p_execute: 'Li dijminên ku cana wan di bin %35 de ye %25 zêdetir ziyan dide.', p_regen: '5 çirke li derveyî şer: her çirke %2 ê cana herî zêde nû dike.', p_spellheal: 'Bi qasî %12 ê ziyana şiyanan xwe derman dike.', p_healboost: 'Şiyanên dermankirinê %25 bihêztir in.', crit: 'krîtîk', builds: 'Pêkhate', rotate: 'Ji bo dîtina herî baş telefonê bizivirîne',
     multi2: 'Kuştina cot!', multi3: 'Kuştina sêcar!', multi4: 'Kuştina çarcar!', multi5: 'Nayê rawestandin!', spiritDown: 'Ruhê Çem serî danî — tîma te her û her bi hêz bû!', spiritDownEnemy: 'Dijmin Ruhê Çem bi dest xist!',
     sp_blink: 'Gava Stêrkê', sp_blink_d: 'Mesafeyeke kurt biguheze.', sp_mend: 'Derman', sp_mend_d: 'Xwe û hevalên nêzîk derman bike.', board: 'Tabloya encaman', assists: 'Alîkarî', rank: 'Pile', skillPoint: 'Xala şiyanê heye — li + ya şiyanekê bixe',

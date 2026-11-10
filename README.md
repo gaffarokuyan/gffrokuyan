@@ -8,6 +8,9 @@
 - **10 kahraman:** Rûbar, Zerya, Bahoz, Çiya, Hêvî, Şevîn, Baran, Şêr, Tîrêj, Zinar — her birinde Q/W/E + R (ulti), seviye 15'e kadar
 - **Maç içi dükkân:** 14 eşya; 7 temel parça birleşerek 7 gelişmiş eşyaya dönüşür
 - **Pasifler ve kritik vuruş:** her kahramanın bir pasifi var
+- **Orman:** Kor Damgası ve Dalga Arması güçlendirme kampları, Kadim, Nehir Ruhu
+- **Görüş:** gözcü taşı (2 hak, 45 sn'de yenilenir), kule kendi kahramanına saldıranı hedef alır
+- **Maç dışı:** tılsım seçimi, zorluk (kolay/normal/zor), sıralama puanı ve 6 kademe, maç öncesi kadro ve maç sonu istatistik tablosu + MVP
 - **Mağaza (DEMO):** elmas paketleri ve kostümler. Gerçek ödeme alınmaz; Android sürümünde Google Play Billing bağlanacak.
 - **Teknik:** Three.js + Vite, tüm modeller/efektler/sesler kodla üretilir (harici asset yok)
 
