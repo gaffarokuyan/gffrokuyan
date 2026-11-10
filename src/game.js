@@ -71,10 +71,10 @@ export class Game {
     for (const team of [0, 1]) {
       const sx = team === 0 ? -1 : 1;
       for (const [lane, tier, x, z] of TOWERS) {
-        const tw = this.add({ kind: 'tower', team, lane, tier, x: x * sx, z, r: 1.9, maxHp: 3800, atk: 175, arm: 42, range: 10.5, as: 0.85, ranged: true, h: 9.6, obj: makeTower(team), struct: true });
+        const tw = this.add({ kind: 'tower', team, lane, tier, x: x * sx, z, r: 1.9, maxHp: tier === 1 ? 5200 : 4400, atk: tier === 1 ? 200 : 175, arm: 45, range: 10.5, as: 0.85, ranged: true, h: 9.6, obj: makeTower(team), struct: true });
         this.towers.push(tw);
       }
-      const core = this.add({ kind: 'core', team, x: CORE[team].x, z: 0, r: 4.6, maxHp: 6500, atk: 210, arm: 42, range: 11.5, as: 1, ranged: true, h: 9, obj: makeCore(team), struct: true });
+      const core = this.add({ kind: 'core', team, x: CORE[team].x, z: 0, r: 4.6, maxHp: 8500, atk: 230, arm: 45, range: 11.5, as: 1, ranged: true, h: 9, obj: makeCore(team), struct: true });
       (this.cores ||= [])[team] = core;
     }
     this.updateProtection();
@@ -102,7 +102,7 @@ export class Game {
         maxHp: data.hp, atk: data.atk, arm: data.def, spd: data.spd, range: data.range, as: data.as, ranged: !data.melee,
         level: 1, xp: 0, gold: 500, items: [], cds: [0, 0, 0, 0], cdMax: [1, 1, 1, 1], ranks: [0, 0, 0, 0], sp: 1, mp: data.mp, maxMp: data.mp, buffs: [],
         spells: SPELLS.map((q) => ({ cd: 0, max: q.cd })), hitBy: {}, multi: 0, lastKillT: -99,
-        passive: PASSIVES[id], hits: 0, crit: 0, k: 0, d: 0, a: 0, cs: 0, respawnT: 0, recallT: 0, ap: 0, cdr: 0, ls: 0, moveTo: null, attackTarget: null, dash: null, slot,
+        passive: PASSIVES[id], hits: 0, streak: 0, feed: 0, crit: 0, k: 0, d: 0, a: 0, cs: 0, respawnT: 0, recallT: 0, ap: 0, cdr: 0, ls: 0, moveTo: null, attackTarget: null, dash: null, slot,
         obj: makeHero(data, pal, team),
         bot: isPlayer ? null : { lane, roam, roamT: 40, think: Math.random() * 0.3, retreat: false, castT: 1 + Math.random() * 2 },
       });
@@ -244,6 +244,7 @@ export class Game {
     if (src.passive === 'execute' && tgt.hp < tgt.maxHp * 0.35) amt *= 1.25;
     if (!o.pure) amt *= 100 / (100 + tgt.arm);
     if (src.kind === 'minion' && tgt.struct && !src.siege) amt *= 0.5;
+    if (tgt.struct && src.kind === 'hero') { if (this.time - (tgt.sieged ?? -9) > 0.6) { tgt.sieged = this.time; tgt.cover = !this.units.some((u) => u.kind === 'minion' && u.team === src.team && !u.dead && dist(u, tgt) < 13); } if (tgt.cover) amt *= 0.3; }
     if (src.kind === 'minion' && tgt.kind === 'hero') amt *= 0.7;
     if (tgt.shield > 0) { const a = Math.min(tgt.shield, amt); tgt.shield -= a; amt -= a; }
     tgt.hp -= amt; tgt.lastHit = src; tgt.hitT = this.time;
@@ -262,6 +263,8 @@ export class Game {
 
   addXp(h, n) {
     if (h.level >= MAX_LEVEL) return;
+    const lv = [0, 0]; for (const o of this.heroes) lv[o.team] += o.level;
+    if (lv[h.team] < lv[1 - h.team] - 4) n *= 1.35;
     h.xp += n;
     while (h.level < MAX_LEVEL && h.xp >= xpNeed(h.level)) {
       h.xp -= xpNeed(h.level); h.level++; h.sp++; if (h.bot) this.autoRank(h);
@@ -305,21 +308,22 @@ export class Game {
       this.fx.burst(tgt.x, 1.5, tgt.z, tgt.spirit ? 0x60f0ff : tgt.big ? 0xc070ff : 0xb0ff60, tgt.big ? 80 : 24, 8, 0.6, 0.9);
       tgt.camp.unit = null; tgt.camp.respawn = tgt.spirit ? 150 : tgt.big ? 110 : 55; tgt.removeT = 2.5;
     } else if (tgt.kind === 'hero') {
-      tgt.d++; tgt.respawnT = 6 + tgt.level * 1.5; tgt.moveTo = null; tgt.attackTarget = null; tgt.dash = null; tgt.buffs.length = 0; tgt.shield = 0;
+      tgt.d++; tgt.respawnT = 5 + tgt.level * 1.6 + Math.min(12, this.time / 60); tgt.moveTo = null; tgt.attackTarget = null; tgt.dash = null; tgt.buffs.length = 0; tgt.shield = 0;
       this.kills[1 - tgt.team]++;
-      share(110 + tgt.level * 22, 20);
+      share((110 + tgt.level * 22) * Math.max(0.5, 1 - tgt.feed * 0.12), 20);
       if (killer) {
-        killer.k++; killer.gold += 200;
+        const bounty = Math.round(Math.max(90, Math.min(450, 200 + tgt.streak * 60 - tgt.feed * 40)));
+        killer.k++; killer.gold += bounty; killer.streak++; killer.feed = 0; tgt.lastBounty = bounty;
         killer.multi = this.time - killer.lastKillT < 10 ? killer.multi + 1 : 1; killer.lastKillT = this.time;
         if (killer.multi >= 2) setTimeout(() => this.ui.announce(`${killer.name} — ${t('multi' + Math.min(5, killer.multi))}`, killer.team === 0 ? 'good' : 'bad'), 900);
       }
       for (const o of this.heroes) if (o.team !== tgt.team && o !== killer && this.time - (tgt.hitBy[o.id] ?? -99) < 10) { o.a++; o.gold += 80; if (o.isPlayer) this.floatText(tgt, '+80', '#ffd24a'); }
-      tgt.hitBy = {};
+      tgt.hitBy = {}; tgt.streak = 0; tgt.feed++;
       this.fx.burst(tgt.x, 1.5, tgt.z, tgt.pal.fx, 60, 9, 0.6, 1); this.fx.ring(tgt.x, tgt.z, 6, tgt.pal.fx, 0.7);
       this.ui.feed(killer ? killer.name : (src.struct ? '🏰' : '⚔️'), tgt.name, killer ? killer.team : 1 - tgt.team);
       if (!this.firstBlood) { this.firstBlood = true; this.ui.announce(t('firstBlood'), killer && killer.team === 0 ? 'good' : 'bad'); }
       if (tgt.isPlayer) { this.audio.play('death'); this.ui.announce(t('youSlain'), 'bad'); }
-      else if (killer && killer.isPlayer) { this.audio.play('level'); this.floatText(tgt, '+200', '#ffd24a', true); }
+      else if (killer && killer.isPlayer) { this.audio.play('level'); this.floatText(tgt, '+' + tgt.lastBounty, '#ffd24a', true); }
     } else if (tgt.kind === 'tower') {
       for (const h of this.heroes) if (h.team !== tgt.team) { h.gold += 130; this.addXp(h, 90); }
       this.wreck(tgt, 70);
@@ -613,7 +617,10 @@ export class Game {
     if (tw && (!tanked(tw) || tw.target === h)) { h.attackTarget = null; h.moveTo = { x: h.x - dir * 9, z: h.z }; return; }
     if (eh) {
       const etw = this.towers.find((o) => o.team !== mine && !o.dead && dist(o, eh) < o.range);
-      const want = !(etw && !tanked(etw)) && eh.hp / eh.maxHp < hpR + 0.3;
+      let mineP = 0, foeP = 0;
+      for (const o of this.heroes) { if (o.dead) continue; const pw = (o.hp + o.shield) * (0.6 + o.level * 0.08); if (o.team === mine) { if (dist(o, h) < 12) mineP += pw; } else if (this.sees(mine, o) && dist(o, eh) < 11) foeP += pw; }
+      const want = !(etw && !tanked(etw)) && mineP >= foeP * (eh.hp / eh.maxHp < 0.3 ? 0.55 : 0.85);
+      if (!want && mineP < foeP * 0.6 && ehD < 11) { h.attackTarget = null; h.moveTo = { x: h.x - dir * 9, z: h.z }; this.botCast(h, eh); return; }
       if (want) { h.attackTarget = eh; h.moveTo = null; this.botCast(h, eh); return; }
       this.botCast(h, eh);
       if (ehD < 6 && hpR < 0.55) { h.attackTarget = null; h.moveTo = { x: h.x - dir * 7, z: h.z }; return; }

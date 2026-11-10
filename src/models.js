@@ -2,11 +2,11 @@
 import * as THREE from 'three';
 
 const G = {
-  sphere: new THREE.SphereGeometry(1, 20, 14),
+  sphere: new THREE.SphereGeometry(1, 12, 8),
   box: new THREE.BoxGeometry(1, 1, 1),
-  cyl: new THREE.CylinderGeometry(1, 1, 1, 14),
-  cone: new THREE.ConeGeometry(1, 1, 12),
-  cap: new THREE.CapsuleGeometry(1, 1, 6, 12),
+  cyl: new THREE.CylinderGeometry(1, 1, 1, 10),
+  cone: new THREE.ConeGeometry(1, 1, 8),
+  cap: new THREE.CapsuleGeometry(1, 1, 3, 8),
   octa: new THREE.OctahedronGeometry(1, 0),
   ico: new THREE.IcosahedronGeometry(1, 0),
   torus: new THREE.TorusGeometry(1, 0.08, 6, 20, Math.PI),
@@ -30,6 +30,7 @@ function m(geo, mat, sx, sy, sz, x = 0, y = 0, z = 0) {
 }
 function pivot(x, y, z) { const g = new THREE.Group(); g.position.set(x, y, z); return g; }
 
+const BLOB = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32, depthWrite: false });
 export const TEAM_COLOR = [0x3aa0ff, 0xff4a4a, 0xc9a04a];
 
 export function teamRing(team, r) {
@@ -161,7 +162,11 @@ export function makeHero(def, pal, team) {
 export function makeMinion(team, ranged, scale = 0.8) {
   const c = TEAM_COLOR[team];
   const pal = { color: c, accent: team === 0 ? 0xcfe8ff : 0xffd0c0, fx: c };
-  return makeHumanoid(pal, { weapon: ranged ? 'wand' : 'spear', role: ranged ? 'mage' : 'fighter', scale, simple: true });
+  const g = makeHumanoid(pal, { weapon: ranged ? 'wand' : 'spear', role: ranged ? 'mage' : 'fighter', scale, simple: true });
+  // soldiers skip the shadow pass (dozens of them on screen); a soft blob grounds them instead
+  g.traverse((o) => { o.castShadow = false; });
+  const blob = new THREE.Mesh(G.disc, BLOB); blob.rotation.x = -Math.PI / 2; blob.position.y = 0.05; blob.scale.setScalar(scale * 0.95); g.add(blob);
+  return g;
 }
 
 export function makeTower(team) {
