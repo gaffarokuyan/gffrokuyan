@@ -20,11 +20,18 @@ export class Hud {
     $('scoreBtn').addEventListener('click', () => this.toggleBoard());
     $('boardClose').addEventListener('click', () => this.toggleBoard(false));
     $('board').addEventListener('pointerdown', (e) => { if (e.target.id === 'board') this.toggleBoard(false); });
-    $('minimap').addEventListener('pointerdown', (e) => {
-      const g = this.game; if (!g || g.paused || g.player.dead) return;
-      const r = e.currentTarget.getBoundingClientRect(), p = g.player;
-      p.attackTarget = null; p.recallT = 0; p.moveTo = { x: Math.max(-96, Math.min(96, ((e.clientX - r.left) / r.width - 0.5) * 200)), z: Math.max(-54, Math.min(54, ((e.clientY - r.top) / r.height - 0.5) * 116)) };
-    });
+    // minimap: quick tap walks there, press-and-hold looks there
+    const mm = $('minimap'); let mmT = 0, mmId = null;
+    const mmPos = (e) => { const r = mm.getBoundingClientRect(); return { x: Math.max(-96, Math.min(96, ((e.clientX - r.left) / r.width - 0.5) * 200)), z: Math.max(-54, Math.min(54, ((e.clientY - r.top) / r.height - 0.5) * 116)) }; };
+    mm.addEventListener('pointerdown', (e) => { const g = this.game; if (!g || g.paused) return; mmId = e.pointerId; mm.setPointerCapture(mmId); mmT = performance.now(); g.lookAt = mmPos(e); });
+    mm.addEventListener('pointermove', (e) => { if (e.pointerId === mmId && this.game) this.game.lookAt = mmPos(e); });
+    const mmUp = (e) => {
+      if (e.pointerId !== mmId) return; mmId = null; const g = this.game; if (!g) return;
+      g.lookAt = null;
+      if (e.type === 'pointerup' && performance.now() - mmT < 280 && !g.player.dead) { const p = g.player; p.attackTarget = null; p.recallT = 0; p.moveTo = mmPos(e); }
+    };
+    mm.addEventListener('pointerup', mmUp); mm.addEventListener('pointercancel', mmUp);
+    $('pingBtn').addEventListener('pointerdown', (e) => { e.preventDefault(); this.game?.ping(); });
     this.bindJoystick();
   }
 
@@ -122,7 +129,7 @@ export class Hud {
       const st = [];
       if (it.atk) st.push(`+${it.atk} ${t('atk')}`); if (it.hp) st.push(`+${it.hp} ${t('hp')}`); if (it.def) st.push(`+${it.def} ${t('def')}`);
       if (it.spd) st.push(`+${it.spd} ${t('spd')}`); if (it.as) st.push(`+${it.as * 100}% ⚡`); if (it.ap) st.push(`+${Math.round(it.ap * 100)}% ✺`);
-      if (it.cdr) st.push(`-${it.cdr * 100}% ${t('cd')}`); if (it.mp) st.push(`+${it.mp} ${t('mana')}`); if (it.ls) st.push(`${Math.round(it.ls * 100)}% ♥`); if (it.crit) st.push(`${Math.round(it.crit * 100)}% ${t('crit')}`);
+      if (it.cdr) st.push(`-${it.cdr * 100}% ${t('cd')}`); if (it.mp) st.push(`+${it.mp} ${t('mana')}`); if (it.ls) st.push(`${Math.round(it.ls * 100)}% ♥`); if (it.crit) st.push(`${Math.round(it.crit * 100)}% ${t('crit')}`); if (it.mr) st.push(`+${it.mr} ${t('mr')}`);
       const from = it.from ? `<p class="fr">${t('builds')}: ${it.from.map((c) => `<span class="${p.items.includes(c) ? 'have' : ''}">${ITEM[c].icon}</span>`).join(' + ')}</p>` : '';
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'item' + (it.from ? ' adv' : '') + (owned ? ' owned' : !afford || !can ? ' no' : '');
@@ -178,6 +185,7 @@ export class Hud {
       if (!$('board').hidden && this.tick % 30 === 0) this.renderBoard();
       $('hpTxt').textContent = `${Math.ceil(Math.max(0, p.hp))} / ${Math.round(p.maxHp)}`; $('mpTxt').textContent = `${Math.floor(p.mp)} / ${Math.round(p.maxMp)}`;
       if (this.wardN !== p.wardN) { this.wardN = p.wardN; this.wardBtn.querySelector('.cd').textContent = p.wardN; this.wardBtn.classList.toggle('off', !p.wardN); }
+      $('pingBtn').classList.toggle('off', p.pingCd > 0);
       const bk = g.playerBuffs().map((b) => `<span>${b[0]} ${b[1]}</span>`).join(''); if (bk !== this.buffKey) { this.buffKey = bk; $('buffs').innerHTML = bk; }
       $('lvl').textContent = p.level; $('gold').textContent = Math.floor(p.gold);
       $('scBlue').textContent = g.kills[0]; $('scRed').textContent = g.kills[1];

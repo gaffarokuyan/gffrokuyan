@@ -113,6 +113,28 @@ export const HEROES = {
       { key: 'r', type: 'buff', ult: true, name: { en: 'Bulwark', tr: 'Siper', ku: 'Senger' }, cd: 70, mana: 110, dur: 6, shield: [220, 40], def: 35, team: 10 },
     ],
   },
+  agir: {
+    name: 'Agir', role: 'assassin', weapon: 'daggers', melee: true, cost: 1800,
+    hp: 630, mp: 300, atk: 68, def: 23, spd: 7.9, range: 2.5, as: 1.15, hpG: 82, atkG: 4.9,
+    color: 0xb3261e, accent: 0xffc46b, fx: 0xff5a2a,
+    abil: [
+      { key: 'q', type: 'dash', name: { en: 'Flare Lunge', tr: 'Alev Hamlesi', ku: 'Êrîşa Pêtê' }, cd: 6.5, mana: 40, range: 8, radius: 2.8, dmg: [70, 18, 0.7] },
+      { key: 'w', type: 'aoe', name: { en: 'Scorch Ring', tr: 'Kavuran Halka', ku: 'Xeleka Şewatê' }, cd: 8, mana: 45, range: 0, radius: 4.4, delay: 0.2, dmg: [80, 20, 0.7], slow: 0.3 },
+      { key: 'e', type: 'buff', name: { en: 'Kindle', tr: 'Tutuştur', ku: 'Vêxistin' }, cd: 12, mana: 40, dur: 4, spd: 1.35, atk: 28 },
+      { key: 'r', type: 'aoe', ult: true, name: { en: 'Wildfire', tr: 'Orman Yangını', ku: 'Agirê Daristanê' }, cd: 55, mana: 100, range: 10, radius: 6, delay: 0.8, dmg: [270, 50, 1.3], meteor: true },
+    ],
+  },
+  befrin: {
+    name: 'Befrîn', role: 'support', weapon: 'wand', melee: false, cost: 1800,
+    hp: 590, mp: 470, atk: 45, def: 20, spd: 7.2, range: 9, as: 0.9, hpG: 76, atkG: 2.8,
+    color: 0xcfe8f5, accent: 0x6fc3ff, fx: 0xa8e4ff,
+    abil: [
+      { key: 'q', type: 'aoe', name: { en: 'Snowdrift', tr: 'Kar Yığını', ku: 'Kûma Berfê' }, cd: 7, mana: 50, range: 11, radius: 3.8, delay: 0.6, dmg: [85, 22, 0.5], slow: 0.5 },
+      { key: 'w', type: 'buff', name: { en: 'Frost Ward', tr: 'Ayaz Kalkanı', ku: 'Mertalê Qeşayê' }, cd: 12, mana: 60, dur: 4, shield: [110, 30], team: 8 },
+      { key: 'e', type: 'proj', name: { en: 'Icicle', tr: 'Buz Saçağı', ku: 'Qeşaya Tûj' }, cd: 10, mana: 55, range: 14, speed: 27, width: 1.0, dmg: [70, 18, 0.4], stun: 1.1 },
+      { key: 'r', type: 'heal', ult: true, name: { en: 'First Thaw', tr: 'İlk Erime', ku: 'Helîna Yekem' }, cd: 70, mana: 120, radius: 10, heal: [260, 50], shield: [120, 30] },
+    ],
+  },
 };
 
 export const HERO_IDS = Object.keys(HEROES);
@@ -126,6 +148,7 @@ export const ITEMS = [
   { id: 'tome', icon: '📜', cost: 650, ap: 0.22, mp: 150, name: { en: 'Star Scroll', tr: 'Yıldız Tomarı', ku: 'Tomara Stêrkê' } },
   { id: 'quiver', icon: '🏹', cost: 700, as: 0.25, name: { en: 'Storm Quiver', tr: 'Fırtına Sadağı', ku: 'Tîrdanka Bahozê' } },
   { id: 'crystal', icon: '💠', cost: 600, cdr: 0.1, mp: 150, name: { en: 'Clear Crystal', tr: 'Berrak Kristal', ku: 'Krîstala Zelal' } },
+  { id: 'cloak', icon: '🧣', cost: 550, mr: 30, name: { en: 'Woven Cloak', tr: 'Dokuma Pelerin', ku: 'Ebayê Honandî' } },
   { id: 'great', icon: '⚔️', cost: 1700, from: ['blade', 'quiver'], atk: 60, as: 0.3, crit: 0.2, name: { en: 'Sunforged Edge', tr: 'Güneş Dövmesi', ku: 'Tîxa Rojê' } },
   { id: 'fang', icon: '🦷', cost: 1550, from: ['blade', 'vest'], atk: 45, hp: 350, ls: 0.15, name: { en: 'Wolf Fang', tr: 'Kurt Dişi', ku: 'Diranê Gur' } },
   { id: 'reaver', icon: '🌙', cost: 1600, from: ['blade', 'crystal'], atk: 50, cdr: 0.15, crit: 0.15, name: { en: 'Dusk Reaver', tr: 'Alaca Orak', ku: 'Dasa Êvarê' } },
@@ -133,11 +156,13 @@ export const ITEMS = [
   { id: 'storm', icon: '🌩️', cost: 1800, from: ['quiver', 'tome'], as: 0.35, ap: 0.3, spd: 0.4, name: { en: 'Stormcaller', tr: 'Fırtına Çağıran', ku: 'Bangkerê Bahozê' } },
   { id: 'plate', icon: '🛡️', cost: 1600, from: ['mail', 'vest'], def: 60, hp: 500, name: { en: 'Mountain Plate', tr: 'Dağ Zırhı', ku: 'Zirxê Çiyê' } },
   { id: 'warden', icon: '🏵️', cost: 1600, from: ['mail', 'crystal'], def: 45, hp: 200, cdr: 0.2, mp: 250, name: { en: 'Warden\'s Oath', tr: 'Muhafız Yemini', ku: 'Sonda Parêzvan' } },
+  { id: 'aegis', icon: '🔰', cost: 1650, from: ['cloak', 'vest'], mr: 60, hp: 450, name: { en: 'Highland Aegis', tr: 'Yayla Kalkanı', ku: 'Mertalê Zozanê' } },
+  { id: 'veil', icon: '🧿', cost: 1600, from: ['cloak', 'crystal'], mr: 45, ap: 0.2, cdr: 0.15, mp: 250, name: { en: 'Evil-Eye Veil', tr: 'Nazar Peçesi', ku: 'Perdeya Nezerê' } },
 ];
 export const ITEM = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
 
 // One passive per hero
-export const PASSIVES = { rubar: 'third', ser: 'third', bahoz: 'third', sevin: 'execute', tirej: 'execute', ciya: 'regen', zinar: 'regen', zerya: 'spellheal', baran: 'spellheal', hevi: 'healboost' };
+export const PASSIVES = { rubar: 'third', ser: 'third', bahoz: 'third', sevin: 'execute', tirej: 'execute', ciya: 'regen', zinar: 'regen', zerya: 'spellheal', baran: 'spellheal', hevi: 'healboost', agir: 'execute', befrin: 'healboost' };
 
 // Skins: palette swaps bought with gems (demo store)
 export const SKINS = {
@@ -150,6 +175,8 @@ export const SKINS = {
   ser: [{ id: 'default', cost: 0 }, { id: 'crimson', cost: 120, color: 0xc8322e, accent: 0xffd27a, fx: 0xff6040 }, { id: 'frost', cost: 200, color: 0xe6f4ff, accent: 0x8ad0ff, fx: 0xbdeaff }],
   tirej: [{ id: 'default', cost: 0 }, { id: 'azure', cost: 120, color: 0x3a7cff, accent: 0xd8ecff, fx: 0x6ab8ff }, { id: 'gold', cost: 200, color: 0xe0a82a, accent: 0xfff2b0, fx: 0xffd860 }],
   zinar: [{ id: 'default', cost: 0 }, { id: 'obsidian', cost: 120, color: 0x2e2e3a, accent: 0xff6a3a, fx: 0xff7040 }, { id: 'rose', cost: 200, color: 0xd87a9a, accent: 0xfff0f5, fx: 0xffa8c8 }],
+  agir: [{ id: 'default', cost: 0 }, { id: 'azure', cost: 120, color: 0x2a5cd6, accent: 0xbfe0ff, fx: 0x5aa8ff }, { id: 'obsidian', cost: 200, color: 0x2a2a34, accent: 0xff7a3a, fx: 0xff8040 }],
+  befrin: [{ id: 'default', cost: 0 }, { id: 'rose', cost: 120, color: 0xffa8c4, accent: 0xfff0f5, fx: 0xffc0d8 }, { id: 'gold', cost: 200, color: 0xe8c060, accent: 0xfff6d0, fx: 0xffe080 }],
   sevin: [{ id: 'default', cost: 0 }, { id: 'crimson', cost: 120, color: 0xc0283a, accent: 0xffd27a, fx: 0xff5060 }, { id: 'jade', cost: 200, color: 0x18a878, accent: 0xb0ffe0, fx: 0x50ffc0 }],
 };
 

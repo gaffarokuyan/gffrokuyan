@@ -5,8 +5,10 @@
 - **Diller:** Kurdî (Kurmancî), Türkçe, English
 - **Maç:** 5v5 (sen + 4 bot vs 5 bot), 3 koridor, kuleler, asker dalgaları (kuşatma ve şampiyon askerler), orman canavarları, Kadim ve Nehir Ruhu hedefleri, Yıldız Çekirdeği
 - **Derinlik:** yetenek puanı/kademe sistemi, savaş sisi ve çalılar, iki büyü (D/F), asist ve çoklu öldürme, skor tablosu
-- **10 kahraman:** Rûbar, Zerya, Bahoz, Çiya, Hêvî, Şevîn, Baran, Şêr, Tîrêj, Zinar — her birinde Q/W/E + R (ulti), seviye 15'e kadar
-- **Maç içi dükkân:** 14 eşya; 7 temel parça birleşerek 7 gelişmiş eşyaya dönüşür
+- **12 kahraman:** Rûbar, Zerya, Bahoz, Çiya, Hêvî, Şevîn, Baran, Şêr, Tîrêj, Zinar, Agir, Befrîn — her birinde Q/W/E + R (ulti), seviye 15'e kadar
+- **Maç içi dükkân:** 17 eşya; 8 temel parça birleşerek 9 gelişmiş eşyaya dönüşür
+- **Hasar türleri:** fiziksel ve büyü hasarı, zırh ve büyü direnci
+- **Botlar:** her takımda bir ormancı, gözcü diken botlar, "yardım çağır" pingine gelen takım arkadaşları
 - **Pasifler ve kritik vuruş:** her kahramanın bir pasifi var
 - **Orman:** Kor Damgası ve Dalga Arması güçlendirme kampları, Kadim, Nehir Ruhu
 - **Görüş:** gözcü taşı (2 hak, 45 sn'de yenilenir), kule kendi kahramanına saldıranı hedef alır

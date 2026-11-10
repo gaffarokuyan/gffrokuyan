@@ -1,6 +1,7 @@
 // English / Türkçe / Kurdî (Kurmancî)
 const S = {
   en: {
+    mr: 'Magic resist', pingHelp: 'Allies are on their way!', ping: 'Call for help',
     ace: 'Team wiped out!', shutdown: 'Shut down!', emberBuff: 'Ember Brand: your attacks burn and slow', tideBuff: 'Tide Crest: mana and cooldowns restored faster', ward: 'Watchstone', ward_d: 'Plant a hidden watchstone that reveals the area for 90s.', mvp: 'MVP', dmgCol: 'Damage', vs: 'VS',
     talent: 'Talisman', tal_fury: 'Fury', tal_fury_d: '+8% attack', tal_guard: 'Guard', tal_guard_d: '+10% health', tal_haste: 'Haste', tal_haste_d: '+8% cooldown reduction, +0.3 speed', tal_leech: 'Leech', tal_leech_d: '+6% lifesteal',
     difficulty: 'Opponents', easy: 'Easy', normal: 'Normal', hard: 'Hard', rankPts: 'rank points', rank0: 'Stone', rank1: 'Iron', rank2: 'Silver', rank3: 'Gold', rank4: 'Diamond', rank5: 'Star',
@@ -35,13 +36,14 @@ const S = {
     d_heal: 'Heal nearby allies for {h}{s}.',
     x_slow: ' and slowing by {n}%', x_stun: ' and stunning for {n}s', b_shield: ' {n} shield', b_spd: ' +{n}% speed', b_as: ' +{n}% attack speed', b_atk: ' +{n} attack', b_def: ' +{n} armor', s_shield: ' and grant a {n} shield',
     cd: 'Cooldown', mana: 'Mana', unlockAt: 'Unlocks at level {n}',
-    tipDesktop: 'Right-click: move / attack · Q W E R: abilities (Shift+key: rank up) · D F: spells · B: recall · P: shop · Tab: scoreboard',
+    tipDesktop: 'Right-click: move / attack · Q W E R: abilities (Shift+key: rank up) · D F: spells · 4: watchstone · G: call for help · B: recall · P: shop · Tab: scoreboard · hold the minimap to look around',
     tipTouch: 'Left thumb moves · tap abilities to cast at the nearest enemy',
     pause: 'Paused', resume: 'Resume', surrender: 'Leave match', menu: 'Menu',
     loading: 'Raising the arena…', storeNote: 'All purchases here are simulated for the demo. Real billing will be wired in the Android release.',
     free: 'Free', ally: 'Ally', enemy: 'Enemy', attack: 'Attack',
   },
   tr: {
+    mr: 'Büyü direnci', pingHelp: 'Takım arkadaşların geliyor!', ping: 'Yardım çağır',
     ace: 'Takım silindi!', shutdown: 'Seri bozuldu!', emberBuff: 'Kor Damgası: saldırıların yakar ve yavaşlatır', tideBuff: 'Dalga Arması: mana ve beklemeler hızlı dolar', ward: 'Gözcü Taşı', ward_d: 'Bölgeyi 90 sn gösteren gizli bir gözcü taşı dik.', mvp: 'MVP', dmgCol: 'Hasar', vs: 'VS',
     talent: 'Tılsım', tal_fury: 'Öfke', tal_fury_d: '+%8 saldırı', tal_guard: 'Muhafız', tal_guard_d: '+%10 can', tal_haste: 'Çeviklik', tal_haste_d: '+%8 bekleme azaltma, +0.3 hız', tal_leech: 'Sülük', tal_leech_d: '+%6 can çalma',
     difficulty: 'Rakipler', easy: 'Kolay', normal: 'Normal', hard: 'Zor', rankPts: 'sıralama puanı', rank0: 'Taş', rank1: 'Demir', rank2: 'Gümüş', rank3: 'Altın', rank4: 'Elmas', rank5: 'Yıldız',
@@ -76,13 +78,14 @@ const S = {
     d_heal: 'Yakındaki dostları {h} iyileştirir{s}.',
     x_slow: ', %{n} yavaşlatır', x_stun: ', {n} sn sersemletir', b_shield: ' {n} kalkan', b_spd: ' +%{n} hız', b_as: ' +%{n} saldırı hızı', b_atk: ' +{n} saldırı', b_def: ' +{n} zırh', s_shield: ' ve {n} kalkan verir',
     cd: 'Bekleme', mana: 'Mana', unlockAt: '{n}. seviyede açılır',
-    tipDesktop: 'Sağ tık: yürü / saldır · Q W E R: yetenekler (Shift+tuş: kademe artır) · D F: büyüler · B: üsse dön · P: dükkân · Tab: skor tablosu',
+    tipDesktop: 'Sağ tık: yürü / saldır · Q W E R: yetenekler (Shift+tuş: kademe artır) · D F: büyüler · 4: gözcü taşı · G: yardım çağır · B: üsse dön · P: dükkân · Tab: skor tablosu · etrafa bakmak için haritaya basılı tut',
     tipTouch: 'Sol başparmak yürütür · yeteneğe dokun, en yakın düşmana atılır',
     pause: 'Duraklatıldı', resume: 'Devam et', surrender: 'Maçtan çık', menu: 'Menü',
     loading: 'Arena kuruluyor…', storeNote: 'Buradaki tüm satın almalar demo amaçlı simüle edilir. Gerçek ödeme Android sürümünde bağlanacak.',
     free: 'Ücretsiz', ally: 'Dost', enemy: 'Düşman', attack: 'Saldır',
   },
   ku: {
+    mr: 'Berxwedana efsûnê', pingHelp: 'Hevalên te tên!', ping: 'Alîkarî bixwaze',
     ace: 'Tîm hat tunekirin!', shutdown: 'Rêz hat şikandin!', emberBuff: 'Nîşana Pêtê: êrîşên te dişewitînin û hêdî dikin', tideBuff: 'Nîşana Pêlê: mana û bendewarî zûtir tije dibin', ward: 'Kevirê Nobedar', ward_d: 'Kevirekî nobedar ê veşartî deyne ku 90 çirke herêmê nîşan dide.', mvp: 'MVP', dmgCol: 'Ziyan', vs: 'VS',
     talent: 'Nivişt', tal_fury: 'Hêrs', tal_fury_d: '+%8 êrîş', tal_guard: 'Parêzvan', tal_guard_d: '+%10 can', tal_haste: 'Lezgînî', tal_haste_d: '+%8 kêmkirina bendewariyê, +0.3 lez', tal_leech: 'Zûrî', tal_leech_d: '+%6 candizî',
     difficulty: 'Hevrik', easy: 'Hêsan', normal: 'Normal', hard: 'Dijwar', rankPts: 'xalên rêzê', rank0: 'Kevir', rank1: 'Hesin', rank2: 'Zîv', rank3: 'Zêr', rank4: 'Elmas', rank5: 'Stêrk',
@@ -117,7 +120,7 @@ const S = {
     d_heal: 'Hevalên nêzîk {h} derman dike{s}.',
     x_slow: ' û %{n} hêdî dike', x_stun: ' û {n} çirke gêj dike', b_shield: ' {n} mertal', b_spd: ' +%{n} lez', b_as: ' +%{n} leza êrîşê', b_atk: ' +{n} êrîş', b_def: ' +{n} zirx', s_shield: ' û {n} mertal dide',
     cd: 'Bendewarî', mana: 'Mana', unlockAt: 'Di asta {n} de vedibe',
-    tipDesktop: 'Tikandina rastê: here / êrîş bike · Q W E R: şiyan (Shift+bişkok: pile zêde bike) · D F: efsûn · B: vegere bingehê · P: dikan · Tab: tabloya encaman',
+    tipDesktop: 'Tikandina rastê: here / êrîş bike · Q W E R: şiyan (Shift+bişkok: pile zêde bike) · D F: efsûn · 4: kevirê nobedar · G: alîkarî bixwaze · B: vegere bingehê · P: dikan · Tab: tabloya encaman · ji bo nêrînê nexşeyê bigire',
     tipTouch: 'Tiliya çepê dimeşîne · li şiyanê bixe, ber bi dijminê herî nêzîk ve tê avêtin',
     pause: 'Hat rawestandin', resume: 'Bidomîne', surrender: 'Ji şer derkeve', menu: 'Menû',
     loading: 'Qad tê avakirin…', storeNote: 'Hemû kirînên li vir ji bo demoyê tên teqlîdkirin. Dayîna rastîn di guhertoya Androidê de tê girêdan.',
