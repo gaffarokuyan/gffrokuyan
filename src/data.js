@@ -117,19 +117,27 @@ export const HEROES = {
 
 export const HERO_IDS = Object.keys(HEROES);
 
-// In-match items (bought with match gold)
+// In-match items (bought with match gold). `from` lists components that are consumed; `cost` is the full price.
 export const ITEMS = [
+  { id: 'boots', icon: '🥾', cost: 450, spd: 1.1, name: { en: 'Wind Boots', tr: 'Rüzgâr Çizmesi', ku: 'Pêlavên Bayê' } },
   { id: 'blade', icon: '🗡️', cost: 500, atk: 25, name: { en: 'Ember Blade', tr: 'Kor Kılıç', ku: 'Şûrê Pêtê' } },
-  { id: 'boots', icon: '🥾', cost: 650, spd: 1.1, name: { en: 'Wind Boots', tr: 'Rüzgâr Çizmesi', ku: 'Pêlavên Bayê' } },
-  { id: 'vest', icon: '🧥', cost: 900, hp: 320, name: { en: 'Shepherd\'s Vest', tr: 'Çoban Yeleği', ku: 'Êlekê Şivan' } },
-  { id: 'tome', icon: '📜', cost: 450, ap: 0.22, mp: 150, name: { en: 'Star Scroll', tr: 'Yıldız Tomarı', ku: 'Tomara Stêrkê' } },
-  { id: 'quiver', icon: '🏹', cost: 600, as: 0.3, name: { en: 'Storm Quiver', tr: 'Fırtına Sadağı', ku: 'Tîrdanka Bahozê' } },
-  { id: 'crystal', icon: '💠', cost: 1200, cdr: 0.2, mp: 200, name: { en: 'Clear Crystal', tr: 'Berrak Kristal', ku: 'Krîstala Zelal' } },
-  { id: 'fang', icon: '🦷', cost: 1050, atk: 18, ls: 0.14, name: { en: 'Wolf Fang', tr: 'Kurt Dişi', ku: 'Diranê Gur' } },
-  { id: 'plate', icon: '🛡️', cost: 800, def: 40, hp: 260, name: { en: 'Mountain Plate', tr: 'Dağ Zırhı', ku: 'Zirxê Çiyê' } },
-  { id: 'great', icon: '⚔️', cost: 1450, atk: 62, name: { en: 'Sunforged Edge', tr: 'Güneş Dövmesi', ku: 'Tîxa Rojê' } },
-  { id: 'staff', icon: '🔮', cost: 1500, ap: 0.48, name: { en: 'Orb of Dawn', tr: 'Şafak Küresi', ku: 'Goga Berbangê' } },
+  { id: 'vest', icon: '🧥', cost: 600, hp: 320, name: { en: 'Shepherd\'s Vest', tr: 'Çoban Yeleği', ku: 'Êlekê Şivan' } },
+  { id: 'mail', icon: '⛓️', cost: 550, def: 25, name: { en: 'Ring Mail', tr: 'Halka Zırh', ku: 'Zirxê Xelekî' } },
+  { id: 'tome', icon: '📜', cost: 650, ap: 0.22, mp: 150, name: { en: 'Star Scroll', tr: 'Yıldız Tomarı', ku: 'Tomara Stêrkê' } },
+  { id: 'quiver', icon: '🏹', cost: 700, as: 0.25, name: { en: 'Storm Quiver', tr: 'Fırtına Sadağı', ku: 'Tîrdanka Bahozê' } },
+  { id: 'crystal', icon: '💠', cost: 600, cdr: 0.1, mp: 150, name: { en: 'Clear Crystal', tr: 'Berrak Kristal', ku: 'Krîstala Zelal' } },
+  { id: 'great', icon: '⚔️', cost: 1700, from: ['blade', 'quiver'], atk: 60, as: 0.3, crit: 0.2, name: { en: 'Sunforged Edge', tr: 'Güneş Dövmesi', ku: 'Tîxa Rojê' } },
+  { id: 'fang', icon: '🦷', cost: 1550, from: ['blade', 'vest'], atk: 45, hp: 350, ls: 0.15, name: { en: 'Wolf Fang', tr: 'Kurt Dişi', ku: 'Diranê Gur' } },
+  { id: 'reaver', icon: '🌙', cost: 1600, from: ['blade', 'crystal'], atk: 50, cdr: 0.15, crit: 0.15, name: { en: 'Dusk Reaver', tr: 'Alaca Orak', ku: 'Dasa Êvarê' } },
+  { id: 'staff', icon: '🔮', cost: 1750, from: ['tome', 'crystal'], ap: 0.55, mp: 300, cdr: 0.15, name: { en: 'Orb of Dawn', tr: 'Şafak Küresi', ku: 'Goga Berbangê' } },
+  { id: 'storm', icon: '🌩️', cost: 1800, from: ['quiver', 'tome'], as: 0.35, ap: 0.3, spd: 0.4, name: { en: 'Stormcaller', tr: 'Fırtına Çağıran', ku: 'Bangkerê Bahozê' } },
+  { id: 'plate', icon: '🛡️', cost: 1600, from: ['mail', 'vest'], def: 60, hp: 500, name: { en: 'Mountain Plate', tr: 'Dağ Zırhı', ku: 'Zirxê Çiyê' } },
+  { id: 'warden', icon: '🏵️', cost: 1600, from: ['mail', 'crystal'], def: 45, hp: 200, cdr: 0.2, mp: 250, name: { en: 'Warden\'s Oath', tr: 'Muhafız Yemini', ku: 'Sonda Parêzvan' } },
 ];
+export const ITEM = Object.fromEntries(ITEMS.map((i) => [i.id, i]));
+
+// One passive per hero
+export const PASSIVES = { rubar: 'third', ser: 'third', bahoz: 'third', sevin: 'execute', tirej: 'execute', ciya: 'regen', zinar: 'regen', zerya: 'spellheal', baran: 'spellheal', hevi: 'healboost' };
 
 // Skins: palette swaps bought with gems (demo store)
 export const SKINS = {

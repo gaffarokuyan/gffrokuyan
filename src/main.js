@@ -1,6 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
-import { HEROES, HERO_IDS, SKINS, GEM_PACKS, skinPalette } from './data.js';
+import { HEROES, HERO_IDS, SKINS, GEM_PACKS, PASSIVES, skinPalette } from './data.js';
 import { t, loc, setLang, getLang, LANGS, abilDesc } from './i18n.js';
 import { audio } from './audio.js';
 import { Game, UNLOCK } from './game.js';
@@ -108,7 +108,7 @@ function renderHero() {
   $('heroName').textContent = h.name; $('heroRole').textContent = t(h.role);
   const stat = (k, v, max) => `<span>${t(k)}</span><div class="trk"><div style="width:${Math.min(100, v / max * 100)}%"></div></div>`;
   $('heroStats').innerHTML = stat('hp', h.hp, 950) + stat('atk', h.atk, 72) + stat('def', h.def, 44) + stat('spd', h.spd - 6, 2.1) + stat('rangeS', h.range, 11);
-  $('heroAbils').innerHTML = h.abil.map((a, i) => `<div class="ab${a.ult ? ' ult' : ''}" style="--c:${hex(pal.fx)}"><span class="k">${a.key.toUpperCase()}</span><div><h3>${loc(a.name)}</h3><p>${abilDesc(a, 1, h.atk)}</p><small>${t('cd')} ${a.cd}s · ${t('mana')} ${a.mana}${UNLOCK[i] > 1 ? ' · ' + t('unlockAt', { n: UNLOCK[i] }) : ''}</small></div></div>`).join('');
+  $('heroAbils').innerHTML = `<div class="ab pas" style="--c:${hex(pal.fx)}"><span class="k">✦</span><div><h3>${t('passive')}</h3><p>${t('p_' + PASSIVES[id])}</p></div></div>` + h.abil.map((a, i) => `<div class="ab${a.ult ? ' ult' : ''}" style="--c:${hex(pal.fx)}"><span class="k">${a.key.toUpperCase()}</span><div><h3>${loc(a.name)}</h3><p>${abilDesc(a, 1, h.atk)}</p><small>${t('cd')} ${a.cd}s · ${t('mana')} ${a.mana}${UNLOCK[i] > 1 ? ' · ' + t('unlockAt', { n: UNLOCK[i] }) : ''}</small></div></div>`).join('');
   const row = $('skinRow'); row.innerHTML = '';
   for (const s of SKINS[id]) {
     if (!ownsSkin(id, s.id)) continue;

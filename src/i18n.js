@@ -1,6 +1,7 @@
 // English / Türkçe / Kurdî (Kurmancî)
 const S = {
   en: {
+    passive: 'Passive', p_third: 'Every third basic attack deals 60% more damage.', p_execute: 'Deals 25% more damage to enemies below 35% health.', p_regen: 'Out of combat for 5s: regenerates 2% max health per second.', p_spellheal: 'Heals for 12% of ability damage dealt.', p_healboost: 'Healing abilities are 25% stronger.', crit: 'crit', builds: 'Builds from', rotate: 'Turn your phone sideways for the best view',
     multi2: 'Double kill!', multi3: 'Triple kill!', multi4: 'Quadra kill!', multi5: 'Unstoppable!', spiritDown: 'The River Spirit yields — your team grows stronger for good!', spiritDownEnemy: 'The enemy claimed the River Spirit!',
     sp_blink: 'Starstep', sp_blink_d: 'Teleport a short distance.', sp_mend: 'Mend', sp_mend_d: 'Heal yourself and nearby allies.', board: 'Scoreboard', assists: 'Assists', rank: 'Rank', skillPoint: 'Skill point ready — tap + on an ability',
     tagline: 'Three lanes. One star. Yours to defend.',
@@ -38,6 +39,7 @@ const S = {
     free: 'Free', ally: 'Ally', enemy: 'Enemy', attack: 'Attack',
   },
   tr: {
+    passive: 'Pasif', p_third: 'Her üçüncü temel saldırı %60 fazla hasar verir.', p_execute: 'Canı %35 altındaki düşmanlara %25 fazla hasar verir.', p_regen: '5 sn savaş dışında: saniyede azami canın %2\'sini yeniler.', p_spellheal: 'Verdiği yetenek hasarının %12\'si kadar iyileşir.', p_healboost: 'İyileştirme yetenekleri %25 daha güçlüdür.', crit: 'kritik', builds: 'Bileşenler', rotate: 'En iyi görünüm için telefonu yan çevir',
     multi2: 'Çifte öldürme!', multi3: 'Üçlü öldürme!', multi4: 'Dörtlü öldürme!', multi5: 'Durdurulamıyor!', spiritDown: 'Nehir Ruhu boyun eğdi — takımın kalıcı olarak güçlendi!', spiritDownEnemy: 'Düşman Nehir Ruhunu aldı!',
     sp_blink: 'Yıldız Adımı', sp_blink_d: 'Kısa mesafeye ışınlan.', sp_mend: 'Onar', sp_mend_d: 'Kendini ve yakındaki dostları iyileştir.', board: 'Skor tablosu', assists: 'Asist', rank: 'Kademe', skillPoint: 'Yetenek puanın var — bir yeteneğin + düğmesine dokun',
     tagline: 'Üç koridor. Tek yıldız. Savunması sende.',
@@ -75,6 +77,7 @@ const S = {
     free: 'Ücretsiz', ally: 'Dost', enemy: 'Düşman', attack: 'Saldır',
   },
   ku: {
+    passive: 'Pasîf', p_third: 'Her êrîşa sêyemîn %60 zêdetir ziyan dide.', p_execute: 'Li dijminên ku cana wan di bin %35 de ye %25 zêdetir ziyan dide.', p_regen: '5 çirke li derveyî şer: her çirke %2 ê cana herî zêde nû dike.', p_spellheal: 'Bi qasî %12 ê ziyana şiyanan xwe derman dike.', p_healboost: 'Şiyanên dermankirinê %25 bihêztir in.', crit: 'krîtîk', builds: 'Pêkhate', rotate: 'Ji bo dîtina herî baş telefonê bizivirîne',
     multi2: 'Kuştina cot!', multi3: 'Kuştina sêcar!', multi4: 'Kuştina çarcar!', multi5: 'Nayê rawestandin!', spiritDown: 'Ruhê Çem serî danî — tîma te her û her bi hêz bû!', spiritDownEnemy: 'Dijmin Ruhê Çem bi dest xist!',
     sp_blink: 'Gava Stêrkê', sp_blink_d: 'Mesafeyeke kurt biguheze.', sp_mend: 'Derman', sp_mend_d: 'Xwe û hevalên nêzîk derman bike.', board: 'Tabloya encaman', assists: 'Alîkarî', rank: 'Pile', skillPoint: 'Xala şiyanê heye — li + ya şiyanekê bixe',
     tagline: 'Sê rê. Yek stêrk. Parastina wê li ser te ye.',

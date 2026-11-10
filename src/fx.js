@@ -75,6 +75,16 @@ export class FX {
     this.fxs.push({ mesh, t: 0, dur, kind: 'ring', r0: opts.from ?? 0.3, r1: radius, o: opts.opacity ?? 0.9 });
   }
 
+  // quick blade arc in front of a melee attacker
+  slash(x, z, face, radius, color) {
+    this.arcGeo ||= new THREE.RingGeometry(0.62, 1, 20, 1, -1.0, 2.0);
+    const mat = this.ringMatBase.clone(); mat.color.set(color).multiplyScalar(2); mat.opacity = 1;
+    const mesh = new THREE.Mesh(this.arcGeo, mat);
+    mesh.rotation.set(-Math.PI / 2, 0, Math.atan2(-Math.cos(face), Math.sin(face))); mesh.position.set(x, 1.3, z);
+    this.scene.add(mesh);
+    this.fxs.push({ mesh, t: 0, dur: 0.22, kind: 'ring', r0: radius * 0.75, r1: radius, o: 0.95 });
+  }
+
   // Ground warning circle that fills while an area ability winds up
   telegraph(x, z, radius, color, dur) {
     const mat = this.ringMatBase.clone(); mat.color.set(color); mat.opacity = 0.9;

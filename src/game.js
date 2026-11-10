@@ -4,7 +4,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { HEROES, HERO_IDS, ITEMS, skinPalette } from './data.js';
+import { HEROES, HERO_IDS, ITEMS, ITEM, PASSIVES, skinPalette } from './data.js';
 import { t } from './i18n.js';
 import { FX } from './fx.js';
 import { makeHero, makeMinion, makeTower, makeCore, makeMonster, animateUnit, glowMat, GEO, TEAM_COLOR } from './models.js';
@@ -15,9 +15,9 @@ export const MAX_RANK = [5, 5, 5, 3];
 export const SPELLS = [{ id: 'blink', icon: '✦', cd: 75 }, { id: 'mend', icon: '❤', cd: 60 }];
 const MAX_LEVEL = 15;
 const BUILD = {
-  fighter: ['blade', 'boots', 'vest', 'fang', 'great', 'plate'], mage: ['tome', 'boots', 'crystal', 'staff', 'vest', 'plate'],
-  support: ['tome', 'boots', 'crystal', 'vest', 'staff', 'plate'], marksman: ['blade', 'boots', 'quiver', 'fang', 'great', 'vest'],
-  tank: ['vest', 'boots', 'plate', 'blade', 'crystal', 'fang'], assassin: ['blade', 'boots', 'fang', 'great', 'quiver', 'vest'],
+  fighter: ['boots', 'fang', 'reaver', 'plate', 'great'], mage: ['boots', 'staff', 'storm', 'warden', 'plate'],
+  support: ['boots', 'staff', 'warden', 'plate', 'storm'], marksman: ['boots', 'great', 'fang', 'storm', 'reaver'],
+  tank: ['boots', 'plate', 'warden', 'fang', 'reaver'], assassin: ['boots', 'reaver', 'great', 'fang', 'plate'],
 };
 const dist = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 export const xpNeed = (lvl) => 90 + lvl * 70;
@@ -102,7 +102,7 @@ export class Game {
         maxHp: data.hp, atk: data.atk, arm: data.def, spd: data.spd, range: data.range, as: data.as, ranged: !data.melee,
         level: 1, xp: 0, gold: 500, items: [], cds: [0, 0, 0, 0], cdMax: [1, 1, 1, 1], ranks: [0, 0, 0, 0], sp: 1, mp: data.mp, maxMp: data.mp, buffs: [],
         spells: SPELLS.map((q) => ({ cd: 0, max: q.cd })), hitBy: {}, multi: 0, lastKillT: -99,
-        k: 0, d: 0, a: 0, cs: 0, respawnT: 0, recallT: 0, ap: 0, cdr: 0, ls: 0, moveTo: null, attackTarget: null, dash: null, slot,
+        passive: PASSIVES[id], hits: 0, crit: 0, k: 0, d: 0, a: 0, cs: 0, respawnT: 0, recallT: 0, ap: 0, cdr: 0, ls: 0, moveTo: null, attackTarget: null, dash: null, slot,
         obj: makeHero(data, pal, team),
         bot: isPlayer ? null : { lane, roam, roamT: 40, think: Math.random() * 0.3, retreat: false, castT: 1 + Math.random() * 2 },
       });
@@ -228,28 +228,29 @@ export class Game {
 
   recalc(h) {
     const d = h.data, L = h.level - 1;
-    let hp = d.hp + d.hpG * L, atk = d.atk + d.atkG * L, arm = d.def + 1.6 * L, spd = d.spd, as = 1 + 0.02 * L, mp = d.mp + 25 * L, ap = 0, cdr = 0, ls = 0;
-    for (const id of h.items) { const it = ITEMS.find((i) => i.id === id); hp += it.hp || 0; atk += it.atk || 0; arm += it.def || 0; spd += it.spd || 0; as += it.as || 0; mp += it.mp || 0; ap += it.ap || 0; cdr += it.cdr || 0; ls += it.ls || 0; }
+    let hp = d.hp + d.hpG * L, atk = d.atk + d.atkG * L, arm = d.def + 1.6 * L, spd = d.spd, as = 1 + 0.02 * L, mp = d.mp + 25 * L, ap = 0, cdr = 0, ls = 0, crit = 0;
+    for (const id of h.items) { const it = ITEM[id]; crit += it.crit || 0; hp += it.hp || 0; atk += it.atk || 0; arm += it.def || 0; spd += it.spd || 0; as += it.as || 0; mp += it.mp || 0; ap += it.ap || 0; cdr += it.cdr || 0; ls += it.ls || 0; }
     let sm = 1, am = 1;
     for (const b of h.buffs) { if (b.spd) sm = Math.max(sm, b.spd); if (b.as) am = Math.max(am, b.as); atk += b.atk || 0; arm += b.arm || 0; }
     if (this.bossBuff[h.team] > this.time) atk *= 1.18;
     const st = this.spirit[h.team]; atk *= 1 + 0.05 * st; spd += 0.15 * st; hp *= 1 + 0.04 * st; hp = Math.round(hp);
     if (hp !== h.maxHp) { h.hp += Math.max(0, hp - h.maxHp); h.maxHp = hp; }
-    h.maxMp = mp; h.atk = atk; h.arm = arm; h.spd = spd * sm; h.as = d.as * as * am; h.ap = ap; h.cdr = Math.min(0.4, cdr); h.ls = ls;
+    h.maxMp = mp; h.atk = atk; h.arm = arm; h.spd = spd * sm; h.as = d.as * as * am; h.ap = ap; h.cdr = Math.min(0.4, cdr); h.ls = ls; h.crit = crit;
   }
 
   // ---------- combat ----------
   damage(src, tgt, amt, o = {}) {
     if (tgt.dead || tgt.prot || this.over) return;
+    if (src.passive === 'execute' && tgt.hp < tgt.maxHp * 0.35) amt *= 1.25;
     if (!o.pure) amt *= 100 / (100 + tgt.arm);
     if (src.kind === 'minion' && tgt.struct && !src.siege) amt *= 0.5;
     if (src.kind === 'minion' && tgt.kind === 'hero') amt *= 0.7;
     if (tgt.shield > 0) { const a = Math.min(tgt.shield, amt); tgt.shield -= a; amt -= a; }
     tgt.hp -= amt; tgt.lastHit = src; tgt.hitT = this.time;
-    if (src.kind === 'hero') { tgt.lastHero = src; tgt.lastHeroT = this.time; if (o.basic && src.ls) src.hp = Math.min(src.maxHp, src.hp + amt * src.ls); }
+    if (src.kind === 'hero') { tgt.lastHero = src; tgt.lastHeroT = this.time; if (o.basic && src.ls) src.hp = Math.min(src.maxHp, src.hp + amt * src.ls); if (!o.basic && !o.pure && src.passive === 'spellheal' && !src.dead) src.hp = Math.min(src.maxHp, src.hp + amt * 0.12); }
     if (tgt.kind === 'hero') { tgt.recallT = 0; tgt.combatT = this.time; if (src.kind === 'hero') { src.combatT = this.time; tgt.hitBy[src.id] = this.time; } }
     if (tgt.kind === 'monster' && src.kind === 'hero' && !tgt.target) tgt.target = src;
-    if (amt >= 1 && (src === this.player || tgt === this.player)) this.floatText(tgt, Math.round(amt), tgt === this.player ? '#ff6a5a' : o.basic ? '#ffffff' : '#ffd24a', !o.basic);
+    if (amt >= 1 && (src === this.player || tgt === this.player)) this.floatText(tgt, Math.round(amt) + (o.crit ? '!' : ''), tgt === this.player ? '#ff6a5a' : o.crit ? '#ff9a3c' : o.basic ? '#ffffff' : '#ffd24a', !o.basic || o.crit);
     if (tgt.hp <= 0) this.kill(tgt, src);
   }
 
@@ -345,14 +346,19 @@ export class Game {
     u.atkCd = 1 / u.as;
     const a = u.obj.userData.anim; if (a) a.atk = 1;
     const col = u.kind === 'hero' ? u.pal.fx : u.kind === 'monster' ? 0xb0ff60 : TEAM_COLOR[u.team];
-    let dmg = u.atk;
+    let dmg = u.atk, crit = false;
+    if (u.kind === 'hero') {
+      if (u.passive === 'third' && ++u.hits % 3 === 0) { dmg *= 1.6; this.fx.ring(tgt.x, tgt.z, 2, col, 0.3); }
+      if (u.crit && !tgt.struct && Math.random() < u.crit) { dmg *= 1.75; crit = true; }
+    }
     if (u.struct) { if (tgt.kind === 'hero') { u.ramp = u.rampT === tgt ? Math.min(2.5, u.ramp + 0.3) : 1; u.rampT = tgt; dmg *= u.ramp; } this.sfx('shot', u.x, u.z, 0.9); }
     if (u.ranged) {
       const y = u.kind === 'tower' ? 8.2 : u.kind === 'core' ? 5.2 : 1.9;
-      this.projs.push(this.mkProj({ x: u.x, y, z: u.z, homing: tgt, speed: u.struct ? 34 : 30, dmg, src: u, color: col, basic: true, size: u.struct ? 0.45 : u.kind === 'hero' ? 0.28 : 0.2 }));
+      this.projs.push(this.mkProj({ x: u.x, y, z: u.z, homing: tgt, speed: u.struct ? 34 : 30, dmg, crit, src: u, color: col, basic: true, size: u.struct ? 0.45 : u.kind === 'hero' ? 0.28 : 0.2 }));
       if (u.kind === 'hero') this.sfx('shot', u.x, u.z, 0.6);
     } else {
-      this.damage(u, tgt, dmg, { basic: true });
+      this.damage(u, tgt, dmg, { basic: true, crit });
+      if (u.kind !== 'minion') this.fx.slash(u.x, u.z, Math.atan2(tgt.x - u.x, tgt.z - u.z), u.range + tgt.r * 0.5 + 0.6, col);
       this.fx.burst(tgt.x, 1.4, tgt.z, col, u.kind === 'hero' ? 8 : 3, 4, 0.35, 0.3);
       if (u.kind !== 'minion') this.sfx('hit', u.x, u.z, 0.7);
     }
@@ -434,7 +440,7 @@ export class Game {
         this.fx.pillar(o.x, o.z, col, 1.2, 20, 5); this.fx.ring(o.x, o.z, 2.6, col, 0.6);
       }
     } else if (a.type === 'heal') {
-      const amt = (a.heal[0] + a.heal[1] * L) * (1 + h.ap);
+      const amt = (a.heal[0] + a.heal[1] * L) * (1 + h.ap) * (h.passive === 'healboost' ? 1.25 : 1);
       this.fx.ring(h.x, h.z, a.radius, col, 0.7); this.fx.ring(h.x, h.z, a.radius, 0xffffff, 0.5, { fill: true, opacity: 0.25 });
       for (const o of this.units) {
         if (o.team !== h.team || o.dead || o.struct || dist(o, h) > a.radius) continue;
@@ -477,11 +483,15 @@ export class Game {
   }
   recall() { const p = this.player; if (!p.dead && !p.dash && p.recallT <= 0) { p.recallT = 4; p.moveTo = null; p.attackTarget = null; } }
   canShop(h = this.player) { return h.dead || dist(h, SPAWN[h.team]) < 16; }
+  // price after trading in any components the hero already holds
+  price(h, it) { return it.cost - (it.from || []).reduce((n, c) => n + (h.items.includes(c) ? ITEM[c].cost : 0), 0); }
   buy(h, id) {
-    const it = ITEMS.find((i) => i.id === id);
-    if (!it || h.items.includes(id) || h.items.length >= 6 || h.gold < it.cost) return false;
+    const it = ITEM[id];
+    if (!it || h.items.includes(id)) return false;
+    const keep = h.items.filter((x) => !(it.from || []).includes(x)), cost = this.price(h, it);
+    if (keep.length >= 6 || h.gold < cost) return false;
     if (h.isPlayer && !this.canShop(h)) return false;
-    h.gold -= it.cost; h.items.push(id); this.recalc(h);
+    h.gold -= cost; h.items = keep; h.items.push(id); this.recalc(h);
     if (h.isPlayer) this.audio.play('coin');
     return true;
   }
@@ -545,8 +555,10 @@ export class Game {
 
   // ---------- AI ----------
   botBuy(h) {
-    const next = BUILD[h.data.role].find((id) => !h.items.includes(id));
-    if (next) this.buy(h, next);
+    const next = ITEM[BUILD[h.data.role].find((id) => !h.items.includes(id))];
+    if (!next) return;
+    if (this.buy(h, next.id)) return;
+    for (const c of next.from || []) if (!h.items.includes(c) && this.buy(h, c)) return;
   }
 
   botCast(h, tg, minionOnly) {
@@ -648,7 +660,7 @@ export class Game {
       for (const q of h.spells) q.cd = Math.max(0, q.cd - dt);
       for (let i = h.buffs.length - 1; i >= 0; i--) if ((h.buffs[i].t -= dt) <= 0) h.buffs.splice(i, 1);
       if (h.shieldT > 0 && (h.shieldT -= dt) <= 0) h.shield = 0;
-      h.hp = Math.min(h.maxHp, h.hp + h.maxHp * 0.006 * dt); h.mp = Math.min(h.maxMp, h.mp + h.maxMp * 0.016 * dt);
+      h.hp = Math.min(h.maxHp, h.hp + h.maxHp * (h.passive === 'regen' && this.time - (h.combatT ?? -9) > 5 ? 0.02 : 0.006) * dt); h.mp = Math.min(h.maxMp, h.mp + h.maxMp * 0.016 * dt);
       const fd = dist(h, SPAWN[h.team]);
       if (fd < 9) { h.hp = Math.min(h.maxHp, h.hp + h.maxHp * 0.16 * dt); h.mp = Math.min(h.maxMp, h.mp + h.maxMp * 0.2 * dt); }
       if (dist(h, SPAWN[1 - h.team]) < 9) this.damage(this.cores[1 - h.team], h, 320 * dt, { pure: true });
@@ -727,7 +739,7 @@ export class Game {
         const tg = q.homing, ty = Math.min(2, tg.h * 0.45);
         const dx = tg.x - q.x, dy = ty - q.y, dz = tg.z - q.z, d = Math.hypot(dx, dy, dz), sp = q.speed * dt;
         if (tg.dead) done = true;
-        else if (d <= sp + tg.r * 0.6) { this.damage(q.src, tg, q.dmg, { basic: true }); this.fx.burst(tg.x, ty, tg.z, q.color, 6, 4, 0.35, 0.3); if (q.src.struct) this.sfx('hit', tg.x, tg.z, 0.8); done = true; }
+        else if (d <= sp + tg.r * 0.6) { this.damage(q.src, tg, q.dmg, { basic: true, crit: q.crit }); this.fx.burst(tg.x, ty, tg.z, q.color, 6, 4, 0.35, 0.3); if (q.src.struct) this.sfx('hit', tg.x, tg.z, 0.8); done = true; }
         else { q.x += dx / d * sp; q.y += dy / d * sp; q.z += dz / d * sp; }
         if (Math.random() < 0.7) this.fx.trail(q.x, q.y, q.z, q.color, q.size * 1.6, 0.22, 0.1);
       } else {

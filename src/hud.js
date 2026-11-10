@@ -1,5 +1,5 @@
 // In-match HUD: bars, ability buttons, joystick, shop, feed.
-import { ITEMS } from './data.js';
+import { ITEMS, ITEM } from './data.js';
 import { t, loc, abilDesc } from './i18n.js';
 import { UNLOCK, MAX_RANK, SPELLS, xpNeed } from './game.js';
 import { HEROES } from './data.js';
@@ -72,6 +72,7 @@ export class Hud {
       return { b, cd: b.querySelector('.cd') };
     });
     this.spHint = false; $('board').hidden = true;
+    $('rotate').textContent = t('rotate');
     $('announce').innerHTML = ''; $('feed').innerHTML = ''; $('respawn').hidden = true;
     document.body.classList.remove('dead');
     this.itemsKey = null;
@@ -106,17 +107,18 @@ export class Hud {
     $('shopGold').textContent = Math.floor(p.gold);
     const grid = $('itemGrid'); grid.innerHTML = '';
     for (const it of ITEMS) {
-      const owned = p.items.includes(it.id), afford = p.gold >= it.cost;
+      const owned = p.items.includes(it.id), price = g.price(p, it), afford = p.gold >= price;
       const st = [];
       if (it.atk) st.push(`+${it.atk} ${t('atk')}`); if (it.hp) st.push(`+${it.hp} ${t('hp')}`); if (it.def) st.push(`+${it.def} ${t('def')}`);
       if (it.spd) st.push(`+${it.spd} ${t('spd')}`); if (it.as) st.push(`+${it.as * 100}% ⚡`); if (it.ap) st.push(`+${Math.round(it.ap * 100)}% ✺`);
-      if (it.cdr) st.push(`-${it.cdr * 100}% ${t('cd')}`); if (it.mp) st.push(`+${it.mp} ${t('mana')}`); if (it.ls) st.push(`${Math.round(it.ls * 100)}% ♥`);
+      if (it.cdr) st.push(`-${it.cdr * 100}% ${t('cd')}`); if (it.mp) st.push(`+${it.mp} ${t('mana')}`); if (it.ls) st.push(`${Math.round(it.ls * 100)}% ♥`); if (it.crit) st.push(`${Math.round(it.crit * 100)}% ${t('crit')}`);
+      const from = it.from ? `<p class="fr">${t('builds')}: ${it.from.map((c) => `<span class="${p.items.includes(c) ? 'have' : ''}">${ITEM[c].icon}</span>`).join(' + ')}</p>` : '';
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'item' + (owned ? ' owned' : !afford || !can ? ' no' : '');
-      b.innerHTML = `<span class="ic">${it.icon}</span><span><h3>${loc(it.name)}</h3><p>${st.join(' · ')}</p></span><span class="c">${owned ? '✓' : `<i class="coin"></i>${it.cost}`}</span>`;
+      b.type = 'button'; b.className = 'item' + (it.from ? ' adv' : '') + (owned ? ' owned' : !afford || !can ? ' no' : '');
+      b.innerHTML = `<span class="ic">${it.icon}</span><span><h3>${loc(it.name)}</h3><p>${st.join(' · ')}</p>${from}</span><span class="c">${owned ? '✓' : `<i class="coin"></i>${price}`}</span>`;
       b.addEventListener('click', () => {
         if (owned) return;
-        if (p.items.length >= 6) return this.toast(t('full'));
+        if (p.items.filter((x) => !(it.from || []).includes(x)).length >= 6) return this.toast(t('full'));
         if (!g.buy(p, it.id)) { this.audio.play('error'); if (!can) this.toast(t('shopHint')); else this.toast(t('notEnough') + ' — ' + t('coins')); }
         this.renderShop();
       });
@@ -132,7 +134,7 @@ export class Hud {
       h += '<span class="sep"></span>';
       for (const u of g.heroes.filter((x) => x.team === team)) {
         const c = (u.isPlayer ? 'me' : 't' + team) + (u.dead ? ' dead' : '');
-        h += `<span class="nm ${c}">${u.name} <small>${t(HEROES[u.heroId].role)}</small></span><span>${u.level}</span><span>${u.k} / ${u.d} / ${u.a}</span><span>${u.cs}</span><span>${u.items.map((id) => ITEMS.find((x) => x.id === id).icon).join(' ')}</span>`;
+        h += `<span class="nm ${c}">${u.name} <small>${t(HEROES[u.heroId].role)}</small></span><span>${u.level}</span><span>${u.k} / ${u.d} / ${u.a}</span><span>${u.cs}</span><span>${u.items.map((id) => ITEM[id].icon).join(' ')}</span>`;
       }
     }
     $('boardBody').innerHTML = h;
@@ -161,10 +163,10 @@ export class Hud {
       $('lvl').textContent = p.level; $('gold').textContent = Math.floor(p.gold);
       $('scBlue').textContent = g.kills[0]; $('scRed').textContent = g.kills[1];
       const s = Math.floor(g.time); $('clock').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-      const can = g.canShop() && p.items.length < 6 && ITEMS.some((it) => !p.items.includes(it.id) && it.cost <= p.gold);
+      const can = g.canShop() && ITEMS.some((it) => !p.items.includes(it.id) && g.price(p, it) <= p.gold && p.items.filter((x) => !(it.from || []).includes(x)).length < 6);
       $('shopBtn').classList.toggle('can', can);
       const key = p.items.join(',');
-      if (key !== this.itemsKey) { this.itemsKey = key; $('items').innerHTML = Array.from({ length: 6 }, (_, i) => `<span>${ITEMS.find((x) => x.id === p.items[i])?.icon || ''}</span>`).join(''); }
+      if (key !== this.itemsKey) { this.itemsKey = key; $('items').innerHTML = Array.from({ length: 6 }, (_, i) => `<span>${ITEM[p.items[i]]?.icon || ''}</span>`).join(''); }
       document.body.classList.toggle('dead', p.dead && !g.over);
       const rs = $('respawn'); rs.hidden = !p.dead || !!g.over; if (p.dead) rs.textContent = t('respawn', { n: Math.max(0, Math.ceil(p.respawnT)) });
       if (!$('shop').hidden) $('shopGold').textContent = Math.floor(p.gold);

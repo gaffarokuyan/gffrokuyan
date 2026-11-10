@@ -6,7 +6,8 @@
 - **Maç:** 5v5 (sen + 4 bot vs 5 bot), 3 koridor, kuleler, asker dalgaları (kuşatma ve şampiyon askerler), orman canavarları, Kadim ve Nehir Ruhu hedefleri, Yıldız Çekirdeği
 - **Derinlik:** yetenek puanı/kademe sistemi, savaş sisi ve çalılar, iki büyü (D/F), asist ve çoklu öldürme, skor tablosu
 - **10 kahraman:** Rûbar, Zerya, Bahoz, Çiya, Hêvî, Şevîn, Baran, Şêr, Tîrêj, Zinar — her birinde Q/W/E + R (ulti), seviye 15'e kadar
-- **Maç içi dükkân:** 10 eşya, altınla
+- **Maç içi dükkân:** 14 eşya; 7 temel parça birleşerek 7 gelişmiş eşyaya dönüşür
+- **Pasifler ve kritik vuruş:** her kahramanın bir pasifi var
 - **Mağaza (DEMO):** elmas paketleri ve kostümler. Gerçek ödeme alınmaz; Android sürümünde Google Play Billing bağlanacak.
 - **Teknik:** Three.js + Vite, tüm modeller/efektler/sesler kodla üretilir (harici asset yok)
 
