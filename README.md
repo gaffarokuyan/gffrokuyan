@@ -29,8 +29,29 @@ npm run build    # dist/index.html — tek dosyalık, her yerde barındırılabi
 - **Masaüstü:** sağ tık yürü/saldır · Q W E R yetenek (Shift+tuş kademe artırır) · D F büyü · Tab skor tablosu · B üsse dön · P dükkân · Boşluk en yakına saldır · tekerlek yakınlaştır
 - **Mobil:** sol başparmak joystick · yetenek düğmeleri en yakın düşmana nişan alır
 
+## Android
+
+Capacitor ile sarmalanır (`android/`). Yatay ve tam ekran açılır.
+
+```bash
+export ANDROID_HOME=/yol/android-sdk
+npm run android:apk   # test için kurulabilir APK  -> android/app/build/outputs/apk/debug/
+npm run android:aab   # Play Store paketi (AAB)   -> android/app/build/outputs/bundle/release/
+```
+
+AAB imzası için `android/keystore.properties` gerekir (git'e girmez):
+
+```
+storeFile=sterk-upload.jks
+storePassword=...
+keyAlias=sterk
+keyPassword=...
+```
+
+Uygulama kimliği `com.sterkarena.game` (`capacitor.config.json` ve `android/app/build.gradle`). Play'e ilk yüklemeden önce değiştirilebilir, sonra değiştirilemez.
+
 ## Yol haritası
 
-1. Web sürümünü oynayıp dengeyi/hissi oturtmak
-2. Capacitor ile Android sarmalayıcı + Google Play Billing (gerçek satın alma)
-3. İmzalı AAB çıktısı
+1. Gerçek cihazda oynayıp performansı ve dokunmatik hissi oturtmak
+2. Google Play Billing ile gerçek satın alma (şu an mağaza demo)
+3. Play Console'a yükleme: mağaza görselleri, gizlilik politikası, içerik derecelendirmesi

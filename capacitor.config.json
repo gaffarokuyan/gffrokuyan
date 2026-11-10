@@ -1,0 +1,6 @@
+{
+  "appId": "com.sterkarena.game",
+  "appName": "Stêrk Arena",
+  "webDir": "dist",
+  "android": { "backgroundColor": "#0a1317" }
+}

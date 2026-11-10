@@ -63,3 +63,5 @@ class TechnicalQuestionnaire
 # Stêrk Arena
 node_modules/
 dist/
+
+release/
