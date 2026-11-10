@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Stêrk Arena</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#0b1418">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Chakra+Petch:wght@400;500;600;700&display=swap">
+</head>
+<body>
+<canvas id="gl"></canvas>
+<canvas id="overlay"></canvas>
+
+<!-- ============ MENU ============ -->
+<div id="menu" class="screen">
+  <header class="topbar">
+    <div class="brand"><span class="star">✦</span><span class="brand-name">STÊRK ARENA</span></div>
+    <div class="acct">
+      <div class="acct-lv"><span id="acctLv">1</span></div>
+      <div class="acct-xp"><div id="acctXp"></div></div>
+    </div>
+    <div class="wallet">
+      <span class="cur"><i class="coin"></i><b id="coins">0</b></span>
+      <button class="cur gem-btn" id="gemBtn" type="button"><i class="gem"></i><b id="gems">0</b><span class="plus">+</span></button>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs">
+    <button type="button" data-tab="play" class="on"></button>
+    <button type="button" data-tab="store"></button>
+    <button type="button" data-tab="settings"></button>
+  </nav>
+  <div class="kilim"></div>
+
+  <main id="tab-play" class="tab">
+    <div class="roster" id="roster"></div>
+    <div class="stage" id="stage">
+      <div class="stage-name"><h1 id="heroName"></h1><p id="heroRole"></p></div>
+      <div class="skins" id="skinRow"></div>
+    </div>
+    <aside class="info">
+      <div class="stats" id="heroStats"></div>
+      <div class="abils" id="heroAbils"></div>
+      <button type="button" class="cta" id="startBtn"></button>
+      <p class="tip" id="tagline"></p>
+    </aside>
+  </main>
+
+  <main id="tab-store" class="tab" hidden>
+    <p class="note" id="storeNote"></p>
+    <h2 id="packsTitle"></h2>
+    <div class="packs" id="packs"></div>
+    <h2 id="skinsTitle"></h2>
+    <div class="skin-grid" id="skinGrid"></div>
+  </main>
+
+  <main id="tab-settings" class="tab" hidden>
+    <div class="set-row"><label id="lblLang"></label><div class="seg" id="segLang"></div></div>
+    <div class="set-row"><label id="lblQuality"></label><div class="seg" id="segQuality"></div></div>
+    <div class="set-row"><label id="lblSound"></label><div class="seg" id="segSound"></div></div>
+    <div class="set-row"><label></label><button type="button" class="ghost" id="resetBtn"></button></div>
+    <p class="tip" id="controlsTip"></p>
+  </main>
+</div>
+
+<!-- ============ HUD ============ -->
+<div id="hud" class="screen" hidden>
+  <canvas id="minimap" width="200" height="116"></canvas>
+  <div class="score"><b class="blue" id="scBlue">0</b><span id="clock">0:00</span><b class="red" id="scRed">0</b></div>
+  <div class="hud-tr">
+    <button type="button" class="pill" id="shopBtn"><i class="coin"></i><b id="gold">0</b></button>
+    <button type="button" class="pill sq" id="pauseBtn" aria-label="menu">☰</button>
+  </div>
+  <div id="announce"></div>
+  <div id="feed"></div>
+  <div id="respawn" hidden></div>
+  <div class="status">
+    <div class="items" id="items"></div>
+    <div class="bars">
+      <div class="lvl" id="lvl">1</div>
+      <div class="bar-col">
+        <div class="bar hp"><div id="hpFill"></div><span id="hpTxt"></span></div>
+        <div class="bar mp"><div id="mpFill"></div><span id="mpTxt"></span></div>
+        <div class="bar xp"><div id="xpFill"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button type="button" class="act small" id="recallBtn" aria-label="recall">⌂</button>
+    <div class="abil-row" id="abilRow"></div>
+    <button type="button" class="act atk" id="atkBtn" aria-label="attack">⚔</button>
+  </div>
+  <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
+  <div id="tooltip" hidden></div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div id="shop" class="modal" hidden><div class="sheet">
+  <div class="sheet-head"><h2 id="shopTitle"></h2><span class="cur"><i class="coin"></i><b id="shopGold">0</b></span><button type="button" class="x" id="shopClose">✕</button></div>
+  <p class="note" id="shopHint"></p>
+  <div class="item-grid" id="itemGrid"></div>
+</div></div>
+
+<div id="pause" class="modal" hidden><div class="sheet narrow">
+  <h2 id="pauseTitle"></h2>
+  <button type="button" class="cta" id="resumeBtn"></button>
+  <button type="button" class="ghost" id="leaveBtn"></button>
+  <p class="tip" id="pauseTip"></p>
+</div></div>
+
+<div id="dialog" class="modal" hidden><div class="sheet narrow">
+  <span class="demo-badge" id="dlgBadge"></span>
+  <h2 id="dlgTitle"></h2><p id="dlgBody"></p>
+  <button type="button" class="cta" id="dlgOk"></button>
+  <button type="button" class="ghost" id="dlgCancel"></button>
+</div></div>
+
+<div id="end" class="modal" hidden><div class="sheet narrow end">
+  <h1 id="endTitle"></h1>
+  <div class="kilim"></div>
+  <div class="end-stats" id="endStats"></div>
+  <div class="end-rewards" id="endRewards"></div>
+  <button type="button" class="cta" id="endBtn"></button>
+</div></div>
+
+<div id="langPick" class="modal" hidden><div class="sheet narrow">
+  <div class="brand big"><span class="star">✦</span><span class="brand-name">STÊRK ARENA</span></div>
+  <div class="kilim"></div>
+  <div class="lang-list" id="langList"></div>
+</div></div>
+
+<div id="loading" class="modal" hidden><div class="loader"><span class="star spin">✦</span><p id="loadTxt"></p></div></div>
+<div id="toast" hidden></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

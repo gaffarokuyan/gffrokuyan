@@ -1,0 +1,30 @@
+{
+  "name": "sterk-arena",
+  "version": "1.0.0",
+  "description": "Sterk Arena - original 3D MOBA (web first, Android later)",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaffarokuyan/gffrokuyan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gaffarokuyan/gffrokuyan/issues"
+  },
+  "homepage": "https://github.com/gaffarokuyan/gffrokuyan#readme",
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.21",
+    "vite-plugin-singlefile": "^2.3.4"
+  },
+  "private": true,
+  "type": "module"
+}
