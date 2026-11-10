@@ -69,6 +69,50 @@ export const HEROES = {
       { key: 'r', type: 'dash', ult: true, name: { en: 'Eclipse', tr: 'Tutulma', ku: 'Rojgirtin' }, cd: 45, mana: 90, range: 10, radius: 5, dmg: [260, 50, 1.5] },
     ],
   },
+  baran: {
+    name: 'Baran', role: 'mage', weapon: 'staff', melee: false, cost: 1400,
+    hp: 570, mp: 440, atk: 48, def: 18, spd: 7.0, range: 9.5, as: 0.85, hpG: 74, atkG: 3.0,
+    color: 0x2a6f9c, accent: 0xbfe9ff, fx: 0x4fd0ff,
+    abil: [
+      { key: 'q', type: 'proj', name: { en: 'Raindrop Lance', tr: 'Damla Mızrağı', ku: 'Rimê Dilopê' }, cd: 5, mana: 45, range: 15, speed: 27, width: 1.1, dmg: [85, 22, 0.5], slow: 0.35 },
+      { key: 'w', type: 'aoe', name: { en: 'Cloudburst', tr: 'Sağanak', ku: 'Tavî' }, cd: 10, mana: 70, range: 11, radius: 3.6, delay: 0.8, dmg: [100, 26, 0.5], stun: 1.0 },
+      { key: 'e', type: 'buff', name: { en: 'Mist Cloak', tr: 'Sis Pelerini', ku: 'Ebayê Mijê' }, cd: 14, mana: 55, dur: 3.5, shield: [110, 28], spd: 1.3 },
+      { key: 'r', type: 'aoe', ult: true, name: { en: 'Deluge', tr: 'Tufan', ku: 'Tofan' }, cd: 65, mana: 120, range: 13, radius: 8, delay: 1.0, dmg: [240, 50, 0.8], slow: 0.6 },
+    ],
+  },
+  ser: {
+    name: 'Şêr', role: 'fighter', weapon: 'sword', melee: true, cost: 1400,
+    hp: 780, mp: 270, atk: 66, def: 30, spd: 7.5, range: 2.7, as: 1.0, hpG: 100, atkG: 4.6,
+    color: 0xc9892a, accent: 0xfff0c0, fx: 0xffb84a,
+    abil: [
+      { key: 'q', type: 'aoe', name: { en: 'Mane Sweep', tr: 'Yele Savuruşu', ku: 'Hejandina Yalê' }, cd: 5.5, mana: 35, range: 0, radius: 4.2, delay: 0.2, dmg: [75, 20, 0.8] },
+      { key: 'w', type: 'buff', name: { en: 'Roar', tr: 'Kükreme', ku: 'Qîrîn' }, cd: 13, mana: 45, dur: 5, as: 1.45, atk: 20 },
+      { key: 'e', type: 'dash', name: { en: 'Pounce', tr: 'Sıçrayış', ku: 'Xwe Avêtin' }, cd: 10, mana: 45, range: 8.5, radius: 2.8, dmg: [65, 16, 0.6], stun: 0.9 },
+      { key: 'r', type: 'buff', ult: true, name: { en: 'Lionheart', tr: 'Aslan Yürek', ku: 'Dilê Şêr' }, cd: 60, mana: 100, dur: 7, shield: [260, 45], atk: 45, spd: 1.3 },
+    ],
+  },
+  tirej: {
+    name: 'Tîrêj', role: 'marksman', weapon: 'bow', melee: false, cost: 1400,
+    hp: 570, mp: 310, atk: 62, def: 19, spd: 7.3, range: 11, as: 1.05, hpG: 74, atkG: 4.8,
+    color: 0xd94f8a, accent: 0xffe0f0, fx: 0xff8ac0,
+    abil: [
+      { key: 'q', type: 'proj', name: { en: 'Sunray Shot', tr: 'Işın Atışı', ku: 'Avêtina Tîrêjê' }, cd: 4.5, mana: 40, range: 17, speed: 36, width: 0.9, dmg: [85, 22, 1.0] },
+      { key: 'w', type: 'aoe', name: { en: 'Arrowfall', tr: 'Ok Yağmuru', ku: 'Barana Tîran' }, cd: 11, mana: 60, range: 12, radius: 4.2, delay: 0.6, dmg: [90, 22, 0.6], slow: 0.45 },
+      { key: 'e', type: 'dash', name: { en: 'Quickstep', tr: 'Çevik Adım', ku: 'Gava Sivik' }, cd: 9, mana: 35, range: 7, radius: 0, dmg: [0, 0, 0] },
+      { key: 'r', type: 'aoe', ult: true, name: { en: 'Daybreak Volley', tr: 'Şafak Salvosu', ku: 'Gulebarana Berbangê' }, cd: 55, mana: 100, range: 16, radius: 6.5, delay: 0.9, dmg: [260, 50, 1.2], meteor: true },
+    ],
+  },
+  zinar: {
+    name: 'Zinar', role: 'tank', weapon: 'hammer', melee: true, cost: 1400,
+    hp: 900, mp: 280, atk: 54, def: 44, spd: 7.0, range: 2.8, as: 0.85, hpG: 118, atkG: 3.2,
+    color: 0x5a6b7a, accent: 0xb8f0e0, fx: 0x7af0d0,
+    abil: [
+      { key: 'q', type: 'dash', name: { en: 'Boulder Charge', tr: 'Kaya Hücumu', ku: 'Êrîşa Zinar' }, cd: 9, mana: 45, range: 8, radius: 3, dmg: [65, 16, 0.5], stun: 0.8 },
+      { key: 'w', type: 'heal', name: { en: 'Deep Roots', tr: 'Derin Kökler', ku: 'Rehên Kûr' }, cd: 12, mana: 60, radius: 4, heal: [90, 24] },
+      { key: 'e', type: 'aoe', name: { en: 'Tremor', tr: 'Sarsıntı', ku: 'Lerz' }, cd: 7, mana: 40, range: 0, radius: 4.6, delay: 0.3, dmg: [70, 18, 0.6], slow: 0.45 },
+      { key: 'r', type: 'buff', ult: true, name: { en: 'Bulwark', tr: 'Siper', ku: 'Senger' }, cd: 70, mana: 110, dur: 6, shield: [220, 40], def: 35, team: 10 },
+    ],
+  },
 };
 
 export const HERO_IDS = Object.keys(HEROES);
@@ -94,6 +138,10 @@ export const SKINS = {
   bahoz: [{ id: 'default', cost: 0 }, { id: 'dusk', cost: 120, color: 0x7a4dff, accent: 0xffb0f0, fx: 0xb08aff }, { id: 'gold', cost: 200, color: 0xe0a82a, accent: 0xfff2b0, fx: 0xffd860 }],
   ciya: [{ id: 'default', cost: 0 }, { id: 'obsidian', cost: 120, color: 0x3a3a48, accent: 0xff5a3a, fx: 0xff7040 }, { id: 'frost', cost: 200, color: 0xbfe6ff, accent: 0xffffff, fx: 0xa0e0ff }],
   hevi: [{ id: 'default', cost: 0 }, { id: 'rose', cost: 120, color: 0xff7aa8, accent: 0xfff0f5, fx: 0xffa8c8 }, { id: 'azure', cost: 200, color: 0x4a9aff, accent: 0xe8f6ff, fx: 0x8ac8ff }],
+  baran: [{ id: 'default', cost: 0 }, { id: 'dusk', cost: 120, color: 0x6a4dff, accent: 0xe0d0ff, fx: 0xa08aff }, { id: 'jade', cost: 200, color: 0x1fa58a, accent: 0xd8ffe8, fx: 0x60ffc0 }],
+  ser: [{ id: 'default', cost: 0 }, { id: 'crimson', cost: 120, color: 0xc8322e, accent: 0xffd27a, fx: 0xff6040 }, { id: 'frost', cost: 200, color: 0xe6f4ff, accent: 0x8ad0ff, fx: 0xbdeaff }],
+  tirej: [{ id: 'default', cost: 0 }, { id: 'azure', cost: 120, color: 0x3a7cff, accent: 0xd8ecff, fx: 0x6ab8ff }, { id: 'gold', cost: 200, color: 0xe0a82a, accent: 0xfff2b0, fx: 0xffd860 }],
+  zinar: [{ id: 'default', cost: 0 }, { id: 'obsidian', cost: 120, color: 0x2e2e3a, accent: 0xff6a3a, fx: 0xff7040 }, { id: 'rose', cost: 200, color: 0xd87a9a, accent: 0xfff0f5, fx: 0xffa8c8 }],
   sevin: [{ id: 'default', cost: 0 }, { id: 'crimson', cost: 120, color: 0xc0283a, accent: 0xffd27a, fx: 0xff5060 }, { id: 'jade', cost: 200, color: 0x18a878, accent: 0xb0ffe0, fx: 0x50ffc0 }],
 };
 

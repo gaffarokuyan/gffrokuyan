@@ -174,7 +174,7 @@ function startMatch() {
   setTimeout(() => {
     game = new Game({
       renderer, overlay: $('overlay'), heroId: save.hero, skin: skinOf(save.hero), quality: save.quality, audio,
-      ui: { announce: (a, b) => hud.announce(a, b), feed: (a, b, c) => hud.feed(a, b, c), pause: () => togglePause(), shop: () => hud.toggleShop() },
+      ui: { announce: (a, b) => hud.announce(a, b), feed: (a, b, c) => hud.feed(a, b, c), pause: () => togglePause(), shop: () => hud.toggleShop(), board: () => hud.toggleBoard() },
       onEnd: endMatch,
     });
     window.__game = game;
@@ -192,23 +192,23 @@ function togglePause(force) {
 
 function leaveMatch() {
   game?.dispose(); game = null; window.__game = null;
-  for (const id of ['hud', 'pause', 'shop', 'end']) $(id).hidden = true;
+  for (const id of ['hud', 'pause', 'shop', 'end', 'board']) $(id).hidden = true;
   document.body.classList.remove('dead');
   renderer.shadowMap.enabled = false; audio.music(false);
   $('menu').hidden = false; renderAll(); showTab('play');
 }
 
 function endMatch(r) {
-  const coins = (r.win ? 120 : 50) + r.k * 6 + Math.floor(r.cs / 4), xp = (r.win ? 100 : 45) + r.k * 3;
+  const coins = (r.win ? 120 : 50) + r.k * 6 + r.a * 3 + Math.floor(r.cs / 4), xp = (r.win ? 100 : 45) + r.k * 3 + r.a;
   save.coins += coins; save.xp += xp;
   let up = false;
   while (save.xp >= acctNeed(save.level)) { save.xp -= acctNeed(save.level); save.level++; save.gems += 10; up = true; }
   persist();
   $('end').firstElementChild.className = 'sheet narrow end ' + (r.win ? 'win' : 'lose');
   $('endTitle').textContent = t(r.win ? 'victory' : 'defeat');
-  $('endStats').innerHTML = `<div><b>${r.k}</b>${t('kills')}</div><div><b>${r.d}</b>${t('deaths')}</div><div><b>${r.cs}</b>${t('minions')}</div><div><b>${r.level}</b>${t('level')}</div>`;
+  $('endStats').innerHTML = `<div><b>${r.k}</b>${t('kills')}</div><div><b>${r.d}</b>${t('deaths')}</div><div><b>${r.a}</b>${t('assists')}</div><div><b>${r.cs}</b>${t('minions')}</div><div><b>${r.level}</b>${t('level')}</div>`;
   $('endRewards').innerHTML = `<span><i class="coin"></i>+${coins}</span><span>✦ +${xp} ${t('xp')}</span>${up ? `<span><i class="gem"></i>+10 · ${t('accountLevelUp', { n: save.level })}</span>` : ''}`;
-  $('shop').hidden = true; $('pause').hidden = true; $('end').hidden = false;
+  $('shop').hidden = true; $('pause').hidden = true; $('board').hidden = true; $('end').hidden = false;
 }
 
 // ---------- wiring ----------

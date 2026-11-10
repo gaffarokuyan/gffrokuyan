@@ -1,7 +1,8 @@
 // In-match HUD: bars, ability buttons, joystick, shop, feed.
 import { ITEMS } from './data.js';
 import { t, loc, abilDesc } from './i18n.js';
-import { UNLOCK, xpNeed } from './game.js';
+import { UNLOCK, MAX_RANK, SPELLS, xpNeed } from './game.js';
+import { HEROES } from './data.js';
 
 const $ = (id) => document.getElementById(id);
 const ICON = { proj: '➶', aoe: '✺', dash: '➤', buff: '▲', heal: '✚' };
@@ -16,6 +17,9 @@ export class Hud {
     $('shopBtn').addEventListener('click', () => this.toggleShop());
     $('shopClose').addEventListener('click', () => this.toggleShop(false));
     $('shop').addEventListener('pointerdown', (e) => { if (e.target.id === 'shop') this.toggleShop(false); });
+    $('scoreBtn').addEventListener('click', () => this.toggleBoard());
+    $('boardClose').addEventListener('click', () => this.toggleBoard(false));
+    $('board').addEventListener('pointerdown', (e) => { if (e.target.id === 'board') this.toggleBoard(false); });
     this.bindJoystick();
   }
 
@@ -45,15 +49,29 @@ export class Hud {
     const p = game.player, row = $('abilRow');
     row.innerHTML = '';
     this.btns = p.data.abil.map((a, i) => {
+      const slot = document.createElement('div'); slot.className = 'slot';
+      const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'plus-btn'; plus.textContent = '+'; plus.hidden = true;
+      plus.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); game.rankUp(p, i); });
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'act' + (a.ult ? ' ult' : ''); b.style.setProperty('--c', hex(p.pal.fx));
-      b.innerHTML = `${ICON[a.type]}<span class="cd"></span><span class="key">${a.key.toUpperCase()}</span>`;
-      b.addEventListener('pointerdown', (e) => { e.preventDefault(); this.audio.unlock(); game.playerCast(i); });
+      b.innerHTML = `${ICON[a.type]}<span class="rk">${'<i></i>'.repeat(MAX_RANK[i])}</span><span class="cd"></span><span class="key">${a.key.toUpperCase()}</span>`;
+      b.addEventListener('pointerdown', (e) => { e.preventDefault(); this.audio.unlock(); if (!p.ranks[i] && game.canRank(p, i)) game.rankUp(p, i); else game.playerCast(i); });
       b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') this.tip(a, i); });
       b.addEventListener('pointerleave', () => { $('tooltip').hidden = true; });
-      row.appendChild(b);
-      return { b, cd: b.querySelector('.cd'), state: '' };
+      slot.append(plus, b); row.appendChild(slot);
+      return { b, plus, cd: b.querySelector('.cd'), pips: [...b.querySelectorAll('.rk i')], state: '', rank: -1 };
     });
+    const srow = $('spellRow'); srow.innerHTML = '';
+    this.sbtns = SPELLS.map((sp, k) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'act spell';
+      b.innerHTML = `${sp.icon}<span class="cd"></span><span class="key">${'DF'[k]}</span>`;
+      b.addEventListener('pointerdown', (e) => { e.preventDefault(); game.playerSpell(k); });
+      b.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { const el = $('tooltip'); el.innerHTML = `<h3>${t('sp_' + sp.id)} · ${'DF'[k]}</h3><p>${t('sp_' + sp.id + '_d')}</p><small>${t('cd')} ${sp.cd}s</small>`; el.hidden = false; } });
+      b.addEventListener('pointerleave', () => { $('tooltip').hidden = true; });
+      srow.appendChild(b);
+      return { b, cd: b.querySelector('.cd') };
+    });
+    this.spHint = false; $('board').hidden = true;
     $('announce').innerHTML = ''; $('feed').innerHTML = ''; $('respawn').hidden = true;
     document.body.classList.remove('dead');
     this.itemsKey = null;
@@ -61,7 +79,7 @@ export class Hud {
 
   tip(a, i) {
     const p = this.game.player, el = $('tooltip');
-    el.innerHTML = `<h3>${loc(a.name)} · ${a.key.toUpperCase()}</h3><p>${abilDesc(a, p.level, p.atk)}</p><small>${t('cd')} ${a.cd}s · ${t('mana')} ${a.mana}${p.level < UNLOCK[i] ? ' · ' + t('unlockAt', { n: UNLOCK[i] }) : ''}</small>`;
+    el.innerHTML = `<h3>${loc(a.name)} · ${a.key.toUpperCase()}</h3><p>${abilDesc(a, this.game.abL(p, i), p.atk)}</p><small>${t('rank')} ${p.ranks[i]}/${MAX_RANK[i]} · ${t('cd')} ${a.cd}s · ${t('mana')} ${a.mana}${p.level < UNLOCK[i] ? ' · ' + t('unlockAt', { n: UNLOCK[i] }) : ''}</small>`;
     el.hidden = false;
   }
 
@@ -105,6 +123,20 @@ export class Hud {
       grid.appendChild(b);
     }
   }
+  toggleBoard(on) { const el = $('board'); const show = on ?? el.hidden; el.hidden = !show; if (show) this.renderBoard(); }
+  renderBoard() {
+    const g = this.game; if (!g) return;
+    $('boardTitle').textContent = `${t('board')}  ·  ${g.kills[0]} – ${g.kills[1]}`;
+    let h = `<span class="th"></span><span class="th">${t('lv')}</span><span class="th">K / D / A</span><span class="th">${t('minions')}</span><span class="th"></span>`;
+    for (const team of [0, 1]) {
+      h += '<span class="sep"></span>';
+      for (const u of g.heroes.filter((x) => x.team === team)) {
+        const c = (u.isPlayer ? 'me' : 't' + team) + (u.dead ? ' dead' : '');
+        h += `<span class="nm ${c}">${u.name} <small>${t(HEROES[u.heroId].role)}</small></span><span>${u.level}</span><span>${u.k} / ${u.d} / ${u.a}</span><span>${u.cs}</span><span>${u.items.map((id) => ITEMS.find((x) => x.id === id).icon).join(' ')}</span>`;
+      }
+    }
+    $('boardBody').innerHTML = h;
+  }
   toast(msg) { const el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(this._tt); this._tt = setTimeout(() => (el.hidden = true), 2200); }
 
   update() {
@@ -114,12 +146,17 @@ export class Hud {
     $('xpFill').style.transform = `scaleX(${p.level >= 15 ? 1 : p.xp / xpNeed(p.level)})`;
     for (let i = 0; i < 4; i++) {
       const a = p.data.abil[i], o = this.btns[i], cd = p.cds[i];
-      const locked = p.level < UNLOCK[i];
+      const locked = !p.ranks[i];
+      if (o.rank !== p.ranks[i]) { o.rank = p.ranks[i]; o.pips.forEach((el, n) => el.classList.toggle('on', n < o.rank)); }
+      const cr = g.canRank(p, i) && !p.dead; if (o.plus.hidden === cr) o.plus.hidden = !cr;
       const state = locked ? 'off' : cd > 0 ? 'cd' : p.mp < a.mana ? 'nomana' : 'ready';
       if (state !== o.state) { o.state = state; o.b.classList.toggle('off', locked); o.b.classList.toggle('nomana', state === 'nomana'); o.b.classList.toggle('ready', state === 'ready'); if (locked) { o.cd.textContent = '🔒'; o.cd.style.setProperty('--p', '0%'); } else if (state !== 'cd') { o.cd.textContent = ''; o.cd.style.setProperty('--p', '0%'); } }
       if (state === 'cd') { o.cd.style.setProperty('--p', (cd / p.cdMax[i] * 100).toFixed(1) + '%'); o.cd.textContent = cd > 1 ? Math.ceil(cd) : cd.toFixed(1); }
     }
+    this.sbtns.forEach((o, k) => { const q = p.spells[k]; if (q.cd > 0) { o.cd.style.setProperty('--p', (q.cd / q.max * 100).toFixed(1) + '%'); o.cd.textContent = Math.ceil(q.cd); } else if (o.cd.textContent) { o.cd.textContent = ''; o.cd.style.setProperty('--p', '0%'); } });
+    if (p.sp > 0 && !this.spHint && g.time > 1) { this.spHint = true; this.toast(t('skillPoint')); }
     if (this.tick % 6 === 0) {
+      if (!$('board').hidden && this.tick % 30 === 0) this.renderBoard();
       $('hpTxt').textContent = `${Math.ceil(Math.max(0, p.hp))} / ${Math.round(p.maxHp)}`; $('mpTxt').textContent = `${Math.floor(p.mp)} / ${Math.round(p.maxMp)}`;
       $('lvl').textContent = p.level; $('gold').textContent = Math.floor(p.gold);
       $('scBlue').textContent = g.kills[0]; $('scRed').textContent = g.kills[1];

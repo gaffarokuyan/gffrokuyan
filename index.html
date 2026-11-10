@@ -66,7 +66,7 @@
 <!-- ============ HUD ============ -->
 <div id="hud" class="screen" hidden>
   <canvas id="minimap" width="200" height="116"></canvas>
-  <div class="score"><b class="blue" id="scBlue">0</b><span id="clock">0:00</span><b class="red" id="scRed">0</b></div>
+  <div class="score" id="scoreBtn"><b class="blue" id="scBlue">0</b><span id="clock">0:00</span><b class="red" id="scRed">0</b></div>
   <div class="hud-tr">
     <button type="button" class="pill" id="shopBtn"><i class="coin"></i><b id="gold">0</b></button>
     <button type="button" class="pill sq" id="pauseBtn" aria-label="menu">☰</button>
@@ -86,7 +86,7 @@
     </div>
   </div>
   <div class="actions">
-    <button type="button" class="act small" id="recallBtn" aria-label="recall">⌂</button>
+    <div class="spell-col"><button type="button" class="act small" id="recallBtn" aria-label="recall">⌂</button><div class="spell-row" id="spellRow"></div></div>
     <div class="abil-row" id="abilRow"></div>
     <button type="button" class="act atk" id="atkBtn" aria-label="attack">⚔</button>
   </div>
@@ -99,6 +99,11 @@
   <div class="sheet-head"><h2 id="shopTitle"></h2><span class="cur"><i class="coin"></i><b id="shopGold">0</b></span><button type="button" class="x" id="shopClose">✕</button></div>
   <p class="note" id="shopHint"></p>
   <div class="item-grid" id="itemGrid"></div>
+</div></div>
+
+<div id="board" class="modal" hidden><div class="sheet">
+  <div class="sheet-head"><h2 id="boardTitle"></h2><button type="button" class="x" id="boardClose">✕</button></div>
+  <div id="boardBody"></div>
 </div></div>
 
 <div id="pause" class="modal" hidden><div class="sheet narrow">

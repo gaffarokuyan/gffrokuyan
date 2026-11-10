@@ -158,10 +158,10 @@ export function makeHero(def, pal, team) {
   return g;
 }
 
-export function makeMinion(team, ranged) {
+export function makeMinion(team, ranged, scale = 0.8) {
   const c = TEAM_COLOR[team];
   const pal = { color: c, accent: team === 0 ? 0xcfe8ff : 0xffd0c0, fx: c };
-  return makeHumanoid(pal, { weapon: ranged ? 'wand' : 'spear', role: ranged ? 'mage' : 'fighter', scale: 0.8, simple: true });
+  return makeHumanoid(pal, { weapon: ranged ? 'wand' : 'spear', role: ranged ? 'mage' : 'fighter', scale, simple: true });
 }
 
 export function makeTower(team) {
@@ -204,13 +204,13 @@ export function makeCore(team) {
   return g;
 }
 
-export function makeMonster(big) {
+export function makeMonster(big, spirit) {
   const g = new THREE.Group();
   const rig = new THREE.Group(); g.add(rig);
-  const col = big ? 0x5a3f7a : 0x4f6a3a;
+  const col = spirit ? 0x1f6f80 : big ? 0x5a3f7a : 0x4f6a3a;
   const hide = std(col, { roughness: 0.95 });
   const bone = std(0xe8e0c8);
-  const glow = glowMat(big ? 0xc070ff : 0xb0ff60, 2);
+  const glow = glowMat(spirit ? 0x60f0ff : big ? 0xc070ff : 0xb0ff60, 2);
   const body = pivot(0, 1.2, 0); rig.add(body);
   body.add(m(G.sphere, hide, 1.1, 0.95, 1.4));
   const head = pivot(0, 0.5, 1.2); body.add(head);

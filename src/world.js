@@ -21,12 +21,15 @@ export const CAMPS = [
   { x: -30, z: -18, big: false }, { x: 30, z: -18, big: false },
   { x: -30, z: 18, big: false }, { x: 30, z: 18, big: false },
   { x: 0, z: -19, big: true },
+  { x: 0, z: 19, big: true, spirit: true },
 ];
+// Tall grass: units inside are hidden from enemies outside it
+export const BUSHES = [];
+for (const sx of [-1, 1]) BUSHES.push({ x: 13 * sx, z: -29.5, r: 3.2 }, { x: 40 * sx, z: -29.5, r: 3.2 }, { x: 13 * sx, z: 29.5, r: 3.2 }, { x: 40 * sx, z: 29.5, r: 3.2 }, { x: 12 * sx, z: 7 * sx, r: 3 }, { x: 38 * sx, z: -7 * sx, r: 3 }, { x: 5 * sx, z: -9 * sx, r: 2.8 });
 export const GROVES = [];
 for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
   GROVES.push({ x: 15 * sx, z: 17 * sz, r: 4.2 }, { x: 47 * sx, z: 19 * sz, r: 4.6 }, { x: 70 * sx, z: 30 * sz, r: 4 });
 }
-GROVES.push({ x: -8, z: 20, r: 3.6 }, { x: 8, z: 20, r: 3.6 });
 
 export const riverX = (z) => Math.sin(z * 0.09) * 4;
 
@@ -98,7 +101,7 @@ function paintGround() {
   // camps
   for (const cp of CAMPS) {
     const r = (cp.big ? 9 : 6) * s; const rg = g.createRadialGradient(px(cp.x), pz(cp.z), 0, px(cp.x), pz(cp.z), r);
-    rg.addColorStop(0, cp.big ? 'rgba(70,40,90,0.85)' : 'rgba(60,50,30,0.8)'); rg.addColorStop(1, 'rgba(40,40,30,0)');
+    rg.addColorStop(0, cp.spirit ? 'rgba(20,80,95,0.85)' : cp.big ? 'rgba(70,40,90,0.85)' : 'rgba(60,50,30,0.8)'); rg.addColorStop(1, 'rgba(40,40,30,0)');
     g.fillStyle = rg; g.beginPath(); g.arc(px(cp.x), pz(cp.z), r, 0, 7); g.fill();
   }
   // bases
@@ -206,5 +209,22 @@ export function buildWorld(scene, quality) {
   rocks.count = ri; flowers.count = fi; rocks.castShadow = true; rocks.receiveShadow = true;
   scene.add(rocks, flowers);
 
-  return { sun, water };
+  // tall grass blades
+  const blades = new THREE.InstancedMesh(new THREE.ConeGeometry(0.13, 1.5, 4), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, flatShading: true }), BUSHES.length * 130);
+  let bi = 0;
+  for (const b of BUSHES) for (let i = 0; i < 130; i++) {
+    const a = R() * 6.283, dd = Math.sqrt(R()) * b.r, sc = 0.6 + R() * 0.6;
+    d.position.set(b.x + Math.cos(a) * dd, 0.72 * sc, b.z + Math.sin(a) * dd); d.scale.set(1 + R(), sc, 1 + R()); d.rotation.set((R() - 0.5) * 0.4, R() * 6, (R() - 0.5) * 0.4); d.updateMatrix(); blades.setMatrixAt(bi, d.matrix);
+    col.setHSL(0.24 + R() * 0.08, 0.6, 0.3 + R() * 0.14); blades.setColorAt(bi++, col);
+  }
+  blades.receiveShadow = true; scene.add(blades);
+
+  // fog of war: a low-res light map multiplied over the battlefield
+  const fc = document.createElement('canvas'); fc.width = 200; fc.height = 116;
+  const fogCtx = fc.getContext('2d'); fogCtx.fillStyle = '#fff'; fogCtx.fillRect(0, 0, 200, 116);
+  const fogTex = new THREE.CanvasTexture(fc); fogTex.minFilter = fogTex.magFilter = THREE.LinearFilter; fogTex.generateMipmaps = false;
+  const fogMesh = new THREE.Mesh(new THREE.PlaneGeometry(MAP.W, MAP.H), new THREE.MeshBasicMaterial({ map: fogTex, blending: THREE.MultiplyBlending, transparent: true, depthWrite: false, toneMapped: false, premultipliedAlpha: true }));
+  fogMesh.rotation.x = -Math.PI / 2; fogMesh.position.y = 0.04; fogMesh.renderOrder = 2; scene.add(fogMesh);
+
+  return { sun, water, fogCtx, fogTex };
 }
