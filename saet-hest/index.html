@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ku">
+<head>
+<meta charset="utf-8">
+<title>Saet heşt! — Kurdî A1</title>
+<style>
+@font-face{font-family:Baloo;font-weight:600;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2013-2026,U+201C-201D}
+@font-face{font-family:Baloo;font-weight:600;src:url(fonts/baloo-2-latin-ext-600-normal.woff2) format('woff2');unicode-range:U+0100-024F}
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2013-2026,U+201C-201D}
+@font-face{font-family:Baloo;font-weight:800;src:url(fonts/baloo-2-latin-ext-800-normal.woff2) format('woff2');unicode-range:U+0100-024F}
+html,body{margin:0;background:#111;}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Baloo,sans-serif;background:#F6ECD6;transform-origin:0 0}
+#stage svg{position:absolute;left:0;top:0}
+#stage text{font-family:Baloo,sans-serif}
+.title{position:absolute;left:0;right:0;top:128px;text-align:center;font-weight:800;font-size:118px;line-height:1;color:#FFC83D;
+  -webkit-text-stroke:16px #1f1b16;paint-order:stroke fill;letter-spacing:2px;text-shadow:0 10px 0 rgba(31,27,22,.25)}
+.tag{position:absolute;left:0;right:0;top:262px;text-align:center}
+.tag span{display:inline-block;background:#1f1b16;color:#fff;font-weight:600;font-size:34px;padding:2px 26px 0;border-radius:40px;letter-spacing:1px}
+.sub{position:absolute;left:54px;right:54px;top:1262px;background:#fff;border:7px solid #1f1b16;border-radius:34px;padding:30px 30px 22px;text-align:center;
+  box-shadow:0 10px 0 rgba(31,27,22,.22)}
+.sub .ku{font-weight:800;font-size:58px;line-height:1.12;color:#1f1b16}
+.sub .ku b{color:#E0407B}
+.sub.R .ku b{color:#2468D8}
+.sub .tr{font-weight:600;font-size:36px;line-height:1.2;color:#7b746a;margin-top:8px}
+.sub .who{position:absolute;top:-34px;font-weight:800;font-size:34px;color:#fff;padding:3px 24px 0;border-radius:16px;border:6px solid #1f1b16}
+.sub.B .who{left:30px;background:#F06A9B}
+.sub.R .who{right:30px;background:#2F7DE1}
+.card{position:absolute;left:0;right:0;top:760px;text-align:center}
+.card>div{display:inline-block;background:#FFC83D;border:8px solid #1f1b16;border-radius:26px;padding:26px 60px 16px;box-shadow:0 14px 0 rgba(0,0,0,.35)}
+.card .ku{font-weight:800;font-size:92px;line-height:1;color:#1f1b16}
+.card .tr{font-weight:600;font-size:40px;color:#5a4a1c}
+.end{position:absolute;left:70px;right:70px;top:330px;background:#fff;border:8px solid #1f1b16;border-radius:44px;padding:34px 44px 40px;box-shadow:0 16px 0 rgba(31,27,22,.25)}
+.end h2{margin:0;font-size:76px;font-weight:800;color:#1f1b16;text-align:center;line-height:1}
+.end h3{margin:0 0 22px;font-size:36px;font-weight:600;color:#7b746a;text-align:center}
+.row{display:flex;align-items:center;justify-content:space-between;border-top:4px dashed #e6dcc6;padding:13px 6px 7px}
+.row .k{font-weight:800;font-size:66px;color:#E0407B;line-height:1.05}
+.row:nth-child(odd) .k{color:#2468D8}
+.row .t{font-weight:600;font-size:46px;color:#3b352d}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script src="timeline.js"></script>
+<script src="env.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
