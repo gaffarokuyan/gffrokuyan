@@ -67,7 +67,7 @@
       { id: 'l10', who: 'R', gap: .6, ku: 'Berfîn… pisîka te *keskesor* e!', tr: 'Berfîn… kedin gökkuşağı olmuş!', tts: '[mischievously] Berfîn… pisîka te keskesor e!',
         s: { pose: 'down', expr: 'smug' }, l: { pose: 'idle', expr: 'wide' } },
       { id: 'l11', who: 'B', ku: 'Pisîka min a *spî*!', tr: 'Benim beyaz kedim!', tts: '[crying] Pisîka min a spî!', s: { pose: 'up', expr: 'sad', tear: true } },
-      { id: 'l12', who: 'R', ku: 'Ne xem e. Niha ew pir *xweşik* e!', tr: 'Dert değil. Şimdi çok güzel oldu!', tts: '[warmly] Ne xem e. [happy] Niha ew pir xweşik e!',
+      { id: 'l12', who: 'R', ku: 'Ne xem e. Niha ew pir *xweşik* e!', tr: 'Dert değil. Şimdi çok güzel oldu!', tts: '[warmly] Ne hem e. [happy] Nıha ew pır hweşık e!',
         s: { pose: 'shrug', expr: 'happy' }, l: { pose: 'idle', expr: 'sad', tear: true }, then: [{ f: .7, l: { pose: 'idle', expr: 'happy' } }] },
     ],
     tail: 1.5,

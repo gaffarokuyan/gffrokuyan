@@ -10,7 +10,7 @@ window.EP = {
       s: { pose: 'wave', expr: 'happy' }, l: { pose: 'idle', expr: 'happy' } },
     { id: 'l02', who: 'R', ku: '*Ez baş im*, spas!', tr: 'İyiyim, teşekkürler!', tts: '[happy] Ez baş im, spas!',
       s: { pose: 'cheer', expr: 'happy', hop: 30 } },
-    { id: 'l03', who: 'B', ku: 'Pir baş! *Navê te çi ye?*', tr: 'Çok güzel! Adın ne?', tts: '[happy] Pir baş! [curious] Navê te çi ye?',
+    { id: 'l03', who: 'B', ku: 'Pir baş! *Navê te çi ye?*', tr: 'Çok güzel! Adın ne?', tts: '[happy] Pır baş! [curious] Nave te çı ye?',
       s: { pose: 'point', expr: 'happy' } },
     { id: 'l04', who: 'R', ku: '*Ez baş im*, spas!', tr: 'İyiyim, teşekkürler!', tts: '[happy] Ez baş im, spas!',
       s: { pose: 'cheer', expr: 'happy', hop: 30 }, l: { pose: 'idle', expr: 'wide' } },

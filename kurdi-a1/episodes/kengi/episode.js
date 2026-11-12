@@ -1,6 +1,7 @@
 // "Kengî?!" — Rojên hefteyê (haftanın günleri)
+// tts metni Türkçe seslere göre yazılır: Kürtçe i → ı, î → i, ê → e, û → u, x → h, q → k
 (function () {
-  const DAYS = ['duşem', 'sêşem', 'çarşem', 'pêncşem', 'în', 'şemî', 'yekşem'];
+  const DAYS = ['duşem', 'sêşem', 'çarşem', 'pêncşem', 'înî', 'şemî', 'yekşem'];
   // [gün açılır, gün elenir] — replik içi oranlarla
   const ON = [['l02', 0], ['l03', .1], ['l05', 0], ['l05', .5], ['l07', 0], ['l07', .5], ['l09', .5]];
   const OFF = [['l02', .5], ['l04', .35], ['l06', .2], ['l06', .65], ['l08', .3], ['l08', .5], null];
@@ -12,7 +13,7 @@
     mode: () => 'morning',
     table: () => ({ teapot: true, glass: 'empty' }),
     seq: [
-      { id: 'l01', who: 'B', ku: 'Ronî! Mal pir *qirêj* e! Em *kengî* paqij bikin?', tr: 'Ronî! Ev çok kirli! Ne zaman temizleyelim?', tts: '[angry] Ronî! Mal pir qirêj e! [curious] Em kengî paqij bikin?',
+      { id: 'l01', who: 'B', ku: 'Ronî! Mal pir *qirêj* e! Em *kengî* paqij bikin?', tr: 'Ronî! Ev çok kirli! Ne zaman temizleyelim?', tts: '[angry] Roni! Mal pır kırej e! [curious] Em kengi pakıj bıkın?',
         s: { pose: 'show', expr: 'angry', red: .3 }, l: { pose: 'idle', expr: 'wide' } },
       { id: 'l02', who: 'R', ku: '*Duşem?* Na… Duşemê ez westiyayî me.', tr: 'Pazartesi mi? Yok… Pazartesi yorgunum.', tts: '[curious] Duşem? [tired] Na… Duşemê ez westiyayî me.',
         s: { pose: 'think', expr: 'normal', tilt: -8 }, then: [{ f: .45, s: { pose: 'idle', expr: 'sleep', tilt: 12 } }], l: { pose: 'hips', expr: 'normal' } },
@@ -23,13 +24,13 @@
         s: { pose: 'point', expr: 'angry', red: .35 } },
       { id: 'l06', who: 'R', ku: 'Çarşemê *futbol* heye! Pêncşemê… ez di *xew* de me.', tr: 'Çarşamba maç var! Perşembe… uykudayım.', tts: '[excited] Çarşemê futbol heye! [tired] Pêncşemê… ez di xew de me.',
         s: { pose: 'cheer', expr: 'happy', hop: 34 }, then: [{ f: .55, s: { pose: 'idle', expr: 'sleep', tilt: 14 } }] },
-      { id: 'l07', who: 'B', ku: '*În? Şemî?!*', tr: 'Cuma? Cumartesi?!', tts: '[angry] În? Şemî?!',
+      { id: 'l07', who: 'B', ku: '*Înî? Şemî?!*', tr: 'Cuma? Cumartesi?!', tts: '[angry] İni? Şemi?!',
         s: { pose: 'up', expr: 'angry', red: .75, shake: 1 } },
-      { id: 'l08', who: 'R', ku: 'În û şemî *betlane* ne!', tr: 'Cuma ve cumartesi tatil!', tts: '[happy] În û şemî betlane ne!',
+      { id: 'l08', who: 'R', ku: 'Înî û şemî *betlane* ne!', tr: 'Cuma ve cumartesi tatil!', tts: '[happy] İni u şemi betlane ne!',
         s: { pose: 'shrug', expr: 'smug' }, l: { pose: 'hips', expr: 'angry', red: .6 } },
       { id: 'l09', who: 'B', gap: .6, ku: 'Baş e. *Yekşem!*', tr: 'Tamam. Pazar!', tts: '[sighs] Baş e. [confident] Yekşem!',
         s: { pose: 'hips', expr: 'sleep' }, then: [{ f: .5, s: { pose: 'point', expr: 'angry', red: .3 } }] },
-      { id: 'l10', who: 'R', ku: 'Erê! Yekşem *pir baş* e!', tr: 'Evet! Pazar çok iyi!', tts: '[excited] Erê! Yekşem pir baş e!',
+      { id: 'l10', who: 'R', ku: 'Erê! Yekşem *pir baş* e!', tr: 'Evet! Pazar çok iyi!', tts: '[excited] Ere! Yekşem pır baş e!',
         s: { pose: 'cheer', expr: 'happy', hop: 44 }, l: { pose: 'hips', expr: 'smug' } },
       { id: 'l11', who: 'B', gap: .7, ku: 'Ronî… *îro* yekşem e.', tr: 'Ronî… bugün pazar.', tts: '[mischievously] Ronî… îro yekşem e.',
         s: { pose: 'hips', expr: 'smug' }, then: [{ f: .5, l: { pose: 'idle', expr: 'wide', sweat: true, rot: 5 } }] },
@@ -48,7 +49,7 @@
       { line: 'l08', f: .3, who: 'R', icon: 'beach', label: 'betlane' },
     ],
     vocab: [
-      ['duşem', 'pazartesi'], ['sêşem', 'salı'], ['çarşem', 'çarşamba'], ['pêncşem', 'perşembe'], ['în', 'cuma'], ['şemî', 'cumartesi'], ['yekşem', 'pazar'],
+      ['duşem', 'pazartesi'], ['sêşem', 'salı'], ['çarşem', 'çarşamba'], ['pêncşem', 'perşembe'], ['înî', 'cuma'], ['şemî', 'cumartesi'], ['yekşem', 'pazar'],
     ],
     sfx(H) {
       const out = [];
