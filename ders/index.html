@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ku">
+<head>
+<meta charset="utf-8">
+<title>Dîrok Kurdî — Ders</title>
+<style>
+@font-face{font-family:Cinzel;font-weight:700;src:url(fonts/cinzel-latin-700-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2013-2026}
+@font-face{font-family:Cinzel;font-weight:700;src:url(fonts/cinzel-latin-ext-700-normal.woff2) format('woff2');unicode-range:U+0100-024F}
+@font-face{font-family:Cinzel;font-weight:900;src:url(fonts/cinzel-latin-900-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+2013-2026}
+@font-face{font-family:Cinzel;font-weight:900;src:url(fonts/cinzel-latin-ext-900-normal.woff2) format('woff2');unicode-range:U+0100-024F}
+html,body{margin:0;background:#000}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;font-family:Inter,system-ui,sans-serif;color:#fff;
+  background:radial-gradient(1300px 900px at 72% 42%,#2d5a3f 0%,#1c3a2a 45%,#0f2318 100%)}
+#stage svg.bg{position:absolute;left:0;top:0}
+.gold{background:linear-gradient(180deg,#FBE9A6 0%,#E9C46A 45%,#B8862E 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 5px 0 rgba(0,0,0,.35))}
+.serif{font-family:Cinzel,serif;font-weight:900;letter-spacing:2px;line-height:1}
+.tags{position:absolute;left:70px;top:54px;display:flex;gap:14px;align-items:center}
+.tag{font-weight:800;font-size:26px;padding:6px 16px;border-radius:8px;border:2px solid #cfae5a;color:#f3dc98;letter-spacing:1px}
+.tag.tr{background:#e9c46a;color:#16301f;border-color:#e9c46a}
+.foot{position:absolute;left:70px;bottom:52px;display:flex;gap:18px;align-items:center}
+.pill{background:#C8372D;color:#fff;font-weight:800;font-size:26px;padding:8px 18px;border-radius:8px;letter-spacing:1px}
+.foot .sub{font-size:26px;color:#cfe0d2;font-weight:600}
+.brand{position:absolute;right:70px;bottom:54px;font-family:Cinzel,serif;font-weight:700;font-size:26px;letter-spacing:6px;color:#d9b962;opacity:.85}
+.dots{position:absolute;left:0;right:0;bottom:120px;display:flex;gap:14px;justify-content:center}
+.dots i{width:16px;height:16px;border-radius:50%;background:#3d6a4f;display:block}
+.dots i.on{background:#e9c46a}
+.layer{position:absolute;inset:0}
+.word{position:absolute;left:120px;top:250px;width:1040px}
+.word .ku{font-size:210px;text-transform:uppercase}
+.word .tr{font-size:70px;font-weight:800;margin-top:26px;color:#fff}
+.word .tr b{color:#e9c46a;font-weight:800}
+.sent{margin-top:54px;border-left:8px solid #e9c46a;padding:8px 0 8px 34px}
+.sent .s1{font-size:64px;font-weight:700;color:#f4efe1}
+.sent .s1 b{color:#f1cf73}
+.sent .s2{font-size:42px;font-weight:500;color:#b9cfbf;margin-top:10px}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.phr{position:absolute;left:200px;right:200px;top:300px}
+.phr .row{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid rgba(233,196,106,.35);padding:26px 10px}
+.phr .k{font-size:76px;font-weight:700;color:#f4efe1}
+.phr .k b{color:#f1cf73}
+.phr .t{font-size:52px;font-weight:600;color:#b9cfbf}
+.grid{position:absolute;left:110px;right:110px;top:250px;display:grid;grid-template-columns:repeat(5,1fr);gap:26px}
+.cell{background:rgba(10,30,20,.55);border:2px solid rgba(233,196,106,.5);border-radius:22px;padding:14px 10px 20px;text-align:center}
+.cell svg{display:block;margin:0 auto}
+.cell .k{font-family:Cinzel,serif;font-weight:900;font-size:52px;text-transform:uppercase;line-height:1.1}
+.cell .t{font-size:30px;font-weight:600;color:#cfe0d2}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+// index.html?lesson=<ders klasörü>
+window.LNAME = new URLSearchParams(location.search).get('lesson') || 'xwarin-u-vexwarin';
+for (const f of ['lesson.js', 'timing.js']) document.write(`<script src="lessons/${window.LNAME}/${f}"><\/script>`);
+document.write('<script src="engine.js"><\/script>');
+</script>
+</body>
+</html>
