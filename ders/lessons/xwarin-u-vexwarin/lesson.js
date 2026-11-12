@@ -1,8 +1,10 @@
 // A1 · Ders 11 — Xwarin û vexwarin (yiyecekler ve içecekler)
 // Sesler (ElevenLabs v4; Ülgen = kelimeler, Yunus C = cümleler).
-// Telaffuz yöntemi: Kürtçe parçalar TEK TEK değil, Kürtçe yazımla yazılmış tek uzun kayıtta üretilir
-// ("Xwarin. [pause] Vexwarin. [pause] Nan. …"), mazdek Kürtçe konuşma tanıma ile doğrulanır, sonra sessizliklerden bölünür.
-// Türkçe okunuşla yazmak (hwarın, dev…) ve tek kelimelik kısa klipler x / w seslerini bozuyor.
+// Telaffuz yöntemi: Kürtçe metin sese ARAP HARFLİ Kürtçe yazımla verilir (mazdek transliterate, latin-to-arabic);
+// Latin yazımda Türkçe sesler "xw" gibi sesleri bozuyor. Parçalar tek uzun kayıtta üretilir, sonra sessizliklerden bölünür:
+//   kelimeler : خوارن. [pause] ڤەخوارن. [pause] نان. [pause] پەنیر. [pause] هێک. [pause] گۆشت. [pause] برنج. [pause] سێڤ. [pause] ئاڤ. [pause] چای. [pause] شیر. [pause] دەو.
+//   cümleler  : ئەز نان دخوم. [pause] پەنیر پر خوەشە. [pause] ئەز دو هێکان دخوم. [pause] ئەز گۆشت ناخوم. [pause] برنج گەرمە. [pause] سێڤ سۆرە. [pause] ئەز ئاڤێ ڤەدخوم. [pause] ئەز ژ چایێ هەز دکم. [pause] پسیک شیر ڤەدخوە. [pause] دەو سارە.
+//   ifadeler  : ئەز برچی مە. [pause] ئەز تی مە. [pause] نۆشیجان بە!
 //   <id>k / <id>a : Kürtçe kelime (videoda iki kez çalınır)   <id>t / <id>m : Türkçe karşılığı   <id>b : Kürtçe örnek cümle
 window.LESSON = {
   no: 11,
