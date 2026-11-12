@@ -30,7 +30,7 @@
         s: { pose: 'point', expr: 'happy' }, l: { pose: 'think', expr: 'normal', tilt: -10 } },
       { id: 'l10', who: 'R', gap: .6, ku: 'Saet… *dema xwarinê* ye!', tr: 'Saat… yemek vakti!', tts: '[curious] Saet… [tired] dema hwarıne ye!',
         s: { pose: 'think', expr: 'normal', tilt: -12 }, then: [{ f: .4, s: { pose: 'down', expr: 'sad', tilt: 6 }, l: { pose: 'hips', expr: 'wide' } }] },
-      { id: 'l11', who: 'B', ku: 'Na! Saet *donzdeh* e!', tr: 'Hayır! Saat on iki!', tts: '[frustrated] Na! Saet donzdeh e!',
+      { id: 'l11', who: 'B', ku: 'Na! Saet *donzdeh* e!', tr: 'Hayır! Saat on iki!', tts: '[frustrated] نا! سەعەت دۆنزدەهە!' /* Arap harfli yazım: telaffuz böyle doğru çıkıyor */,
         s: { pose: 'up', expr: 'angry', red: .45, shake: 1 }, l: { pose: 'idle', expr: 'wide' } },
       { id: 'l12', who: 'R', ku: 'Erê… donzdeh… dema xwarinê! *Xatrê te!*', tr: 'Evet… on iki… yemek vakti! Hoşça kal!', tts: '[happy] Ere… donzdeh… dema hwarıne! [excited] Hatre te!',
         s: { pose: 'shrug', expr: 'happy' }, then: [{ f: .7, s: { pose: 'wave', expr: 'happy' } }], l: { pose: 'hips', expr: 'angry', red: .4 } },
