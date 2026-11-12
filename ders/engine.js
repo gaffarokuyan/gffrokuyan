@@ -18,14 +18,14 @@
   for (const it of L.seq) {
     const o = { ...it, a: t };
     if (it.type === 'intro') { TL.clips.push({ id: it.id, at: t + .6 }); t += .6 + d(it.id, 4) + .7; }
-    else if (it.type === 'section') { TL.clips.push({ id: it.id, at: t + .35 }); TL.chimes.push(t + .05); t += .35 + Math.max(d(it.id), 1.6) + .55; }
+    else if (it.type === 'section') { o.tk = t + .35; const k2 = o.tk + d(it.id + 'k') + .4; o.tt = k2 + d(it.id + 'k') + .35; TL.clips.push({ id: it.id + 'k', at: o.tk }, { id: it.id + 'k', at: k2 }, { id: it.id + 't', at: o.tt }); TL.chimes.push(t + .05); t = o.tt + d(it.id + 't', 1) + .6; }
     else if (it.type === 'word') {
-      o.ta = t + .3; o.tb = o.ta + d(it.id + 'a') + .45; o.n = words.indexOf(it);
-      TL.clips.push({ id: it.id + 'a', at: o.ta }, { id: it.id + 'b', at: o.tb }); TL.chimes.push(t + .05);
+      o.ta = t + .3; const a2 = o.ta + d(it.id + 'a') + .4; o.tm = a2 + d(it.id + 'a') + .35; o.tb = o.tm + d(it.id + 'm', 1) + .5; o.n = words.indexOf(it);
+      TL.clips.push({ id: it.id + 'a', at: o.ta }, { id: it.id + 'a', at: a2 }, { id: it.id + 'm', at: o.tm }, { id: it.id + 'b', at: o.tb }); TL.chimes.push(t + .05);
       t = o.tb + d(it.id + 'b') + .95;
     } else if (it.type === 'phrases') {
-      t += .9; o.at = [];
-      for (const p of it.items) { o.at.push(t); TL.clips.push({ id: p.id, at: t }); t += d(p.id, 2.5) + .55; }
+      t += .9; o.at = []; o.att = [];
+      for (const p of it.items) { const tt = t + d(p.id + 'k', 1.3) + .3; o.at.push(t); o.att.push(tt); TL.clips.push({ id: p.id + 'k', at: t }, { id: p.id + 't', at: tt }); t = tt + d(p.id + 't', 1) + .6; }
       t += .5;
     } else if (it.type === 'recap') { TL.clips.push({ id: it.id, at: t + 1.6 }); t += 1.6 + Math.max(d(it.id, 3), 3) + 2.2; }
     o.b = t; TL.items.push(o);
@@ -74,9 +74,9 @@
     if (it.type === 'intro') {
       h = bg(t, 1, [1560, 460, 170]) + titleCard(f);
     } else if (it.type === 'section') {
-      h = bg(t, .22, [960, 500, 300]) + `<div class="center" style="opacity:${f}"><div class="serif gold" style="font-size:230px;transform:scale(${.85 + .15 * back(fin)})">${it.ku}</div><div style="font-size:72px;font-weight:800;margin-top:30px"><span style="color:#e9c46a">=</span> ${it.tr}</div></div>`;
+      h = bg(t, .22, [960, 500, 300]) + `<div class="center" style="opacity:${f}"><div class="serif gold" style="font-size:230px;transform:scale(${.85 + .15 * back(fin)})">${it.ku}</div><div style="font-size:72px;font-weight:800;margin-top:30px;opacity:${eout(seg(t, it.tt - .1, it.tt + .2))}"><span style="color:#e9c46a">=</span> ${it.tr}</div></div>`;
     } else if (it.type === 'word') {
-      const pm = eout(seg(t, it.ta + d(it.id + 'a') * .5, it.ta + d(it.id + 'a') * .5 + .3)), ps = eout(seg(t, it.tb - .15, it.tb + .2));
+      const pm = eout(seg(t, it.tm - .1, it.tm + .2)), ps = eout(seg(t, it.tb - .15, it.tb + .2));
       const pop = back(seg(t, it.a + .05, it.a + .5));
       h = bg(t, .9 * f, [1480, 470, 250]);
       h += `<div class="layer" style="opacity:${f}"><div style="position:absolute;left:1260px;top:250px;width:440px;height:440px;border-radius:50%;background:rgba(13,31,21,.82);border:6px solid #e9c46a;transform:scale(${pop})"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform:translateY(${Math.sin(t * 2) * 6}px)">${iconSvg(it.icon, 340)}</div></div>`;
@@ -84,7 +84,7 @@
       h += `<div class="dots">${words.map((_, i) => `<i class="${i <= it.n ? 'on' : ''}"></i>`).join('')}</div></div>`;
     } else if (it.type === 'phrases') {
       h = bg(t, .2, [1560, 300, 220]) + `<div class="layer" style="opacity:${f}"><div style="position:absolute;left:200px;top:150px"><span class="serif gold" style="font-size:96px">${it.title}</span><span style="font-size:50px;font-weight:700;margin-left:26px;color:#cfe0d2">= ${it.titleTr}</span></div><div class="phr">`;
-      it.items.forEach((p, i) => { const pp = eout(seg(t, it.at[i] - .1, it.at[i] + .3)); h += `<div class="row" style="opacity:${pp};transform:translateX(${(1 - pp) * -30}px)"><span class="k">${hl(p.ku)}</span><span class="t">${p.tr}</span></div>`; });
+      it.items.forEach((p, i) => { const pp = eout(seg(t, it.at[i] - .1, it.at[i] + .3)); h += `<div class="row" style="opacity:${pp};transform:translateX(${(1 - pp) * -30}px)"><span class="k">${hl(p.ku)}</span><span class="t" style="opacity:${eout(seg(t, it.att[i] - .1, it.att[i] + .2))}">${p.tr}</span></div>`; });
       h += `</div></div>`;
     } else if (it.type === 'recap') {
       h = bg(t, .15, [960, 520, 330]) + `<div class="layer" style="opacity:${fin}"><div style="position:absolute;left:0;right:0;top:120px;text-align:center"><span class="serif gold" style="font-size:88px">${L.title.join(' ')}</span></div><div class="grid">`;
