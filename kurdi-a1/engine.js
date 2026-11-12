@@ -297,6 +297,29 @@
   EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
   if (EP.sfx) TL.sfx.push(...EP.sfx(H));
 
+  // ---------- Kapak ----------
+  // renderCover({ title, words: [[kurdî, türkçe], ...] }) — verilmezse bölümün kendi verisi kullanılır
+  window.renderCover = function (o = {}) {
+    const title = o.title || EP.title, words = (o.words || EP.vocab).slice(0, 7);
+    const cx = 540, cy = 1180;
+    let s = `<svg width="${W}" height="${HH}" viewBox="0 0 ${W} ${HH}"><rect width="${W}" height="${HH}" fill="#FFC83D"/>`;
+    for (let i = 0; i < 24; i += 2) { const a = rad(i * 15 - 7), b = rad(i * 15 + 8); s += `<path d="M${cx} ${cy}L${cx + Math.cos(a) * 2400} ${cy + Math.sin(a) * 2400}L${cx + Math.cos(b) * 2400} ${cy + Math.sin(b) * 2400}Z" fill="#FFD666"/>`; }
+    s += `<ellipse cx="${cx}" cy="1600" rx="470" ry="70" fill="#fff" opacity=".85"/>`;
+    const k = 1.5, gy = 1590;
+    const [nb, fb] = POSE.wave(.35), [nr, fr] = POSE.cheer(0);
+    const B = { who: 'B', x: 0, expr: 'happy', ra: [30, -20], la: fb, mouth: .7 }, R = { who: 'R', x: 0, expr: 'happy', la: nr, ra: fr, mouth: .5 };
+    s += `<g transform="translate(700 ${gy}) scale(${k}) translate(0 ${-(FLOOR - 10)})">${person(R, 1)}</g>`;
+    s += `<g transform="translate(380 ${gy}) scale(${k}) translate(0 ${-(FLOOR - 10)})">${person(B, 1)}</g>`;
+    s += `</svg>`;
+    const cols = ['#E0407B', '#2468D8'];
+    const spots = [['left:26px', 800, -8], ['right:26px', 790, 7], ['left:26px', 1130, 6], ['right:26px', 1140, -6], ['left:40px', 1690, -4], ['right:40px', 1690, 5], ['left:50%', 1806, 2]];
+    let h = `<div class="cv-top"><span>KURDÎ · KURMANCÎ</span></div>`;
+    h += `<div class="cv-a1"><b>A1</b> PRATİK</div>`;
+    h += `<div class="cv-title"><div style="font-size:${Math.min(112, Math.round(1050 / title.length))}px">${title}</div></div>`;
+    words.forEach(([a, b], i) => { const [x, y, r] = spots[i]; h += `<div class="cv-chip" style="${x};top:${y}px;transform:translate(${x === 'left:50%' ? '-50%' : '0'},-50%) rotate(${r}deg)"><div class="k" style="color:${cols[i % 2]};font-size:${a.length > 9 ? 42 : 58}px">${a}</div><div class="t">${b}</div></div>`; });
+    document.getElementById('stage').innerHTML = s + h;
+  };
+
   // ---------- Kare ----------
   const layer = (name, t, P) => (EP[name] ? EP[name](t, P, H) : '');
   window.renderAt = function (t) {
