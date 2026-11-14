@@ -44,6 +44,21 @@
     for (const th of L.then || []) push(L.start + th.f * L.dur, th.s ? { ...(L.s || {}), ...th.s } : null, th.l);
   }
 
+  // Kelime listesi seslendirmesi: audio/vNNk (Berfîn, Kürtçe) + audio/vNNt (Ronî, Türkçe) varsa
+  {
+    const vid = (i, x) => 'v' + String(i + 1).padStart(2, '0') + x;
+    if (EP.vocab.every((_, i) => DUR[vid(i, 'k')] && DUR[vid(i, 't')])) {
+      let s = TL.endAt + 1.0;
+      TL.voc = EP.vocab.map((_, i) => {
+        const k = vid(i, 'k'), tr = vid(i, 't'), a = s, ta = a + DUR[k] + .15, b = ta + DUR[tr] + .35;
+        TL.lines.push({ id: k, who: 'B', ku: '', tr: '', start: a, dur: DUR[k] }, { id: tr, who: 'R', ku: '', tr: '', start: ta, dur: DUR[tr] });
+        TL.marks[k] = { a, b: a + DUR[k] }; TL.marks[tr] = { a: ta, b: ta + DUR[tr] };
+        s = b; return { a, ta, b };
+      });
+      TL.dur = Math.ceil((s + 2) * 2) / 2;
+    }
+  }
+
   const H = { W, H: HH, FLOOR, BX, RX, INK, PINK, BLUE, S, clamp, lerp, seg, eio, eout, back, rad, mixA, T, amp, TL };
   window.H = H;
 
@@ -273,7 +288,9 @@
     const card = TL.cards.find(c => t >= c.a && t < c.b), end = t >= TL.endAt;
     if (!card && !end) {
       const L = TL.lines.find(l => t >= l.start - .08 && t < l.start + l.dur + .3);
-      if (L) { const p = eout(seg(t, L.start - .08, L.start + .12)); h += `<div class="sub ${L.who}" style="transform:translateY(${(1 - p) * 24}px);opacity:${p}"><span class="who">${L.who === 'B' ? 'BERFÎN' : 'RONÎ'}</span><div class="ku">${hl(L.ku)}</div><div class="tr">${L.tr}</div></div>`; }
+      if (L && L.ku) { const p = eout(seg(t, L.start - .08, L.start + .12)), n = L.ku.replace(/\*/g, '').length, m = L.tr.length;
+        const fk = n <= 22 ? 76 : n <= 32 ? 68 : n <= 44 ? 60 : 54, ft = m <= 30 ? 46 : m <= 46 ? 41 : 37;
+        h += `<div class="sub ${L.who}" style="transform:translateY(${(1 - p) * 24}px);opacity:${p}"><span class="who">${L.who === 'B' ? 'BERFÎN' : 'RONÎ'}</span><div class="ku" style="font-size:${fk}px">${hl(L.ku)}</div><div class="tr" style="font-size:${ft}px">${L.tr}</div></div>`; }
     }
     if (card) {
       const f = Math.min(seg(t, card.a, card.a + .25), 1 - seg(t, card.b - .25, card.b));
@@ -284,7 +301,10 @@
       const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = EP.vocabScale ?? 1;
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .7}"></div>`;
       let rows = '';
-      EP.vocab.forEach(([a, b, c], i) => { const p = back(seg(t, TL.endAt + .5 + i * .4, TL.endAt + .78 + i * .4)); rows += `<div class="row" style="opacity:${Math.min(1, p * 1.5)};transform:translateX(${(1 - p) * -40}px)"><span class="k" style="font-size:${66 * k}px${c ? `;color:${c};-webkit-text-stroke:${c === '#fff' ? '7px #1f1b16;paint-order:stroke fill' : '0'}` : ''}">${a}</span><span class="t" style="font-size:${46 * k}px">${b}</span></div>`; });
+      EP.vocab.forEach(([a, b, c], i) => {
+        const V = TL.voc && TL.voc[i], a0 = V ? V.a - .15 : TL.endAt + .5 + i * .4, p = back(seg(t, a0, a0 + .28));
+        const on = V && t >= V.a - .1 && t < V.b, sk = V && t >= V.a - .05 && t < V.ta - .05, st = V && t >= V.ta - .05 && t < V.b - .2;
+        rows += `<div class="row${on ? ' on' : ''}" style="opacity:${Math.min(1, p * 1.5)};transform:translateX(${(1 - p) * -40}px)"><span class="k${sk ? ' say' : ''}" style="font-size:${66 * k}px${c ? `;color:${c};-webkit-text-stroke:${c === '#fff' ? '7px #1f1b16;paint-order:stroke fill' : '0'}` : ''}">${a}</span><span class="t${st ? ' say' : ''}" style="font-size:${52 * k}px">${b}</span></div>`; });
       h += `<div class="end" style="transform:translateY(${(1 - f) * 900}px)"><h2>Peyvên îro</h2><h3>Bugünün kelimeleri</h3>${rows}</div>`;
     }
     return h;
@@ -294,7 +314,7 @@
   TL.sfx = [{ type: 'title', at: .15 }];
   for (const c of TL.cards) TL.sfx.push({ type: 'chime', at: c.a + .05 });
   for (const b of TL.bubbles) TL.sfx.push({ type: 'pop', at: b.a });
-  EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
+  if (!TL.voc) EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
   if (EP.sfx) TL.sfx.push(...EP.sfx(H));
 
   // ---------- Kapak ----------

@@ -153,7 +153,7 @@
     tag: 'Kurdî A1 · Dersa 12',
     noClock: true,
     table: () => ({}),
-    vocabScale: .74,
+    vocabScale: .84,
     seq: SEQ,
     tail: 1.6,
     bubbles: [
