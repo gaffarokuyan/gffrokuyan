@@ -1,4 +1,5 @@
 // "Cil û berg" — Ders 12 pratiği (kıyafetler): Berfîn anlatır, Ronî komik hatalar yapar, Berfîn gülüp düzeltir.
+// Sesler ElevenLabs API (eleven_v4) ile üretildi; bölme ElevenLabs Scribe kelime zamanlarıyla yapıldı.
 // Sesler: Kürtçe metin sese ARAP HARFLİ Kürtçe yazımla verilir (tts alanı); her sahne + konuşmacı tek uzun kayıt
 // ([long pause] ile ayrılmış), sonra sessizliklerden bölünür → audio/<id>.mp3
 // "Û ev?" (i03) klibi i05, i09, i11 için de kopyalanır.
@@ -73,6 +74,14 @@
     HA('g03', 'Ronî! Tu *her tim* birçî yî! Ne kartol — *qapût*!', 'Ronî! Sen hep açsın! Patates değil — mont!', '[laughs] رۆنی! تو هەر تم برچی یی! نە کارتۆل — قاپووت!'),
     R('g04', 'Baş e, baş e… *qapût*.', 'Tamam, tamam… mont.', '[reluctant] باشە، باشە… قاپووت.', { s: { pose: 'down', expr: 'sad' } }),
 
+    // ---------- lepik ----------
+    B('j01', 'Û ev *lepik* in. Ji bo *destan* in.', 'Bunlar da eldiven. Eller için.', '[clearly] ئوو ئەڤ لەپکن. ژ بۆ دەستانن.'),
+    R('j02', 'Lepik! Ez lepikan li *lingên* xwe dikim!', 'Eldiven! Eldivenleri ayaklarıma giyiyorum!', '[proud] لەپک! ئەز لەپکان ل لنگێن خوە دکم!', { s: { pose: 'hips', expr: 'smug' } }),
+    { id: 'jw', wait: 2 },
+    HA('j03', 'Na, na! Lepik ji bo *destan* in, Ronî!', 'Hayır, hayır! Eldiven eller için Ronî!', '[giggles] نا، نا! لەپک ژ بۆ دەستانن، رۆنی!', { gap: .1 }),
+    R('j04', 'Ez *dizanim*! Henek bû!', 'Biliyorum! Şakaydı!', '[mischievously] ئەز دزانم! هەنەک بوو!', { s: { pose: 'cheer', expr: 'smug', hop: 24 } }),
+    HA('j05', 'Ronî, tu pir *şeytan* î!', 'Ronî, sen çok yaramazsın!', '[laughing] رۆنی، تو پر شەیتانی!', { l: { pose: 'idle', expr: 'smug' } }),
+
     // ---------- dubare ----------
     B('i01', 'Niha em *dubare* bikin! Ev çi ye?', 'Şimdi tekrar edelim! Bu ne?', '[energetic] نها ئەم دوبارە بکن! ئەڤ چ یە؟'),
     R('i02', '*Kum* e!', 'Şapka!', '[confident] کومە!', { gap: .35, s: OK }),
@@ -131,7 +140,9 @@
     ['kiras', 'legs', ['ew', .55], ['f01', 0]],
     ['bercavk', 'back', ['fw', .55], ['f05', .5]],
     ['bercavk', 'face', ['f05', .5], ['g01', 0]],
-    ['qaput', 'body', ['g04', .6], ['i01', 0]],
+    ['qaput', 'body', ['g04', .6], ['j01', 0]],
+    ['lepik', 'foot', ['jw', .55], ['j04', .3]],
+    ['lepik', 'hands', ['j04', .3], ['i01', 0]],
     ['kum', 'foot', ['hw', .15], null], ['gore', 'hands', ['hw', .32], null], ['pelav', 'head', ['hw', .5], null], ['bercavk', 'back', ['hw', .68], null], ['kiras', 'legs', ['hw', .85], null],
   ];
   const REVIEW = [['i01', 'kum'], ['i03', 'gore'], ['i05', 'pelav'], ['i07', 'kiras'], ['i09', 'pantol'], ['i11', 'bercavk'], ['i13', 'qaput']];
@@ -165,6 +176,7 @@
       { line: 'f06', f: .4, who: 'B', icon: 'heart', label: 'bedew' },
       { line: 'g01', f: .45, who: 'B', icon: 'qaput', label: 'qapût' },
       { line: 'g02', f: 0, who: 'R', icon: 'kartol', label: 'kartol?!' },
+      { line: 'j01', f: .1, who: 'B', icon: 'lepik', label: 'lepik' },
       { line: 'g03', f: .6, who: 'B', icon: 'kartol+no', label: 'ne kartol' },
       ...REVIEW.map(([line, k]) => ({ line, f: line === 'i01' ? .55 : 0, who: 'B', icon: k, label: '?' })),
       { line: 'i14', f: 0, tf: .4, hold: 0, who: 'R', icon: 'kartol', label: 'kartol!' },
@@ -198,7 +210,7 @@
     tweak(t, P, H) {
       const T = H.T, Rr = P.R, Bb = P.B;
       // giyinme telaşı
-      for (const id of ['bw', 'cw', 'ew', 'fw', 'hw']) if (t > T(id, 0) && t < T(id, 1)) {
+      for (const id of ['bw', 'cw', 'ew', 'fw', 'jw', 'hw']) if (t > T(id, 0) && t < T(id, 1)) {
         const u = H.seg(t, T(id, 0), T(id, 1));
         if (u < .6 || id === 'hw') { Rr.dx = Math.sin(t * 30) * 6; Rr.la = [100 + Math.sin(t * 17) * 50, 150]; Rr.ra = [100 - Math.sin(t * 19) * 50, 150]; Rr.expr = 'happy'; }
         else { Rr.expr = 'smug'; Rr.la = [48, -44]; Rr.ra = [48, -44]; }
