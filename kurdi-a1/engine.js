@@ -6,6 +6,9 @@
   const W = 1080, HH = 1920, FLOOR = 1180;
   const INK = '#1f1b16', PINK = '#F48FB1', BLUE = '#2F7DE1';
   const BX = 500, RX = 800;
+  // Yatay (1920×1080) mod: index.html?ep=..&land=1 — sahne koordinatları aynı, görünüm penceresi genişler
+  const LAND = /[?&]land=1/.test(location.search), LX0 = -560, LW = 2200;
+  window.LAND = LAND;
 
   const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
   const lerp = (a, b, u) => a + (b - a) * u;
@@ -76,12 +79,13 @@
   // ---------- Oda ----------
   function room(t) {
     const mode = EP.mode ? EP.mode(t, H) : 'day';
-    let s = `<rect width="${W}" height="${FLOOR}" fill="#F6ECD6"/>`;
-    for (let y = 60; y < FLOOR; y += 90) for (let x = 45 + ((y / 90) % 2) * 45; x < W; x += 90) s += `<circle cx="${x}" cy="${y}" r="4" fill="#E9DCBF"/>`;
-    s += `<rect y="${FLOOR}" width="${W}" height="${HH - FLOOR}" fill="#DDB680"/>`;
-    for (let i = 0; i < 9; i++) s += `<path d="M0 ${FLOOR + 30 + i * 84}H${W}" stroke="#C99E66" stroke-width="4"/>`;
-    for (let i = 0; i < 9; i++) for (let x = (i % 2) * 200 + 120; x < W; x += 400) s += `<path d="M${x} ${FLOOR + 30 + (i - 1) * 84}v84" stroke="#C99E66" stroke-width="4"/>`;
-    s += `<rect y="${FLOOR - 26}" width="${W}" height="26" fill="#fff" ${S} stroke-width="6"/>`;
+    const X0 = LAND ? LX0 : 0, XW = LAND ? LW : W;
+    let s = `<rect x="${X0}" width="${XW}" height="${FLOOR}" fill="#F6ECD6"/>`;
+    for (let y = 60; y < FLOOR; y += 90) for (let x = 45 + ((y / 90) % 2) * 45 + (LAND ? -630 : 0); x < X0 + XW; x += 90) s += `<circle cx="${x}" cy="${y}" r="4" fill="#E9DCBF"/>`;
+    s += `<rect x="${X0}" y="${FLOOR}" width="${XW}" height="${HH - FLOOR}" fill="#DDB680"/>`;
+    for (let i = 0; i < 9; i++) s += `<path d="M${X0} ${FLOOR + 30 + i * 84}H${X0 + XW}" stroke="#C99E66" stroke-width="4"/>`;
+    for (let i = 0; i < 9; i++) for (let x = (i % 2) * 200 + 120 + (LAND ? -800 : 0); x < X0 + XW; x += 400) s += `<path d="M${x} ${FLOOR + 30 + (i - 1) * 84}v84" stroke="#C99E66" stroke-width="4"/>`;
+    s += `<rect x="${X0}" y="${FLOOR - 26}" width="${XW}" height="26" fill="#fff" ${S} stroke-width="6"/>`;
     const wx = 70, wy = 520, ww = 290, wh = 330;
     const sky = mode === 'day' ? '#9FD8FF' : mode === 'morning' ? '#FFE0B0' : '#1D2A52';
     s += `<rect x="${wx}" y="${wy}" width="${ww}" height="${wh}" fill="${sky}" ${S} stroke-width="9"/>`;
@@ -105,7 +109,7 @@
     s += `<rect x="935" y="640" width="170" height="210" rx="8" fill="none" stroke="#A56F38" stroke-width="7"/><rect x="935" y="890" width="170" height="210" rx="8" fill="none" stroke="#A56F38" stroke-width="7"/>`;
     s += `<circle cx="938" cy="880" r="13" fill="#FFD23F" ${S} stroke-width="5"/>`;
     if (!EP.noClock) s += clockFace(640, 420, 78, EP.clock ? EP.clock(t, H) : (EP.clockH ?? 10.17), 8);
-    if (mode === 'night') s += `<rect width="${W}" height="${HH}" fill="#18204a" opacity=".2"/>`;
+    if (mode === 'night') s += `<rect x="${LAND ? LX0 : 0}" width="${LAND ? LW : W}" height="${HH}" fill="#18204a" opacity=".2"/>`;
     return s;
   }
 
@@ -139,6 +143,7 @@
     s += `<ellipse cx="0" cy="6" rx="${70 - Math.abs(dy) * .6}" ry="12" fill="#000" opacity=".12"/>`;
     let lf = [-36, 0], rf = [36, 0];
     if (walk != null) { const p = walk * Math.PI * 2; lf = [Math.sin(p) * 48, -Math.max(0, Math.cos(p)) * 26]; rf = [-Math.sin(p) * 48, -Math.max(0, -Math.cos(p)) * 26]; }
+    if (o.legUp) { const u = o.legUp; rf = [36 + 80 * u, -150 * u]; } // tek bacak havada
     s += `<path d="M0 ${hipY}L${lf[0]} ${lf[1]}M0 ${hipY}L${rf[0]} ${rf[1]}" fill="none" ${S} stroke-width="10"/>`;
     s += `<path d="M0 ${hipY}L0 ${neckY}" fill="none" ${S} stroke-width="10"/>`;
     if (who === 'B') {
@@ -157,8 +162,10 @@
       s += `<g transform="translate(${-look * 26} -62) rotate(${-look * 14})"><path d="M0 0L-30 -18L-30 18ZM0 0L30 -18L30 18Z" fill="#E0407B" ${S} stroke-width="5"/><circle r="8" fill="#E0407B" ${S} stroke-width="5"/></g>`;
       s += `<circle cx="${ex0 - 36}" cy="22" r="11" fill="#FF8FB0" opacity=".55"/><circle cx="${ex0 + 36}" cy="22" r="11" fill="#FF8FB0" opacity=".55"/>`;
     } else {
+      if (!o.noCap) {
       s += `<path d="M${look * 26} -12L${look * 112} -8" stroke="#1E5FBF" stroke-width="18" stroke-linecap="round"/>`;
       s += `<path d="M-${R + 2} -12A${R + 2} ${R + 2} 0 0 1 ${R + 2} -12Z" fill="${BLUE}" ${S} stroke-width="7"/><circle cy="-76" r="8" fill="#1E5FBF" ${S} stroke-width="4"/>`;
+      } else s += `<path d="M${look * 4} -60q-6 -40 ${look * 26} -44" fill="none" ${S} stroke-width="6"/>`; // kel kafa, tek tel saç
     }
     const blink = ((t + (who === 'B' ? 0 : 1.3)) % 3.4) < 0.12;
     const E = blink && !['sleep', 'wide', 'dizzy'].includes(expr) ? 'sleep' : expr;
@@ -283,7 +290,7 @@
   const hl = s => s.replace(/\*(.+?)\*/g, '<b>$1</b>');
   function overlays(t) {
     const pop = back(seg(t, .1, .7));
-    let h = `<div class="title" style="font-size:${Math.min(118, Math.round(1230 / EP.title.length))}px;transform:rotate(-3deg) scale(${pop})">${EP.title}</div>`;
+    let h = `<div class="title" style="font-size:${LAND ? Math.min(96, Math.round(900 / EP.title.length)) : Math.min(118, Math.round(1230 / EP.title.length))}px;transform:rotate(-3deg) scale(${pop})">${EP.title}</div>`;
     h += `<div class="tag" style="opacity:${seg(t, .6, 1)}"><span>${EP.tag}</span></div>`;
     const card = TL.cards.find(c => t >= c.a && t < c.b), end = t >= TL.endAt;
     if (!card && !end) {
@@ -298,7 +305,7 @@
       h += `<div class="card" style="opacity:${f};transform:rotate(-4deg) scale(${.6 + .4 * back(seg(t, card.a + .05, card.a + .4))})"><div><div class="ku">${card.ku}</div><div class="tr">${card.tr}</div></div></div>`;
     }
     if (end) {
-      const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = EP.vocabScale ?? 1;
+      const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = (EP.vocabScale ?? 1) * (LAND ? .86 : 1);
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .7}"></div>`;
       let rows = '';
       EP.vocab.forEach(([a, b, c], i) => {
@@ -320,6 +327,7 @@
   // ---------- Kapak ----------
   // renderCover({ title, words: [[kurdî, türkçe], ...] }) — verilmezse bölümün kendi verisi kullanılır
   window.renderCover = function (o = {}) {
+    if (LAND) return renderCoverLand(o);
     const title = o.title || EP.title, words = (o.words || EP.vocab).slice(0, 7);
     const cx = 540, cy = 1180;
     let s = `<svg width="${W}" height="${HH}" viewBox="0 0 ${W} ${HH}"><rect width="${W}" height="${HH}" fill="#FFC83D"/>`;
@@ -340,11 +348,32 @@
     document.getElementById('stage').innerHTML = s + h;
   };
 
+  function renderCoverLand(o) {
+    const title = o.title || EP.title, words = (o.words || EP.vocab).slice(0, 6);
+    const cx = 1380, cy = 760;
+    let s = `<svg width="1920" height="1080" viewBox="0 0 1920 1080"><rect width="1920" height="1080" fill="#FFC83D"/>`;
+    for (let i = 0; i < 24; i += 2) { const a = rad(i * 15 - 7), b = rad(i * 15 + 8); s += `<path d="M${cx} ${cy}L${cx + Math.cos(a) * 3000} ${cy + Math.sin(a) * 3000}L${cx + Math.cos(b) * 3000} ${cy + Math.sin(b) * 3000}Z" fill="#FFD666"/>`; }
+    s += `<ellipse cx="${cx}" cy="1000" rx="430" ry="60" fill="#fff" opacity=".85"/>`;
+    const k = 1.32, gy = 990;
+    const [, fb] = POSE.wave(.35), [nr, fr] = POSE.cheer(0);
+    const B = { who: 'B', x: 0, expr: 'happy', ra: [30, -20], la: fb, mouth: .7 }, R = { who: 'R', x: 0, expr: 'happy', la: nr, ra: fr, mouth: .5 };
+    s += `<g transform="translate(1530 ${gy}) scale(${k}) translate(0 ${-(FLOOR - 10)})">${person(R, 1)}</g>`;
+    s += `<g transform="translate(1240 ${gy}) scale(${k}) translate(0 ${-(FLOOR - 10)})">${person(B, 1)}</g>`;
+    s += `</svg>`;
+    const cols = ['#E0407B', '#2468D8'];
+    const spots = [[70, 720, -6], [380, 700, 5], [690, 725, -4], [90, 905, 4], [400, 920, -5], [710, 900, 6]];
+    let h = `<div class="cv-top" style="left:70px;right:auto;top:56px;text-align:left"><span>KURDÎ · KURMANCÎ</span></div>`;
+    h += `<div class="cv-a1" style="left:40px;right:auto;top:130px;text-align:left;font-size:180px"><b style="font-size:230px">A1</b> PRATİK</div>`;
+    h += `<div class="cv-title" style="left:70px;right:auto;top:420px;text-align:left"><div style="font-size:${Math.min(120, Math.round(1000 / title.length))}px">${title}</div></div>`;
+    words.forEach(([a, b], i) => { const [x, y, r] = spots[i]; h += `<div class="cv-chip" style="left:${x}px;top:${y}px;transform:translateY(-50%) rotate(${r}deg)"><div class="k" style="color:${cols[i % 2]};font-size:${a.length > 9 ? 44 : 58}px">${a}</div><div class="t">${b}</div></div>`; });
+    document.getElementById('stage').innerHTML = s + h;
+  }
+
   // ---------- Kare ----------
   const layer = (name, t, P) => (EP[name] ? EP[name](t, P, H) : '');
   window.renderAt = function (t) {
     const P = poses(t);
-    let s = `<svg width="${W}" height="${HH}" viewBox="0 0 ${W} ${HH}">`;
+    let s = LAND ? `<svg width="1920" height="1080" viewBox="-420 390 1920 1080">` : `<svg width="${W}" height="${HH}" viewBox="0 0 ${W} ${HH}">`;
     s += room(t) + layer('back', t, P) + table(t) + layer('mid', t, P);
     if (P.R.show) s += person(P.R, t);
     if (P.B.show) s += person(P.B, t);

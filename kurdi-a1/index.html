@@ -49,12 +49,25 @@ html,body{margin:0;background:#111;}
 .cv-chip{position:absolute;background:#fff;border:7px solid #1f1b16;border-radius:26px;padding:10px 26px 4px;text-align:center;white-space:nowrap;box-shadow:0 9px 0 rgba(31,27,22,.25)}
 .cv-chip .k{font-weight:800;line-height:1.05}
 .cv-chip .t{font-weight:600;font-size:32px;color:#7b746a;line-height:1.1}
+/* yatay mod */
+html.land #stage{width:1920px;height:1080px}
+html.land .title{left:40px;right:auto;top:38px;transform-origin:left center;-webkit-text-stroke:13px #1f1b16}
+html.land .tag{left:44px;right:auto;top:138px;text-align:left}
+html.land .sub{left:230px;right:230px;top:auto;bottom:22px}
+html.land .sub .ku{padding:30px 30px 14px}
+html.land .sub .tr{padding:10px 30px 14px}
+html.land .card{top:330px}
+html.land .end{left:300px;right:300px;top:22px;padding:18px 44px 22px}
+html.land .end h2{font-size:58px}
+html.land .end h3{font-size:30px;margin:0 0 8px}
+html.land .row{padding:5px 6px 1px}
 </style>
 </head>
 <body>
 <div id="stage"></div>
 <script>
 // index.html?ep=<bölüm adı>
+if (/[?&]land=1/.test(location.search)) document.documentElement.classList.add('land');
 window.EPNAME = new URLSearchParams(location.search).get('ep') || 'ez-bas-im';
 for (const f of ['episode.js', 'timing.js']) document.write(`<script src="episodes/${window.EPNAME}/${f}"><\/script>`);
 document.write('<script src="engine.js"><\/script>');

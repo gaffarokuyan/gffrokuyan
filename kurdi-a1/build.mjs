@@ -33,9 +33,10 @@ for (const f of fs.readdirSync(path.join(EPDIR, 'audio')).filter(f => f.endsWith
 fs.writeFileSync(path.join(EPDIR, 'timing.js'), '// build.mjs tarafından üretilir\nwindow.DUR=' + JSON.stringify(dur) + ';\nwindow.ENV=' + JSON.stringify(env) + ';\n');
 
 const browser = await chromium.launch();
-const url = pathToFileURL(path.join(DIR, 'index.html')).href + '?ep=' + EPN;
+const LAND = process.argv.includes('--land'), SUF = LAND ? '-yatay' : '';
+const url = pathToFileURL(path.join(DIR, 'index.html')).href + '?ep=' + EPN + (LAND ? '&land=1' : '');
 async function newPage() {
-  const p = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
+  const p = await browser.newPage({ viewport: LAND ? { width: 1920, height: 1080 } : { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   p.on('pageerror', e => { console.error('SAYFA HATASI:', e.message); });
   await p.goto(url); await p.evaluate(() => document.fonts.ready);
   await p.evaluate(async () => { await Promise.all([document.fonts.load('800 40px Baloo', 'şêîû'), document.fonts.load('600 40px Baloo', 'şêîû')]); });
@@ -44,6 +45,11 @@ async function newPage() {
 const page0 = await newPage();
 const TL = await page0.evaluate(() => JSON.parse(JSON.stringify(window.TL)));
 console.log(EPN, 'süre', TL.dur, 'sn');
+if (LAND) { // yatay kapak (1920×1080 + 1280×720 küçük resim)
+  const cp = await newPage(); await cp.evaluate(() => window.renderCover());
+  const big = path.join(OUT, `kapak-${EPN}-yatay.png`); await cp.screenshot({ path: big }); await cp.close();
+  spawnSync('ffmpeg', ['-y', '-v', 'error', '-i', big, '-vf', 'scale=1280:720:flags=lanczos', path.join(OUT, `kapak-${EPN}-yatay-1280.png`)]);
+}
 
 const shotsArg = process.argv.indexOf('--shots');
 if (shotsArg > 0) {
@@ -53,7 +59,7 @@ if (shotsArg > 0) {
     if (a.startsWith('f:')) { const [, id, f] = a.split(':'); t = await page0.evaluate(([id, f]) => window.H.T(id, f), [id, Number(f)]); }
     if (a === 'end') t = TL.dur - .3;
     await page0.evaluate(t => window.renderAt(t), t);
-    await page0.screenshot({ path: path.join(OUT, `${EPN}-shot-${String(k++).padStart(2, '0')}.png`) });
+    await page0.screenshot({ path: path.join(OUT, `${EPN}${SUF}-shot-${String(k++).padStart(2, '0')}.png`) });
   }
   await browser.close(); process.exit(0);
 }
@@ -101,7 +107,7 @@ const raw = path.join(TMP, 'mix.f32');
 fs.writeFileSync(raw, Buffer.from(mix.buffer));
 
 // 4) Birleştir
-const out = path.join(OUT, EPN + '.mp4');
+const out = path.join(OUT, EPN + SUF + '.mp4');
 const r = spawnSync('ffmpeg', ['-y', '-v', 'error', '-framerate', String(FPS), '-i', path.join(TMP, 'f%05d.jpg'),
   '-f', 'f32le', '-ar', String(SR), '-ac', '1', '-i', raw,
   '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-ac', '2',
