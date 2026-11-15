@@ -139,7 +139,7 @@
     const who = o.who, look = o.look ?? (who === 'B' ? 1 : -1);
     const { x, expr = 'normal', mouth = 0, tilt = 0, rot = 0, dy = 0, dx = 0, la = [14, 6], ra = [14, 6], walk = null, red = 0 } = o;
     const hipY = -172, shY = -314, neckY = -334, hY = -394, R = 62;
-    let s = `<g transform="translate(${x + dx} ${FLOOR - 10 + dy}) rotate(${rot})">`;
+    let s = `<g transform="translate(${x + dx} ${FLOOR - 10 + dy}) rotate(${rot}) scale(${o.sc || 1})">`;
     s += `<ellipse cx="0" cy="6" rx="${70 - Math.abs(dy) * .6}" ry="12" fill="#000" opacity=".12"/>`;
     let lf = [-36, 0], rf = [36, 0];
     if (walk != null) { const p = walk * Math.PI * 2; lf = [Math.sin(p) * 48, -Math.max(0, Math.cos(p)) * 26]; rf = [-Math.sin(p) * 48, -Math.max(0, -Math.cos(p)) * 26]; }
