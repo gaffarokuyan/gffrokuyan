@@ -68,13 +68,13 @@
     R('h04', 'Çavên min? *Çay*? Çay heye?', 'Gözlerim mi? Çay mı? Çay var mı?', '[excited] چاڤێن من؟ چای؟ چای هەیە؟', { s: { pose: 'cheer', expr: 'happy', hop: 30 } }),
     HA('h05', 'Ne çay — *çav*! Te dîsa dest pê kir!', 'Çay değil — göz! Yine başladın!', '[giggles] نە چای — چاڤ! تە دیسا دەست پێ کر!'),
 
-    // ---------- kilîd ----------
-    B('k01', 'Ev *kilîd* e. Bi kilîdê em derî *vedikin*.', 'Bu anahtar. Anahtarla kapıyı açarız.', '[warmly] ئەڤ کلیدەه. ب کلیدێ ئەم دەری ڤەدکن.'),
+    // ---------- qulf ----------
+    B('k01', 'Ev *qulf* e. Bi qulfê em derî *digirin*.', 'Bu kilit. Kilitle kapıyı kilitleriz.', '[warmly] ئەڤ قولفەه. ب قولفێ ئەم دەری دگرن.'),
     R('k02', 'Ez *dizanim*! Binêre!', 'Biliyorum! Bak!', '[confident] ئەز دزانم! بنێرە!', { s: { pose: 'hips', expr: 'smug' } }),
     { id: 'kw', wait: 2.4 },
-    R('k03', 'Berfîn! Derî veke! Kilîd li *hundir* e!', 'Berfîn! Kapıyı aç! Anahtar içeride!', '[shouting] بەرفین! دەری ڤەکە! کلید ل هوندرەه!', { gap: .1 }),
-    HA('k04', 'Hi hi! Kilîd li ser *masê* ye!', 'Hi hi! Anahtar masanın üstünde!', '[laughs] کلید ل سەر ماسێ یە!', { l: {} }),
-    B('k05', 'Baş e, baş e. Ez derî *vedikim*.', 'Tamam, tamam. Kapıyı açıyorum.', '[giggling] باشە، باشە. ئەز دەری ڤەدکم.', { s: { pose: 'point', expr: 'happy', look: 1 } }),
+    R('k03', 'Berfîn! Derî veke! Derî *qulf* bû!', 'Berfîn! Kapıyı aç! Kapı kilitlendi!', '[shouting] بەرفین! دەری ڤەکە! دەری قولف بوو!', { gap: .1 }),
+    HA('k04', 'Hi hi! Derî *bi xwe* qulf bû!', 'Hi hi! Kapı kendi kendine kilitlendi!', '[laughs] دەری ب خوە قولف بوو!', { l: {} }),
+    B('k05', 'Baş e, baş e. Ez *qulfê* vedikim.', 'Tamam, tamam. Kilidi açıyorum.', '[giggling] باشە، باشە. ئەز قولفێ ڤەدکم.', { s: { pose: 'point', expr: 'happy', look: 1 } }),
     { id: 'kw2', wait: 1.6 },
     R('k06', 'Spas! Derve pir *sar* bû!', 'Sağ ol! Dışarısı çok soğuktu!', '[shivering] سپاس! دەرڤە پر سار بوو!', { gap: .1, s: { pose: 'face', expr: 'sad', shake: 1 } }),
 
@@ -123,11 +123,12 @@
     sersok: `<path d="M-44 0h88v10q0 26 -26 26h-36q-26 0 -26 -26z" fill="#fff" ${S0} stroke-width="5"/><path d="M30 0v-34q0 -10 -10 -10h-8" fill="none" ${S0} stroke-width="5"/><circle cx="8" cy="-44" r="6" fill="#B0BEC5" ${S0} stroke-width="3"/><path d="M8 -36l-4 10M14 -36l2 10M2 -36l-8 8" stroke="#6EC6FF" stroke-width="3" stroke-linecap="round"/><circle cx="-14" cy="-4" r="7" fill="#fff" stroke="#6EC6FF" stroke-width="3"/><circle cx="2" cy="-8" r="5" fill="#fff" stroke="#6EC6FF" stroke-width="3"/>`,
     penir: `<path d="M-36 14l36 -30l36 22v22h-72z" fill="#FFE082" ${S0} stroke-width="5"/><circle cx="-10" cy="16" r="5" fill="#FFC107"/><circle cx="14" cy="22" r="4" fill="#FFC107"/>`,
     tv: `<rect x="-46" y="-34" width="92" height="62" rx="8" fill="#37474F" ${S0} stroke-width="5"/><rect x="-38" y="-26" width="76" height="46" rx="4" fill="#6EC6FF"/><path d="M-14 28l-10 14M14 28l10 14" ${S0} stroke-width="5"/><path d="M-10 -34l-14 -14M10 -34l14 -14" ${S0} stroke-width="4"/>`,
+    qulf: `<g transform="translate(0 -6) scale(.72)"><path d="M-22 -6v-16a22 22 0 0 1 44 0v16" fill="none" ${S0} stroke-width="8"/><rect x="-34" y="-8" width="68" height="52" rx="8" fill="#FFD23F" ${S0} stroke-width="5"/><circle cy="12" r="7" fill="${INKC}"/><path d="M0 14v14" ${S0} stroke-width="6"/></g>`,
     kilid: `<circle cx="-24" r="18" fill="#FFD23F" ${S0} stroke-width="5"/><circle cx="-24" r="6" fill="#fff" ${S0} stroke-width="3"/><path d="M-6 0h50v12M30 0v10" fill="none" ${S0} stroke-width="7"/>`,
     gezi: `<path d="M-30 -44l36 56" ${S0} stroke-width="7"/><path d="M-6 6l34 -10l14 44q-26 8 -44 -2z" fill="#FFC107" ${S0} stroke-width="5"/><path d="M8 10l8 28M20 6l10 28" stroke="${INKC}" stroke-width="3"/>`,
     ode: `<rect x="-40" y="-34" width="80" height="68" fill="#FFF3E0" ${S0} stroke-width="5"/><path d="M0 -34v68M-40 0h80" ${S0} stroke-width="4"/>`,
   };
-  const CARD = [['a01', 'mal', 'mal'], ['b01', null, 'derî'], ['c01', null, 'pencere'], ['d01', 'kursi', 'kursî'], ['d02', 'mase', 'mase'], ['e01', 'metbex', 'metbex'], ['e02', 'sarinc', 'sarinc'], ['f01', 'nivin', 'nivîn'], ['g01', 'sersok', 'serşok'], ['h01', 'tv', 'televizyon'], ['k01', 'kilid', 'kilîd'], ['l01', 'gezi', 'gezî'], ['i01', null, '?'], ['j01', 'ode', 'ode'], ['j03', 'metbex', 'metbex']];
+  const CARD = [['a01', 'mal', 'mal'], ['b01', null, 'derî'], ['c01', null, 'pencere'], ['d01', 'kursi', 'kursî'], ['d02', 'mase', 'mase'], ['e01', 'metbex', 'metbex'], ['e02', 'sarinc', 'sarinc'], ['f01', 'nivin', 'nivîn'], ['g01', 'sersok', 'serşok'], ['h01', 'tv', 'televizyon'], ['k01', 'qulf', 'qulf'], ['l01', 'gezi', 'gezî'], ['i01', null, '?'], ['j01', 'ode', 'ode'], ['j03', 'metbex', 'metbex']];
   const PX = LAND ? 1330 : 730, PY = LAND ? 720 : 455;
   const curCard = (t, H) => { let c = null; for (const x of CARD) if (t >= H.T(x[0], 0)) c = x; return c; };
   const CHX = 650; // sandalye konumu
