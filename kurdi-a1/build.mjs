@@ -104,6 +104,10 @@ const SFX = {
   thud: e => add(tone(120, 50, .3, .6, 8), e.at),
   dum: e => { add(tone(95, 55, .28, .7, 7), e.at); add(tone(160, 80, .08, .2, 9, .5), e.at); },
   tek: e => add(tone(1800, 900, .05, .16, 9, .85), e.at),
+  cricket: e => { for (let k = 0; k < 3; k++) add(tone(4200, 4400, .045, .07, 3), e.at + k * .07); },
+  wind: e => add(tone(260, 140, 1.6, .07, .5, .97), e.at),
+  crack: e => { add(tone(1800, 600, .12, .25, 6, .9), e.at); add(tone(2600, 2600, .25, .08, 5), e.at + .05); },
+  shatter: e => { add(tone(900, 300, .3, .35, 6, .9), e.at); for (let k = 0; k < 6; k++) add(tone(2000 + k * 350, 1500 + k * 300, .15, .1, 6, .4), e.at + k * .04); },
 };
 for (const e of TL.sfx) (SFX[e.type] || (() => console.warn('bilinmeyen efekt', e.type)))(e);
 for (let i = 0; i < mix.length; i++) mix[i] = Math.tanh(mix[i] * 1.15);
