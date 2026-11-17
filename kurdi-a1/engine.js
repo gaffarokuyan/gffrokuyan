@@ -59,9 +59,15 @@
         s = b; return { a, ta, b };
       });
       TL.dur = Math.ceil((s + 2) * 2) / 2;
-      // Outro: Ronî sağ alt köşeden kafasını uzatıp veda eder (EP.outro = { id, ku, tr })
-      const O = EP.outro;
-      if (O && DUR[O.id]) {
+    }
+  }
+  // Outro: Ronî sağ alt köşeden kafasını uzatıp veda eder (EP.outro = { id, ku, tr, laugh })
+  // EP.noVocab: sondaki kelime kartı yok (Shorts)
+  if (EP.noVocab) TL.dur = Math.ceil((TL.endAt + .5) * 2) / 2;
+  {
+    const O = EP.outro;
+    if (O && DUR[O.id]) {
+        const s = EP.noVocab ? TL.endAt - .6 : TL.voc ? TL.voc[TL.voc.length - 1].b : TL.endAt + .6 + EP.vocab.length * .4 + .8;
         const a0 = s + .1, a = a0 + .8, b = a + DUR[O.id];
         TL.lines.push({ id: O.id, who: 'R', ku: '', tr: '', start: a, dur: DUR[O.id] }); TL.marks[O.id] = { a, b };
         // ardından pis pis gülme (EP.outro.laugh = ses kimliği)
@@ -70,7 +76,6 @@
         const e = lb + 1.1;
         TL.outro = { ...O, a0, a, b, lb, e };
         TL.dur = Math.ceil((e + .4) * 2) / 2;
-      }
     }
   }
 
@@ -319,8 +324,8 @@
     // konuşma balonu (çizgi roman)
     const bp = back(seg(t, O.a - .15, O.a + .2)) * (1 - eio(seg(t, O.b + .3, O.b + .6)));
     if (bp > 0) {
-      const fs = LAND ? 60 : 54, rx = O.ku.length * fs * .27 + 70, ry = LAND ? 92 : 86;
-      const bx = cx - rx - (LAND ? 60 : 20), by = cy - (LAND ? 300 : 330), j = Math.sin(t * 9) * 1.5;
+      const fs = LAND ? 60 : 48, rx = O.ku.length * fs * .27 + 60, ry = LAND ? 92 : 86;
+      const bx = Math.max(VB[0] + rx + 24, cx - rx - (LAND ? 60 : 20)), by = cy - (LAND ? 300 : 330), j = Math.sin(t * 9) * 1.5;
       // kuyruk ucu kafaya doğru
       const tx = cx - 40 - bx, ty = cy - 70 - by;
       const tail = (dx, dy) => `M${rx * .45 + dx} ${ry * .62 + dy}Q${rx * .62 + dx} ${ry * 1.15 + dy} ${tx + dx} ${ty + dy}Q${rx * .75 + dx} ${ry * .85 + dy} ${rx * .8 + dx} ${ry * .25 + dy}Z`;
@@ -381,8 +386,8 @@
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .82}"></div>`;
       h += `<div class="card" style="opacity:${f};transform:rotate(-4deg) scale(${.6 + .4 * back(seg(t, card.a + .05, card.a + .4))})"><div><div class="ku">${card.ku}</div><div class="tr">${card.tr}</div></div></div>`;
     }
-    if (end && EP.endStyle !== 'old') h += vocabCard(t);
-    else if (end) {
+    if (end && !EP.noVocab && EP.endStyle !== 'old') h += vocabCard(t);
+    else if (end && !EP.noVocab) {
       const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = (EP.vocabScale ?? 1) * (LAND ? .86 : 1);
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .7}"></div>`;
       let rows = '';
@@ -401,7 +406,7 @@
   for (const c of TL.cards) TL.sfx.push({ type: 'chime', at: c.a + .05 });
   for (const b of TL.bubbles) TL.sfx.push({ type: 'pop', at: b.a });
   if (TL.outro) TL.sfx.push({ type: 'boing', at: TL.outro.a0 + .35 }, { type: 'pop', at: TL.outro.a - .1 }, { type: 'whoosh', at: TL.outro.lb + .55 });
-  if (!TL.voc) EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
+  if (!TL.voc && !EP.noVocab) EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
   if (EP.sfx) TL.sfx.push(...EP.sfx(H));
 
   // ---------- Kapak ----------
