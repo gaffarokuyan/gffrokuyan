@@ -100,6 +100,8 @@ const SFX = {
   ding: e => { add(tone(1320, 1320, .5, .16, 6), e.at); add(tone(1760, 1760, .6, .1, 5), e.at + .08); },
   sweep: e => add(tone(700, 500, .28, .1, 2, .95), e.at),
   thud: e => add(tone(120, 50, .3, .6, 8), e.at),
+  dum: e => { add(tone(95, 55, .28, .7, 7), e.at); add(tone(160, 80, .08, .2, 9, .5), e.at); },
+  tek: e => add(tone(1800, 900, .05, .16, 9, .85), e.at),
 };
 for (const e of TL.sfx) (SFX[e.type] || (() => console.warn('bilinmeyen efekt', e.type)))(e);
 for (let i = 0; i < mix.length; i++) mix[i] = Math.tanh(mix[i] * 1.15);

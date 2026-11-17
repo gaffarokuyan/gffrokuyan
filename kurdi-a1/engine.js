@@ -288,6 +288,36 @@
 
   // ---------- HTML katmanları ----------
   const hl = s => s.replace(/\*(.+?)\*/g, '<b>$1</b>');
+  // Kelime kartı (yeşil-altın, numaralı, simgeli): EP.vocabIcons ile her satıra simge
+  function vocabCard(t) {
+    const f = eout(seg(t, TL.endAt, TL.endAt + .5)), VW = LAND ? 1920 : W, VH = LAND ? 1080 : HH;
+    let rows = '';
+    EP.vocab.forEach(([a, b], i) => {
+      const V = TL.voc && TL.voc[i], a0 = V ? V.a - .15 : TL.endAt + .5 + i * .4, p = back(seg(t, a0, a0 + .3));
+      const on = V && t >= V.a - .1 && t < V.b, sk = V && t >= V.a - .05 && t < V.ta - .05, st = V && t >= V.ta - .05 && t < V.b - .2;
+      const ic = EP.vocabIcons && EP.vocabIcons[i] ? `<svg style="position:relative" width="78" height="78" viewBox="-55 -55 110 110">${iconArt(EP.vocabIcons[i])}</svg>` : '<svg style="position:relative" width="78" height="78"></svg>';
+      const ks = a.length > 12 ? 40 : a.length > 9 ? 46 : 52;
+      rows += `<div class="vr${on ? ' on' : ''}" style="opacity:${Math.min(1, p * 1.5)};transform:translateX(${(1 - p) * -50}px)"><div class="n">${i + 1}</div><span class="k${sk ? ' say' : ''}" style="font-size:${ks}px">${a}</span><span class="c">:</span><span class="t${st ? ' say' : ''}">${b}</span>${ic}</div>`;
+    });
+    // kenar motifleri + alt manzara
+    let deco = `<svg style="position:absolute;left:0;top:0" width="${VW}" height="${VH}" viewBox="0 0 ${VW} ${VH}"><defs><pattern id="kmotif" width="44" height="60" patternUnits="userSpaceOnUse"><path d="M22 4L40 30L22 56L4 30Z" fill="none" stroke="#C9A24D" stroke-width="3"/><path d="M22 18L31 30L22 42L13 30Z" fill="#C9A24D"/></pattern></defs>`;
+    if (!LAND) {
+      deco += `<rect x="30" y="230" width="44" height="${VH - 600}" fill="url(#kmotif)" opacity=".45"/><rect x="${VW - 74}" y="230" width="44" height="${VH - 600}" fill="url(#kmotif)" opacity=".45"/>`;
+      const by = VH - 30;
+      deco += `<g>`;
+      for (let i = 0; i < 12; i++) { const ang = Math.PI + i * Math.PI / 11; deco += `<path d="M${VW / 2 + Math.cos(ang) * 120} ${by - 170 + Math.sin(ang) * 120}L${VW / 2 + Math.cos(ang) * 175} ${by - 170 + Math.sin(ang) * 175}" stroke="#E2B547" stroke-width="5" stroke-linecap="round" opacity=".7"/>`; }
+      deco += `<circle cx="${VW / 2}" cy="${by - 170}" r="96" fill="#E8B83E"/>`;
+      deco += `<path d="M0 ${by - 90}L170 ${by - 260}L300 ${by - 150}L430 ${by - 300}L560 ${by - 160}L700 ${by - 280}L860 ${by - 140}L1080 ${by - 240}V${by + 30}H0Z" fill="#8FA88C"/>`;
+      deco += `<path d="M0 ${by - 40}L220 ${by - 170}L400 ${by - 60}L620 ${by - 200}L820 ${by - 70}L1080 ${by - 150}V${by + 30}H0Z" fill="#5E7F5E"/>`;
+      for (const [x, s2] of [[60, 1.3], [140, 1], [950, 1.2], [1030, .9], [20, .8]]) deco += `<g transform="translate(${x} ${by}) scale(${s2})"><path d="M0 -200L-34 -120h20L-48 -60h26L-60 0h120L22 -60h26L14 -120h20Z" fill="#173D2A"/><rect x="-6" y="0" width="12" height="20" fill="#5D4037"/></g>`;
+      deco += `<path d="M420 ${by - 330}q14 -12 28 0q14 -12 28 0M620 ${by - 360}q12 -10 24 0q12 -10 24 0" fill="none" stroke="#7b746a" stroke-width="4"/></g>`;
+    } else {
+      deco += `<rect x="30" y="150" width="30" height="${VH - 190}" fill="url(#kmotif)" opacity=".35"/><rect x="${VW - 60}" y="150" width="30" height="${VH - 190}" fill="url(#kmotif)" opacity=".35"/>`;
+    }
+    deco += `</svg>`;
+    return `<div class="vc" style="opacity:${f};transform:translateY(${(1 - f) * 80}px)">${deco}<div class="frame"></div><h2>Peyvên îro</h2><h3>Bugünün kelimeleri</h3><div class="rows">${rows}</div></div>`;
+  }
+
   function overlays(t) {
     const pop = back(seg(t, .1, .7));
     let h = `<div class="title" style="font-size:${LAND ? Math.min(96, Math.round(900 / EP.title.length)) : Math.min(118, Math.round(1230 / EP.title.length))}px;transform:rotate(-3deg) scale(${pop})">${EP.title}</div>`;
@@ -304,7 +334,8 @@
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .82}"></div>`;
       h += `<div class="card" style="opacity:${f};transform:rotate(-4deg) scale(${.6 + .4 * back(seg(t, card.a + .05, card.a + .4))})"><div><div class="ku">${card.ku}</div><div class="tr">${card.tr}</div></div></div>`;
     }
-    if (end) {
+    if (end && EP.endStyle !== 'old') h += vocabCard(t);
+    else if (end) {
       const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = (EP.vocabScale ?? 1) * (LAND ? .86 : 1);
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .7}"></div>`;
       let rows = '';
