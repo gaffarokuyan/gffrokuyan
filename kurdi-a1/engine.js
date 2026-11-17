@@ -305,15 +305,23 @@
     const R = { who: 'R', x: 0, expr: t > O.b ? 'happy' : 'smug', look: -1, mouth: amp(O.id, t), la: POSE.wave(t * 1.4)[1], ra: [14, 6], tilt: -8 };
     let s = `<svg style="position:absolute;left:0;top:0" width="${LAND ? 1920 : W}" height="${LAND ? 1080 : HH}" viewBox="${VB.join(' ')}">`;
     s += `<g transform="translate(${cx + (1 - p) * 260} ${cy + (1 - p) * 520}) rotate(${rot}) scale(${sc}) translate(0 ${-(FLOOR - 470)})">${person(R, t)}</g>`;
-    // konuşma balonu
+    // konuşma balonu (çizgi roman)
     const bp = back(seg(t, O.a - .15, O.a + .2)) * (1 - eio(seg(t, O.b + .3, O.b + .6)));
     if (bp > 0) {
-      const bw = LAND ? 820 : 760, bh = 170, bx = cx - (LAND ? 250 : 200) - bw, by = cy - (LAND ? 260 : 330);
-      s += `<g transform="translate(${bx + bw} ${by + bh}) scale(${bp}) translate(${-bw} ${-bh})" font-family="Baloo,sans-serif" text-anchor="middle">
-        <path d="M${bw - 60} ${bh - 6}L${bw + 70} ${bh + 70}L${bw - 130} ${bh - 6}Z" fill="#FBF5E6" stroke="#173D2A" stroke-width="7" stroke-linejoin="round"/>
-        <rect width="${bw}" height="${bh}" rx="34" fill="#FBF5E6" stroke="#173D2A" stroke-width="7"/><path d="M${bw - 128} ${bh - 3}h64" stroke="#FBF5E6" stroke-width="9"/>
-        <text x="${bw / 2}" y="78" font-size="${LAND ? 52 : 48}" font-weight="800" fill="#173D2A">${O.ku}</text>
-        <text x="${bw / 2}" y="132" font-size="36" font-weight="700" fill="#8A6D1E">${O.tr}</text></g>`;
+      const fs = LAND ? 60 : 54, rx = O.ku.length * fs * .27 + 70, ry = LAND ? 92 : 86;
+      const bx = cx - rx - (LAND ? 60 : 20), by = cy - (LAND ? 300 : 330), j = Math.sin(t * 9) * 1.5;
+      // kuyruk ucu kafaya doğru
+      const tx = cx - 40 - bx, ty = cy - 70 - by;
+      const tail = (dx, dy) => `M${rx * .45 + dx} ${ry * .62 + dy}Q${rx * .62 + dx} ${ry * 1.15 + dy} ${tx + dx} ${ty + dy}Q${rx * .75 + dx} ${ry * .85 + dy} ${rx * .8 + dx} ${ry * .25 + dy}Z`;
+      s += `<g transform="translate(${bx} ${by}) rotate(${-5 + j}) scale(${bp})" font-family="Baloo,sans-serif" text-anchor="middle">
+        <g transform="translate(10 12)" fill="#1f1b16"><ellipse rx="${rx}" ry="${ry}"/><path d="${tail(0, 0)}"/></g>
+        <path d="${tail(0, 0)}" fill="#fff" stroke="#1f1b16" stroke-width="9" stroke-linejoin="round"/>
+        <ellipse rx="${rx}" ry="${ry}" fill="#fff" stroke="#1f1b16" stroke-width="9"/>
+        <path d="M${rx * .47} ${ry * .66}Q${rx * .66} ${ry * .82} ${rx * .79} ${ry * .3}" fill="none" stroke="#fff" stroke-width="12"/>
+        <path d="M${-rx * .72} ${-ry * .35}q${rx * .12} ${-ry * .45} ${rx * .4} ${-ry * .55}" fill="none" stroke="#E3F2FD" stroke-width="10" stroke-linecap="round"/>
+        <text y="${fs * .35}" font-size="${fs}" font-weight="800" fill="#1f1b16" letter-spacing="1">${O.ku}</text></g>`;
+      // komik hareket çizgileri
+      s += `<g stroke="#1f1b16" stroke-width="7" stroke-linecap="round" opacity="${bp}"><path d="M${cx + 150} ${cy - 50}l34 -34M${cx + 185} ${cy - 5}l44 -16M${cx + 100} ${cy - 85}l14 -44"/></g>`;
     }
     return s + `</svg>`;
   }
