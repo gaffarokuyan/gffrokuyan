@@ -296,8 +296,8 @@
       const V = TL.voc && TL.voc[i], a0 = V ? V.a - .15 : TL.endAt + .5 + i * .4, p = back(seg(t, a0, a0 + .3));
       const on = V && t >= V.a - .1 && t < V.b, sk = V && t >= V.a - .05 && t < V.ta - .05, st = V && t >= V.ta - .05 && t < V.b - .2;
       const ic = EP.vocabIcons && EP.vocabIcons[i] ? `<svg style="position:relative" width="78" height="78" viewBox="-55 -55 110 110">${iconArt(EP.vocabIcons[i])}</svg>` : '<svg style="position:relative" width="78" height="78"></svg>';
-      const ks = a.length > 12 ? 40 : a.length > 9 ? 46 : 52;
-      rows += `<div class="vr${on ? ' on' : ''}" style="opacity:${Math.min(1, p * 1.5)};transform:translateX(${(1 - p) * -50}px)"><div class="n">${i + 1}</div><span class="k${sk ? ' say' : ''}" style="font-size:${ks}px">${a}</span><span class="c">:</span><span class="t${st ? ' say' : ''}">${b}</span>${ic}</div>`;
+      const ks = a.length > 16 ? 34 : a.length > 12 ? 40 : a.length > 9 ? 46 : 52;
+      rows += `<div class="vr${on ? ' on' : ''}" style="opacity:${Math.min(1, p * 1.5)};transform:translateX(${(1 - p) * -50}px)"><div class="n">${i + 1}</div><span class="k${sk ? ' say' : ''}" style="font-size:${ks}px">${a}</span><span class="c">:</span><span class="t${st ? ' say' : ''}" style="font-size:${b.length > 17 ? 30 : b.length > 14 ? 35 : 42}px">${b}</span>${ic}</div>`;
     });
     // kenar motifleri + alt manzara
     let deco = `<svg style="position:absolute;left:0;top:0" width="${VW}" height="${VH}" viewBox="0 0 ${VW} ${VH}"><defs><pattern id="kmotif" width="44" height="60" patternUnits="userSpaceOnUse"><path d="M22 4L40 30L22 56L4 30Z" fill="none" stroke="#C9A24D" stroke-width="3"/><path d="M22 18L31 30L22 42L13 30Z" fill="#C9A24D"/></pattern></defs>`;
