@@ -66,13 +66,15 @@ if (shotsArg > 0) {
 
 // 2) Kareler
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'kurdi-a1-'));
+// --from <sn>: sadece o saniyeden sonrasını render et (önizleme)
+const fromArg = process.argv.indexOf('--from'), FROM = fromArg > 0 ? Number(process.argv[fromArg + 1]) : 0, F0 = Math.round(FROM * FPS);
 const total = Math.round(TL.dur * FPS);
-let next = 0;
+let next = F0;
 await Promise.all([page0, await newPage(), await newPage(), await newPage()].map(async p => {
   for (;;) {
     const f = next++; if (f >= total) break;
     await p.evaluate(t => window.renderAt(t), f / FPS);
-    await p.screenshot({ path: path.join(TMP, `f${String(f).padStart(5, '0')}.jpg`), type: 'jpeg', quality: 95 });
+    await p.screenshot({ path: path.join(TMP, `f${String(f - F0).padStart(5, '0')}.jpg`), type: 'jpeg', quality: 95 });
   }
 }));
 await browser.close();
@@ -106,10 +108,10 @@ const SFX = {
 for (const e of TL.sfx) (SFX[e.type] || (() => console.warn('bilinmeyen efekt', e.type)))(e);
 for (let i = 0; i < mix.length; i++) mix[i] = Math.tanh(mix[i] * 1.15);
 const raw = path.join(TMP, 'mix.f32');
-fs.writeFileSync(raw, Buffer.from(mix.buffer));
+fs.writeFileSync(raw, Buffer.from(mix.slice(Math.floor(FROM * SR)).buffer));
 
 // 4) Birleştir
-const out = path.join(OUT, EPN + SUF + '.mp4');
+const out = path.join(OUT, EPN + SUF + (FROM ? '-son' : '') + '.mp4');
 const r = spawnSync('ffmpeg', ['-y', '-v', 'error', '-framerate', String(FPS), '-i', path.join(TMP, 'f%05d.jpg'),
   '-f', 'f32le', '-ar', String(SR), '-ac', '1', '-i', raw,
   '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-ac', '2',

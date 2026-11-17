@@ -62,9 +62,13 @@
       // Outro: Ronî sağ alt köşeden kafasını uzatıp veda eder (EP.outro = { id, ku, tr })
       const O = EP.outro;
       if (O && DUR[O.id]) {
-        const a0 = s + .1, a = a0 + .8, b = a + DUR[O.id], e = b + 1.1;
-        TL.outro = { ...O, a0, a, b, e };
+        const a0 = s + .1, a = a0 + .8, b = a + DUR[O.id];
         TL.lines.push({ id: O.id, who: 'R', ku: '', tr: '', start: a, dur: DUR[O.id] }); TL.marks[O.id] = { a, b };
+        // ardından pis pis gülme (EP.outro.laugh = ses kimliği)
+        let lb = b;
+        if (O.laugh && DUR[O.laugh]) { const la = b + .25; lb = la + DUR[O.laugh]; TL.lines.push({ id: O.laugh, who: 'R', ku: '', tr: '', start: la, dur: DUR[O.laugh] }); TL.marks[O.laugh] = { a: la, b: lb }; }
+        const e = lb + 1.1;
+        TL.outro = { ...O, a0, a, b, lb, e };
         TL.dur = Math.ceil((e + .4) * 2) / 2;
       }
     }
@@ -299,12 +303,14 @@
   // Kelime kartı (yeşil-altın, numaralı, simgeli): EP.vocabIcons ile her satıra simge
   function outroPeek(t) {
     const O = TL.outro, VB = LAND ? [-420, 390, 1920, 1080] : [0, 0, W, HH];
-    const pin = back(seg(t, O.a0, O.a0 + .55)), pout = eio(seg(t, O.b + .45, O.e)), p = pin * (1 - pout);
+    const pin = back(seg(t, O.a0, O.a0 + .55)), pout = eio(seg(t, O.lb + .45, O.e)), p = pin * (1 - pout), lau = O.laugh && t >= O.b + .2 && t < O.lb + .2;
     const cx = VB[0] + VB[2] - (LAND ? 230 : 210), cy = VB[1] + VB[3] - (LAND ? 330 : 400);
     const sc = LAND ? 1.55 : 1.75, wob = Math.sin(t * 7) * 4, rot = -32 + wob + (1 - p) * 25;
-    const R = { who: 'R', x: 0, expr: t > O.b ? 'happy' : 'smug', look: -1, mouth: amp(O.id, t), la: POSE.wave(t * 1.4)[1], ra: [14, 6], tilt: -8 };
+    const R = { who: 'R', x: 0, expr: lau ? 'smug' : t > O.b ? 'happy' : 'smug', look: -1, mouth: lau ? amp(O.laugh, t) : amp(O.id, t), dy: lau ? -Math.abs(Math.sin(t * 22)) * 10 : 0, la: POSE.wave(t * 1.4)[1], ra: [14, 6], tilt: -8 };
     let s = `<svg style="position:absolute;left:0;top:0" width="${LAND ? 1920 : W}" height="${LAND ? 1080 : HH}" viewBox="${VB.join(' ')}">`;
     s += `<g transform="translate(${cx + (1 - p) * 260} ${cy + (1 - p) * 520}) rotate(${rot}) scale(${sc}) translate(0 ${-(FLOOR - 470)})">${person(R, t)}</g>`;
+    // pis pis gülme yazısı
+    if (lau) { const u = seg(t, O.b + .2, O.lb + .2); for (let k = 0; k < 3; k++) { const v = clamp(u * 1.6 - k * .25); if (v > 0 && v < 1) { const X = cx - 260 - k * 150, Y = cy - 10 - k * 50 - v * 50; s += `<text x="${X}" y="${Y}" font-family="Baloo,sans-serif" font-size="${84 - k * 6}" font-weight="800" fill="#E0407B" stroke="#fff" stroke-width="8" paint-order="stroke" text-anchor="middle" opacity="${1 - v * v * v}" transform="rotate(${-14 + k * 8} ${X} ${Y})">hı hı</text>`; } } }
     // konuşma balonu (çizgi roman)
     const bp = back(seg(t, O.a - .15, O.a + .2)) * (1 - eio(seg(t, O.b + .3, O.b + .6)));
     if (bp > 0) {
@@ -371,7 +377,6 @@
       h += `<div class="card" style="opacity:${f};transform:rotate(-4deg) scale(${.6 + .4 * back(seg(t, card.a + .05, card.a + .4))})"><div><div class="ku">${card.ku}</div><div class="tr">${card.tr}</div></div></div>`;
     }
     if (end && EP.endStyle !== 'old') h += vocabCard(t);
-    if (TL.outro && t >= TL.outro.a0 && t < TL.outro.e) h += outroPeek(t);
     else if (end) {
       const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = (EP.vocabScale ?? 1) * (LAND ? .86 : 1);
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .7}"></div>`;
@@ -382,6 +387,7 @@
         rows += `<div class="row${on ? ' on' : ''}" style="opacity:${Math.min(1, p * 1.5)};transform:translateX(${(1 - p) * -40}px)"><span class="k${sk ? ' say' : ''}" style="font-size:${66 * k}px${c ? `;color:${c};-webkit-text-stroke:${c === '#fff' ? '7px #1f1b16;paint-order:stroke fill' : '0'}` : ''}">${a}</span><span class="t${st ? ' say' : ''}" style="font-size:${52 * k}px">${b}</span></div>`; });
       h += `<div class="end" style="transform:translateY(${(1 - f) * 900}px)"><h2>Peyvên îro</h2><h3>Bugünün kelimeleri</h3>${rows}</div>`;
     }
+    if (TL.outro && t >= TL.outro.a0 && t < TL.outro.e) h += outroPeek(t);
     return h;
   }
 
@@ -389,7 +395,7 @@
   TL.sfx = [{ type: 'title', at: .15 }];
   for (const c of TL.cards) TL.sfx.push({ type: 'chime', at: c.a + .05 });
   for (const b of TL.bubbles) TL.sfx.push({ type: 'pop', at: b.a });
-  if (TL.outro) TL.sfx.push({ type: 'boing', at: TL.outro.a0 + .35 }, { type: 'pop', at: TL.outro.a - .1 }, { type: 'whoosh', at: TL.outro.b + .55 });
+  if (TL.outro) TL.sfx.push({ type: 'boing', at: TL.outro.a0 + .35 }, { type: 'pop', at: TL.outro.a - .1 }, { type: 'whoosh', at: TL.outro.lb + .55 });
   if (!TL.voc) EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
   if (EP.sfx) TL.sfx.push(...EP.sfx(H));
 
