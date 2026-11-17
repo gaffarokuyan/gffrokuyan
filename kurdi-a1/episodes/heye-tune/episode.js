@@ -88,6 +88,15 @@
     R('g04', 'Haydarê te *tune*! Haydarê min *heye*!', 'Senin Haydar\'ın yok! Benim Haydar\'ım var!', '[laughing, running] Haydarê te tune! Haydarê min heye!', { gap: .2, write: 1 }),
     B('g05', 'Ronî! *Raweste*!', 'Ronî! Dur!', '[shouting, laughing] رۆنی! راوەستە!', { gap: .2 }),
     { id: 'gx', wait: 1.6 },
+
+    // ---------- DORA TE: izleyiciye boşluk doldurma ----------
+    B('q01', 'Niha dora *te* ye! Cihê vala tije bike: Pereyê min… ___ ?', 'Şimdi sıra sende! Boşluğu doldur: Param… ?', '[cheerful, inviting] Niha dora te ye! Cihê vala tije bike: Pereyê min… çi?', { gap: .3, s: { pose: 'show', expr: 'happy' } }),
+    { id: 'qa', wait: 3.6 },
+    B('q02', 'Bersiv: *tune*! Pereyê min tune. Aferîn!', 'Cevap: tune! Param yok. Aferin!', '[happy] Bersiv: tune! Pereyê min tune. Aferîn!', { gap: .2, s: { pose: 'cheer', expr: 'happy' } }),
+    B('q03', 'Pirsa *duyem*: Sê pisîkên min… ___ ?', 'İkinci soru: Üç kedim… ?', '[curious] Pirsa duyem: Sê pisîkên min… çi?', { gap: .5, s: { pose: 'show', expr: 'happy' } }),
+    { id: 'qb', wait: 3.6 },
+    R('q04', 'Ez dizanim! Lê *nabêjim*! Bersiva xwe di *şîroveyan* de binivîse!', 'Biliyorum! Ama söylemem! Cevabını yorumlara yaz!', '[cheeky, playful] Ez dizanim! Lê nabêjim! Bersiva xwe di şîroveyan de binivîse!', { gap: .2, s: { pose: 'point', expr: 'smug' } }),
+    { id: 'qz', wait: 1.2 },
   ];
 
   // ---------- tahta sayfaları: [sayfanın başladığı replik, [[yazıldığı replik, oran, metin, renk?, yazan?], ...]] ----------
@@ -163,6 +172,8 @@
       out.push({ type: 'whoosh', at: T('dx', .25) }, { type: 'bonk', at: T('dx', .33) }, { type: 'rise', at: T('dx', .36) }, { type: 'thud', at: T('dx', .62) });
       for (const id of ['f03', 'f05', 'f07']) out.push({ type: 'ding', at: T(id, .9) });
       out.push({ type: 'pop', at: T('d02', .6) }, { type: 'boing', at: T('g02', .5) }, { type: 'whoosh', at: T('g03', .1) }, { type: 'whoosh', at: T('g04', .1) });
+      for (const q of ['qa', 'qb']) { for (let k = 0; k < 3; k++) out.push({ type: 'tek', at: T(q, 0) + .3 + k * 1.1 }); }
+      out.push({ type: 'whoosh', at: T('q01', 0) }, { type: 'ding', at: T('q02', 0) }, { type: 'rise', at: T('q02', .05) }, { type: 'whoosh', at: T('q03', 0) - .3 }, { type: 'pop', at: T('q04', .5) });
       return out;
     },
     tweak(t, P, H) {
@@ -198,7 +209,7 @@
       { const g2 = T('g02', .5), r0 = T('g02', 1), r1 = T('g04', 0), c0 = T('g04', 0), c1 = T('gx', 1);
         if (t > g2 && t < r0) { Rr.la = [110, 150]; Rr.expr = 'smug'; }
         if (t >= r0 && t < r1) { const v = H.eio(H.seg(t, r0, r1 - .2)); Rr.x = H.lerp(H.RX, 1300, v); Rr.look = 1; Rr.walk = t * 4.5; Rr.expr = 'happy'; if (v >= 1) Rr.show = false; Bb.look = 1; if (t > T('g03', .5)) { Bb.x = H.lerp(H.BX, 1300, H.eio(H.seg(t, T('g03', .5), r1))); Bb.walk = t * 4.5; } }
-        if (t >= c0) { const v = H.seg(t, c0, c1); Rr.x = H.lerp(1350, -420, v); Rr.look = -1; Rr.walk = t * 4.5; Rr.expr = 'happy'; Rr.show = Rr.x > -300 && Rr.x < 1300; Rr.la = [150, 176]; Rr.dy = -Math.abs(Math.sin(t * 14)) * 14;
+        if (t >= c0 && t < c1) { const v = H.seg(t, c0, c1); Rr.x = H.lerp(1350, -420, v); Rr.look = -1; Rr.walk = t * 4.5; Rr.expr = 'happy'; Rr.show = Rr.x > -300 && Rr.x < 1300; Rr.la = [150, 176]; Rr.dy = -Math.abs(Math.sin(t * 14)) * 14;
           Bb.x = Rr.x + 330; Bb.look = -1; Bb.walk = t * 4.5 + .5; Bb.expr = 'angry'; Bb.show = Bb.x > -300 && Bb.x < 1300; Bb.ra = [120, 150]; Bb.la = [120, 150]; Bb.dy = -Math.abs(Math.sin(t * 14 + 1)) * 14; } }
       // gülme
       const L = SEQ.find(l => l.laugh && t >= T(l.id, 0) - .05 && t < T(l.id, .4));
@@ -269,6 +280,35 @@
         <text x="-30" y="-40" font-size="30" font-weight="800" fill="#4FC3F7">brrr</text></g>`; }
       // milyon balonu
       if (t > T('c02', .4) && t < T('c04', .3)) s += `<g transform="translate(${H.RX + 60} ${H.FLOOR - 500}) rotate(6)"><rect x="-110" y="-32" width="220" height="64" rx="12" fill="#A5D6A7" ${S} stroke-width="5"/><text y="14" text-anchor="middle" font-size="38" font-weight="800" fill="${INKC}">1.000.000 ₺</text></g>`;
+      // ---------- DORA TE kartı ----------
+      { const a1 = T('q01', 0), e1 = T('q03', 0) - .35, a2 = T('q03', 0) - .2, e2 = T('qz', 1);
+        const Q = t >= a1 && t < e1 ? 1 : t >= a2 && t < e2 ? 2 : 0;
+        if (Q) {
+          const a = Q === 1 ? a1 : a2, e = Q === 1 ? e1 : e2, p = H.back(H.seg(t, a, a + .4)) * (1 - H.eio(H.seg(t, e - .3, e)));
+          const CX = LAND ? 600 : 540, CY = LAND ? 830 : 760, CW = LAND ? 1100 : 980, CH = 640, sent = Q === 1 ? ['Pereyê min', 'tune', 'Param yok.'] : ['Sê pisîkên min', 'hene', 'Üç kedim var.'];
+          const qc = Q === 1 ? 'qa' : 'qb', qa0 = T(qc, 0), qa1 = T(qc, 1), rev = Q === 1 && t >= T('q02', 0);
+          s += `<rect x="-600" y="0" width="3200" height="2400" fill="#0b2318" opacity="${.45 * Math.min(1, p)}"/>`;
+          s += `<g transform="translate(${CX} ${CY}) scale(${p})" font-family="Baloo,sans-serif" text-anchor="middle">`;
+          s += `<rect x="${-CW / 2}" y="${-CH / 2}" width="${CW}" height="${CH}" rx="28" fill="#FBF5E6" stroke="#173D2A" stroke-width="10"/><rect x="${-CW / 2 + 16}" y="${-CH / 2 + 16}" width="${CW - 32}" height="${CH - 32}" rx="18" fill="none" stroke="#C9A227" stroke-width="4"/>`;
+          s += `<rect x="-200" y="${-CH / 2 - 36}" width="400" height="72" rx="36" fill="#173D2A"/><text y="${-CH / 2 + 14}" font-size="40" font-weight="800" fill="#FFD23F" letter-spacing="2">DORA TE! ✎</text>`;
+          s += `<text y="${-CH / 2 + 92}" font-size="30" font-weight="700" fill="#8A6D1E">SIRA SENDE · BOŞLUĞU DOLDUR</text>`;
+          // cümle + boşluk
+          const fs = LAND ? 76 : 70;
+          const r = rev ? H.back(H.seg(t, T('q02', 0), T('q02', .15))) : 0;
+          const blank = rev ? `<tspan fill="#2E7D32" text-decoration="underline" font-size="${fs * (.6 + .4 * r)}">${sent[1]}</tspan>` : `<tspan fill="#C9A227">_____</tspan>`;
+          s += `<text y="-10" font-size="${fs}" font-weight="800" fill="#173D2A" xml:space="preserve">${sent[0]} ${blank} .</text>`;
+          s += `<text y="62" font-size="40" font-weight="700" fill="#5B4A1E">${sent[2]}</text>`;
+          // seçenekler
+          ['heye', 'hene', 'tune'].forEach((o, i) => { const ox = (i - 1) * 250, ok = rev && o === sent[1], dim = rev && !ok;
+            s += `<g transform="translate(${ox} 150)" opacity="${dim ? .35 : 1}"><rect x="-105" y="-44" width="210" height="80" rx="40" fill="${ok ? '#2E7D32' : '#fff'}" stroke="#173D2A" stroke-width="5"/><text y="12" font-size="44" font-weight="800" fill="${ok ? '#fff' : '#173D2A'}">${ok ? '✓ ' : ''}${o}</text></g>`; });
+          // geri sayım
+          if (t >= qa0 && t < qa1) { const k = Math.max(1, 3 - Math.floor((t - qa0 - .3) / 1.1)), f = ((t - qa0 - .3) % 1.1) / 1.1, sc = 1 + (1 - Math.min(1, f * 3)) * .4;
+            s += `<g transform="translate(${CW / 2 - 70} ${-CH / 2 + 70}) scale(${sc})"><circle r="52" fill="#E53935" stroke="#173D2A" stroke-width="6"/><text y="20" font-size="60" font-weight="800" fill="#fff">${k}</text></g>`; }
+          // açıklama / ipucu
+          if (rev) s += `<text y="${CH / 2 - 52}" font-size="38" font-weight="800" fill="#2E7D32">tune = yok  →  Param YOK = Pereyê min tune</text>`;
+          if (Q === 2 && t >= qa1) { s += `<text y="${CH / 2 - 92}" font-size="34" font-weight="700" fill="#8A6D1E">İpucu: 3 kedi = çoğul</text><g transform="translate(0 ${CH / 2 - 42})"><rect x="-330" y="-34" width="660" height="60" rx="30" fill="#E53935"/><text y="9" font-size="34" font-weight="800" fill="#fff">Cevabını yorumlara yaz!</text></g>`; }
+          s += `</g>`;
+        } }
       return s;
     },
   };
