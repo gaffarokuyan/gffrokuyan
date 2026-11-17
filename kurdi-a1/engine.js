@@ -305,12 +305,17 @@
     const O = TL.outro, VB = LAND ? [-420, 390, 1920, 1080] : [0, 0, W, HH];
     const pin = back(seg(t, O.a0, O.a0 + .55)), pout = eio(seg(t, O.lb + .45, O.e)), p = pin * (1 - pout), lau = O.laugh && t >= O.b + .2 && t < O.lb + .2;
     const cx = VB[0] + VB[2] - (LAND ? 230 : 210), cy = VB[1] + VB[3] - (LAND ? 330 : 400);
-    const sc = LAND ? 1.55 : 1.75, wob = Math.sin(t * 7) * 4 + (O.laugh && t >= O.b + .2 && t < O.lb + .2 ? Math.sin(t * 26) * 9 - 10 : 0), rot = -32 + wob + (1 - p) * 25;
-    const R = { who: 'R', x: 0, expr: lau ? 'smug' : t > O.b ? 'happy' : 'smug', look: -1, mouth: lau ? Math.max(.55, Math.min(1, amp(O.laugh, t) * 1.5)) : amp(O.id, t), dy: lau ? -Math.abs(Math.sin(t * 22)) * 14 : 0, la: POSE.wave(t * 1.4)[1], ra: [14, 6], tilt: -8 };
+    const sc = LAND ? 1.55 : 1.75, wob = Math.sin(t * 7) * 4 + (O.laugh && t >= O.b + .2 && t < O.lb + .2 ? Math.sin(t * 16) * 4 - 4 : 0), rot = -32 + wob + (1 - p) * 25;
+    const R = { who: 'R', x: 0, expr: lau ? 'happy' : t > O.b ? 'happy' : 'smug', look: -1, mouth: lau ? Math.min(.8, amp(O.laugh, t) * 1.3) : amp(O.id, t), dy: lau ? -Math.abs(Math.sin(t * 16)) * 6 : 0, la: POSE.wave(t * 1.4)[1], ra: [14, 6], tilt: -8 };
     let s = `<svg style="position:absolute;left:0;top:0" width="${LAND ? 1920 : W}" height="${LAND ? 1080 : HH}" viewBox="${VB.join(' ')}">`;
+    if (O.laugh) { // Berfîn de yanına çıkıp birlikte güler
+      const bq = back(seg(t, O.b - .15, O.b + .3)) * (1 - pout);
+      if (bq > 0) { const Bf = { who: 'B', x: 0, expr: 'happy', look: 1, mouth: Math.min(.7, amp(O.laugh, t) * 1.2), dy: lau ? -Math.abs(Math.sin(t * 16 + 1)) * 6 : 0, la: [14, 6], ra: [14, 6] };
+        s += `<g transform="translate(${cx - (LAND ? 280 : 250) + (1 - bq) * 120} ${cy + 40 + (1 - bq) * 560}) rotate(${-14 + Math.sin(t * 16) * 3}) scale(${sc}) translate(0 ${-(FLOOR - 470)})">${person(Bf, t)}</g>`; }
+    }
     s += `<g transform="translate(${cx + (1 - p) * 260} ${cy + (1 - p) * 520}) rotate(${rot}) scale(${sc}) translate(0 ${-(FLOOR - 470)})">${person(R, t)}</g>`;
-    // pis pis gülme yazısı
-    if (lau) { const u = seg(t, O.b + .2, O.lb + .2); for (let k = 0; k < 2; k++) { const v = clamp(u * 1.4 - k * .3); if (v > 0 && v < 1) { const X = cx - 330 - k * 330, Y = cy + 40 + k * 150 - v * 40; s += `<text x="${X}" y="${Y}" font-family="Baloo,sans-serif" font-size="${110 - k * 14}" font-weight="800" fill="${k === 1 ? '#E53935' : '#E0407B'}" stroke="#fff" stroke-width="10" paint-order="stroke" text-anchor="middle" opacity="${1 - v * v * v}" transform="rotate(${-14 + k * 8} ${X} ${Y}) scale(${1 + Math.sin(t * 20) * .04})">${k === 0 ? 'PUAHAHA!' : 'HAHAHA!'}</text>`; } } }
+    // birlikte gülüş: küçük "ha ha" / "hi hi"
+    if (lau) { const u = seg(t, O.b + .2, O.lb + .2); [['ha ha', cx + 10, cy - 130, '#1E63B5'], ['hi hi', cx - 380, cy - 60, '#E0407B']].forEach(([w, X, Y, c], k) => { const v = clamp(u * 1.3 - k * .15); if (v > 0 && v < 1) s += `<text x="${X}" y="${Y - v * 40}" font-family="Baloo,sans-serif" font-size="56" font-weight="800" fill="${c}" stroke="#fff" stroke-width="8" paint-order="stroke" text-anchor="middle" opacity="${1 - v * v * v}" transform="rotate(${k ? -10 : 10} ${X} ${Y})">${w}</text>`; }); }
     // konuşma balonu (çizgi roman)
     const bp = back(seg(t, O.a - .15, O.a + .2)) * (1 - eio(seg(t, O.b + .3, O.b + .6)));
     if (bp > 0) {
