@@ -359,7 +359,7 @@
   // renderCover({ title, words: [[kurdî, türkçe], ...] }) — verilmezse bölümün kendi verisi kullanılır
   window.renderCover = function (o = {}) {
     if (LAND) return renderCoverLand(o);
-    const title = o.title || EP.title, words = (o.words || EP.vocab).slice(0, 7);
+    const title = o.title || EP.title, words = (o.words || EP.coverWords || EP.vocab).slice(0, 7);
     const cx = 540, cy = 1180;
     let s = `<svg width="${W}" height="${HH}" viewBox="0 0 ${W} ${HH}"><rect width="${W}" height="${HH}" fill="#FFC83D"/>`;
     for (let i = 0; i < 24; i += 2) { const a = rad(i * 15 - 7), b = rad(i * 15 + 8); s += `<path d="M${cx} ${cy}L${cx + Math.cos(a) * 2400} ${cy + Math.sin(a) * 2400}L${cx + Math.cos(b) * 2400} ${cy + Math.sin(b) * 2400}Z" fill="#FFD666"/>`; }
@@ -380,7 +380,7 @@
   };
 
   function renderCoverLand(o) {
-    const title = o.title || EP.title, words = (o.words || EP.vocab).slice(0, 6);
+    const title = o.title || EP.title, words = (o.words || EP.coverWords || EP.vocab).slice(0, 6);
     const cx = 1380, cy = 760;
     let s = `<svg width="1920" height="1080" viewBox="0 0 1920 1080"><rect width="1920" height="1080" fill="#FFC83D"/>`;
     for (let i = 0; i < 24; i += 2) { const a = rad(i * 15 - 7), b = rad(i * 15 + 8); s += `<path d="M${cx} ${cy}L${cx + Math.cos(a) * 3000} ${cy + Math.sin(a) * 3000}L${cx + Math.cos(b) * 3000} ${cy + Math.sin(b) * 3000}Z" fill="#FFD666"/>`; }

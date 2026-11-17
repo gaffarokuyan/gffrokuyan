@@ -137,6 +137,7 @@
       tea: H => TEA,
       book: H => `<path d="M-44 -30q22 -10 44 0q22 -10 44 0v60q-22 -10 -44 0q-22 -10 -44 0z" fill="#fff" ${H.S} stroke-width="5"/><path d="M0 -30v60" ${H.S} stroke-width="4"/>`,
     },
+    coverWords: [['heye', 'var'], ['tune', 'yok'], ['hene', 'var (çoğul)'], ['pirtûk', 'kitap'], ['pere', 'para'], ['henek', 'şaka'], ['aqil', 'akıl']],
     vocab: [
       ['Pirtûka min heye.', 'Kitabım var.'],
       ['Pereyê min tune.', 'Param yok.'],
