@@ -59,6 +59,14 @@
         s = b; return { a, ta, b };
       });
       TL.dur = Math.ceil((s + 2) * 2) / 2;
+      // Outro: Ronî sağ alt köşeden kafasını uzatıp veda eder (EP.outro = { id, ku, tr })
+      const O = EP.outro;
+      if (O && DUR[O.id]) {
+        const a0 = s + .1, a = a0 + .8, b = a + DUR[O.id], e = b + 1.1;
+        TL.outro = { ...O, a0, a, b, e };
+        TL.lines.push({ id: O.id, who: 'R', ku: '', tr: '', start: a, dur: DUR[O.id] }); TL.marks[O.id] = { a, b };
+        TL.dur = Math.ceil((e + .4) * 2) / 2;
+      }
     }
   }
 
@@ -289,6 +297,26 @@
   // ---------- HTML katmanları ----------
   const hl = s => s.replace(/\*(.+?)\*/g, '<b>$1</b>');
   // Kelime kartı (yeşil-altın, numaralı, simgeli): EP.vocabIcons ile her satıra simge
+  function outroPeek(t) {
+    const O = TL.outro, VB = LAND ? [-420, 390, 1920, 1080] : [0, 0, W, HH];
+    const pin = back(seg(t, O.a0, O.a0 + .55)), pout = eio(seg(t, O.b + .45, O.e)), p = pin * (1 - pout);
+    const cx = VB[0] + VB[2] - (LAND ? 230 : 210), cy = VB[1] + VB[3] - (LAND ? 330 : 400);
+    const sc = LAND ? 1.55 : 1.75, wob = Math.sin(t * 7) * 4, rot = -32 + wob + (1 - p) * 25;
+    const R = { who: 'R', x: 0, expr: t > O.b ? 'happy' : 'smug', look: -1, mouth: amp(O.id, t), la: POSE.wave(t * 1.4)[1], ra: [14, 6], tilt: -8 };
+    let s = `<svg style="position:absolute;left:0;top:0" width="${LAND ? 1920 : W}" height="${LAND ? 1080 : HH}" viewBox="${VB.join(' ')}">`;
+    s += `<g transform="translate(${cx + (1 - p) * 260} ${cy + (1 - p) * 520}) rotate(${rot}) scale(${sc}) translate(0 ${-(FLOOR - 470)})">${person(R, t)}</g>`;
+    // konuşma balonu
+    const bp = back(seg(t, O.a - .15, O.a + .2)) * (1 - eio(seg(t, O.b + .3, O.b + .6)));
+    if (bp > 0) {
+      const bw = LAND ? 820 : 760, bh = 170, bx = cx - (LAND ? 250 : 200) - bw, by = cy - (LAND ? 260 : 330);
+      s += `<g transform="translate(${bx + bw} ${by + bh}) scale(${bp}) translate(${-bw} ${-bh})" font-family="Baloo,sans-serif" text-anchor="middle">
+        <path d="M${bw - 60} ${bh - 6}L${bw + 70} ${bh + 70}L${bw - 130} ${bh - 6}Z" fill="#FBF5E6" stroke="#173D2A" stroke-width="7" stroke-linejoin="round"/>
+        <rect width="${bw}" height="${bh}" rx="34" fill="#FBF5E6" stroke="#173D2A" stroke-width="7"/><path d="M${bw - 128} ${bh - 3}h64" stroke="#FBF5E6" stroke-width="9"/>
+        <text x="${bw / 2}" y="78" font-size="${LAND ? 52 : 48}" font-weight="800" fill="#173D2A">${O.ku}</text>
+        <text x="${bw / 2}" y="132" font-size="36" font-weight="700" fill="#8A6D1E">${O.tr}</text></g>`;
+    }
+    return s + `</svg>`;
+  }
   function vocabCard(t) {
     const f = eout(seg(t, TL.endAt, TL.endAt + .5)), VW = LAND ? 1920 : W, VH = LAND ? 1080 : HH;
     let rows = '';
@@ -335,6 +363,7 @@
       h += `<div class="card" style="opacity:${f};transform:rotate(-4deg) scale(${.6 + .4 * back(seg(t, card.a + .05, card.a + .4))})"><div><div class="ku">${card.ku}</div><div class="tr">${card.tr}</div></div></div>`;
     }
     if (end && EP.endStyle !== 'old') h += vocabCard(t);
+    if (TL.outro && t >= TL.outro.a0 && t < TL.outro.e) h += outroPeek(t);
     else if (end) {
       const f = eout(seg(t, TL.endAt, TL.endAt + .45)), k = (EP.vocabScale ?? 1) * (LAND ? .86 : 1);
       h += `<div style="position:absolute;inset:0;background:#15131c;opacity:${f * .7}"></div>`;
@@ -352,6 +381,7 @@
   TL.sfx = [{ type: 'title', at: .15 }];
   for (const c of TL.cards) TL.sfx.push({ type: 'chime', at: c.a + .05 });
   for (const b of TL.bubbles) TL.sfx.push({ type: 'pop', at: b.a });
+  if (TL.outro) TL.sfx.push({ type: 'boing', at: TL.outro.a0 + .35 }, { type: 'pop', at: TL.outro.a - .1 }, { type: 'whoosh', at: TL.outro.b + .55 });
   if (!TL.voc) EP.vocab.forEach((_, i) => TL.sfx.push({ type: 'row', at: TL.endAt + .5 + i * .4, i }));
   if (EP.sfx) TL.sfx.push(...EP.sfx(H));
 
