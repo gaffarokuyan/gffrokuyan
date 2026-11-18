@@ -4,42 +4,42 @@
   const INK = '#1f1b16';
   // anlatım satırları: txt = ekranda kelime kelime beliren yazı (*vurgu*), tts = seslendirme
   // anlatıcı: Yunus C (who 'R'), tempolu-dramatik belgesel tonu
-  const N = (id, txt, tts, o = {}) => ({ id, who: 'R', ku: '', tr: '', txt, tts: tts.replace(/^\[/, '[fast-paced dramatic documentary narration, '), gap: .18, ...o });
+  const N = (id, txt, tts, o = {}) => ({ id, who: 'R', ku: '', tr: '', txt, tts, gap: .18, ...o });
   const SEQ = [
-    N('k1', 'Bir dil düşün…', '[slow, serious, quiet] Bir dil düşün…', { gap: .2 }),
-    N('k2', 'Annesine *"dayê"* dediği için çocuğun *cezalandırıldığı* bir dil.', '[serious, heavy] Annesine "dayê" dediği için… çocuğun cezalandırıldığı bir dil.'),
+    N('k1', 'Bir dil düşün…', 'Bir dil düşün.', { gap: .2 }),
+    N('k2', 'Annesine *"dayê"* dediği için çocuğun *cezalandırıldığı* bir dil.', 'Annesine "Dayê!" dediği için, çocuğun cezalandırıldığı bir dil.'),
 
-    N('s1', 'Kürtçeye önce *"yok"* dendi.', '[bitter, serious] Kürtçeye önce… "yok" dendi.', { gap: .5 }),
-    N('s2', 'Sonra *"dağ dili"*.', '[bitter] Sonra… "dağ dili".'),
-    N('s3', 'Konuşanı *"bölücü"* ilan edildi.', '[bitter] Konuşanı… "bölücü" ilan edildi.'),
-    N('s4', '*1983*\'te Kürtçe yayın *yasaklandı*.', '[serious] Bin dokuz yüz seksen üçte, Kürtçe yayın yasaklandı.'),
-    N('s5', '*Q, W, X* harfleri bile suç sayıldı.', '[serious, disbelief] Q, W, X harfleri bile… suç sayıldı.'),
+    N('s1', 'Kürtçeye önce *"yok"* dendi.', 'Kürtçeye önce yok dendi.', { gap: .5 }),
+    N('s2', 'Sonra *"dağ dili"*.', 'Sonra dağ dili.'),
+    N('s3', 'Konuşanı *"bölücü"* ilan edildi.', 'Konuşanı bölücü ilan edildi.'),
+    N('s4', '*1983*\'te Kürtçe yayın *yasaklandı*.', 'Bin dokuz yüz seksen üçte, Kürtçe yayın yasaklandı.'),
+    N('s5', '*Q, W, X* harfleri bile suç sayıldı.', 'Q, W, X harfleri bile suç sayıldı.'),
 
-    N('i1', 'Bunu yapanlar, en çok *"din kardeşiyiz"* diyenlerdi.', '[quiet, bitter irony] Bunu yapanlar… en çok "din kardeşiyiz" diyenlerdi.', { gap: .5 }),
+    N('i1', 'Bunu yapanlar, en çok *"din kardeşiyiz"* diyenlerdi.', 'Bunu yapanlar, en çok din kardeşiyiz diyenlerdi.', { gap: .5 }),
 
-    N('w1', 'Oysa İsrail\'de *Arapça* okullarda eğitim dili.', '[measured] Oysa İsrail\'de Arapça, okullarda eğitim dili.', { gap: .5 }),
-    N('w2', 'Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', '[measured] Rusya\'da Tatarca ve Çeçence, kendi cumhuriyetlerinde resmi dil.'),
-    N('w3', 'Irak\'ta bile *Kürtçe*, devletin resmi dili.', '[measured, emphatic] Irak\'ta bile Kürtçe, devletin resmi dili.'),
-    N('w4', 'Sorun dil değil; *"tek dil, tek millet"* korkusu.', '[firm] Sorun dil değil… "tek dil, tek millet" korkusu.', { gap: .5 }),
+    N('w1', 'Oysa İsrail\'de *Arapça* okullarda eğitim dili.', 'Oysa İsrailde Arapça, okullarda eğitim dili.', { gap: .5 }),
+    N('w2', 'Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', 'Rusyada Tatarca ve Çeçence, kendi cumhuriyetlerinde resmi dil.'),
+    N('w3', 'Irak\'ta bile *Kürtçe*, devletin resmi dili.', 'Irakta bile Kürtçe, devletin resmi dili.'),
+    N('w4', 'Sorun dil değil; *"tek dil, tek millet"* korkusu.', 'Sorun dil değil; tek dil, tek millet korkusu.', { gap: .5 }),
 
-    N('r1', '*Ehmedê Xanî*\'nin Mem û Zîn\'i yazdığı, *Melayê Cizîrî*\'nin şiir söylediği bu dil, kökleri *binlerce yıla* uzanan bir dil.', '[proud, warm] Ehmedê Xanî\'nin Mem û Zîn\'i yazdığı, Melayê Cizîrî\'nin şiir söylediği bu dil… kökleri binlerce yıla uzanan bir dil.', { gap: .5 }),
-    N('r2', 'Ve yok olmadı. *Dengbêjin* sesinde, *ninnide*, *düğünde*, *mutfakta* yaşadı.', '[proud, moved] Ve yok olmadı. Dengbêjin sesinde… ninnide… düğünde… mutfakta yaşadı.'),
-    N('r3', 'Yasaklayanlar gitti… *Kürtçe kaldı.*', '[proud, powerful] Yasaklayanlar gitti… Kürtçe kaldı.', { gap: .4 }),
+    N('r1', '*Ehmedê Xanî*\'nin Mem û Zîn\'i yazdığı, *Melayê Cizîrî*\'nin şiir söylediği bu dil, kökleri *binlerce yıla* uzanan bir dil.', 'Ehmedê Xanînin Mem û Zîni yazdığı, Melayê Cizîrînin şiir söylediği bu dil, kökleri binlerce yıla uzanan bir dil.', { gap: .5 }),
+    N('r2', 'Ve yok olmadı. *Dengbêjin* sesinde, *ninnide*, *düğünde*, *mutfakta* yaşadı.', 'Ve yok olmadı. Dengbêjin sesinde, ninnide, düğünde, mutfakta yaşadı.'),
+    N('r3', 'Yasaklayanlar gitti… *Kürtçe kaldı.*', 'Yasaklayanlar gitti. Kürtçe kaldı.', { gap: .4 }),
 
-    N('t1', 'Ama tehlike geçmedi. Kürtçe hâlâ *anadilinde eğitim* hakından yoksun.', '[grave, quiet] Ama tehlike geçmedi. Kürtçe hâlâ anadilinde eğitim hakından yoksun.', { gap: .5 }),
+    N('t1', 'Ama tehlike geçmedi. Kürtçe hâlâ *anadilinde eğitim* hakından yoksun.', 'Ama tehlike geçmedi. Kürtçe hâlâ anadilinde eğitim hakkından yoksun.', { gap: .5 }),
     { id: 't2', who: 'B', ku: '', tr: '', txt: '', tts: '[elderly mother, tender, soft] Tu birçî yî, delalê min?', gap: .5 },
-    { id: 't3', who: 'R', ku: '', tr: '', txt: '', tts: '[confused young child] Anne… ne diyorsun? Anlamıyorum.', gap: .35 },
-    N('t4', 'Annesini anlamayan çocuklar… *çocuğunu anlamayan anneler.*', '[sad, heavy] Annesini anlamayan çocuklar… çocuğunu anlamayan anneler.', { gap: .6 }),
+    { id: 't3', who: 'R', ku: '', tr: '', txt: '', tts: '[confused young child] Anne, ne diyorsun? Anlamıyorum.', gap: .35 },
+    N('t4', 'Annesini anlamayan çocuklar… *çocuğunu anlamayan anneler.*', 'Annesini anlamayan çocuklar. Çocuğunu anlamayan anneler.', { gap: .6 }),
 
-    N('o1', 'Ama dürüst olalım: suç *sadece başkalarında* değil.', '[honest, calm] Ama dürüst olalım: suç sadece başkalarında değil.', { gap: .5 }),
-    N('o2', 'Çocuğuna *Türkçe* konuşan anne-babalar da *bizdik*.', '[honest] Çocuğuna Türkçe konuşan anne babalar da bizdik.'),
-    N('o3', 'Kürtçeyi *"köylü dili"* sanıp *utananlar* da.', '[honest, regretful] Kürtçeyi "köylü dili" sanıp utananlar da.'),
+    N('o1', 'Ama dürüst olalım: suç *sadece başkalarında* değil.', 'Ama dürüst olalım: suç sadece başkalarında değil.', { gap: .5 }),
+    N('o2', 'Çocuğuna *Türkçe* konuşan anne-babalar da *bizdik*.', 'Çocuğuna Türkçe konuşan anne babalar da bizdik.'),
+    N('o3', 'Kürtçeyi *"köylü dili"* sanıp *utananlar* da.', 'Kürtçeyi köylü dili sanıp utananlar da.'),
 
-    N('c1', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu *yaşatmak* için biz *daha çok* çabalamalıyız.', '[determined, rising] Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa… onu yaşatmak için biz daha çok çabalamalıyız.', { gap: .5 }),
-    N('c2', '*Evde*, *sokakta*, *çarşıda*, birbirimizle Kürtçe konuşalım.', '[warm, determined] Evde, sokakta, çarşıda… birbirimizle Kürtçe konuşalım.'),
-    N('c3', '', '[joyful, strong] Li malê, li kolanê, li bazarê: Kurdî biaxivin!'),
-    N('c4', 'Bütün zorluklara rağmen *dilimizi koruyalım.*', '[warm, determined] Bütün zorluklara rağmen… dilimizi koruyalım.'),
-    N('c5', '', '[proud, slow, final] Zimanê min… rûmeta min.', { gap: .5 }),
+    N('c1', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu *yaşatmak* için biz *daha çok* çabalamalıyız.', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu yaşatmak için biz daha çok çabalamalıyız.', { gap: .5 }),
+    N('c2', '*Evde*, *sokakta*, *çarşıda*, birbirimizle Kürtçe konuşalım.', 'Evde, sokakta, çarşıda, birbirimizle Kürtçe konuşalım.'),
+    N('c3', '', 'Li malê, li kolanê, li bazarê: Kurdî biaxivin!'),
+    N('c4', 'Bütün zorluklara rağmen *dilimizi koruyalım.*', 'Bütün zorluklara rağmen dilimizi koruyalım.'),
+    N('c5', '', 'Zimanê min, rûmeta min.', { gap: .5 }),
   ];
 
   // bölüm sınırları ve renkleri
