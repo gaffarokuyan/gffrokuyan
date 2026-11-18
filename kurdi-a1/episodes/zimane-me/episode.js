@@ -22,7 +22,7 @@
     N('w3', 'Irak\'ta bile *Kürtçe*, devletin resmi dili.', 'Irakta bile Kürtçe, devletin resmi dili.'),
     N('w4', 'Sorun dil değil; *"tek dil, tek millet"* korkusu.', 'Sorun dil değil; tek dil, tek millet korkusu.', { gap: .5 }),
 
-    N('r1', '*Ehmedê Xanî*\'nin Mem û Zîn\'i yazdığı, *Melayê Cizîrî*\'nin şiir söylediği bu dil, kökleri *binlerce yıla* uzanan bir dil.', 'Ehmedê Xanînin Mem û Zîni yazdığı, Melayê Cizîrînin şiir söylediği bu dil, kökleri binlerce yıla uzanan bir dil.', { gap: .5 }),
+    N('r1', '*Ehmedê Xanî*, *Mem û Zîn*, *Melayê Cizîrî*… Bu dil, onların dili. Kökleri *binlerce yıla* uzanan bir dil.', '[proud, warm, natural narration] ئەحمەدێ خانی، مەم و زین، مەلایێ جزیری… Bu dil, onların dili. Kökleri binlerce yıla uzanan bir dil.', { gap: .5 }),
     N('r2', 'Ve yok olmadı. *Dengbêjin* sesinde, *ninnide*, *düğünde*, *mutfakta* yaşadı.', 'Ve yok olmadı. Dengbêjin sesinde, ninnide, düğünde, mutfakta yaşadı.'),
     N('r3', 'Yasaklayanlar gitti… *Kürtçe kaldı.*', 'Yasaklayanlar gitti. Kürtçe kaldı.', { gap: .4 }),
 
@@ -37,7 +37,7 @@
 
     N('c1', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu *yaşatmak* için biz *daha çok* çabalamalıyız.', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu yaşatmak için biz daha çok çabalamalıyız.', { gap: .5 }),
     N('c2', '*Evde*, *sokakta*, *çarşıda*, birbirimizle Kürtçe konuşalım.', 'Evde, sokakta, çarşıda, birbirimizle Kürtçe konuşalım.'),
-    N('c3', '', 'Li malê, li kolanê, li bazarê: Kurdî biaxivin!'),
+    N('c3', '', '[joyful, strong, warm] لی مالێ، لی کۆلانێ، لی بازارێ: کوردی بئاخڤن!'),
     N('c4', 'Bütün zorluklara rağmen *dilimizi koruyalım.*', 'Bütün zorluklara rağmen dilimizi koruyalım.'),
     N('c5', '', 'Zimanê min, rûmeta min.', { gap: .5 }),
   ];
