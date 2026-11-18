@@ -240,7 +240,7 @@
           const mo = { who: 'B', expr: t > T('t3', .3) ? 'sad' : 'happy', la: [14, 6], ra: t < T('t3', 0) ? [100, 110] : [14, 6], mouth: H.amp('t2', t) };
           s += man(H, t, mo, mx - split * 60, 1240, 1.25);
           const [mhx, mhy] = headOf(mx - split * 60, 1240, 1.25);
-          s += scarf(mhx, mhy, 1.25);
+          // (başörtüsü kaldırıldı)
           const ch = { who: 'R', expr: t > T('t3', 0) ? 'wide' : 'normal', la: [14, 6], ra: [14, 6], mouth: H.amp('t3', t), noCap: false };
           s += man(H, t, ch, cx + split * 60, 1240, .8);
           const [chx, chy] = headOf(cx + split * 60, 1240, .8);
@@ -288,7 +288,7 @@
           const u = H.eio(H.seg(t, T('c4', 0) - .2, T('c4', .4)));
           s += man(H, t, { who: 'B', expr: 'happy', la: [14, 6], ra: [60, 30] }, H.lerp(300, 480, u), 1240, 1.2);
           const [mhx, mhy] = headOf(H.lerp(300, 480, u), 1240, 1.2);
-          s += scarf(mhx, mhy, 1.2);
+          // (başörtüsü kaldırıldı)
           s += man(H, t, { who: 'R', expr: 'happy', la: [150, 170], ra: [150, 170] }, H.lerp(800, 610, u), 1240, .78);
           if (u >= 1) { const hp = H.back(H.seg(t, T('c4', .45), T('c4', .65))); s += `<path transform="translate(545 ${640 - Math.sin(t * 3) * 10}) scale(${hp * 2.2})" d="M0 18C-40 -10 -28 -40 0 -22C28 -40 40 -10 0 18Z" fill="#E53935" stroke="#fff" stroke-width="3"/>`; }
           if (t > T('c5', 0) - .1) { const q = H.back(H.seg(t, T('c5', 0), T('c5', .25)));
