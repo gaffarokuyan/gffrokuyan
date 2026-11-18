@@ -19,7 +19,7 @@
 
     N('w1', 'Oysa *Araplarla din kardeşi olmayan* İsrail\'de bile *Arapça* okullarda eğitim dili.', 'Oysa Araplarla din kardeşi olmayan İsrailde bile, Arapça okullarda eğitim dili.', { gap: .5 }),
     N('w2', '*Müslüman olmayan* Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', 'Müslüman olmayan Rusyada, Tatarca ve Çeçence kendi cumhuriyetlerinde resmi dil.'),
-    N('w4', 'Sorun dil değil; *"tek dil, tek millet"* korkusu.', 'Sorun dil değil; tek dil, tek millet korkusu.', { gap: .5 }),
+    N('w4', 'Din kardeşi olmayanlar bile dil yasaklamazken… insan *"kardeşim"* dediğinin dilinden korkar mı? *Onu yasaklar mı yahu?*', '[sarcastic, mocking, incredulous] Din kardeşi olmayanlar bile dil yasaklamazken… insan, kardeşim dediğinin dilinden korkar mı? Onu yasaklar mı yahu?', { gap: .5 }),
 
     N('r1', '*Ehmedê Xanî*, *Mem û Zîn*, *Melayê Cizîrî*… Bu dil, onların dili. Kökleri *binlerce yıla* uzanan bir dil.', '[proud, warm, natural narration] ئەحمەدێ خانی، مەم و زین، مەلایێ جزیری… Bu dil, onların dili. Kökleri binlerce yıla uzanan bir dil.', { gap: .5 }),
     N('r2', 'Ve yok olmadı. *Dengbêjin* sesinde, *ninnide*, *düğünde*, *mutfakta* yaşadı.', 'Ve yok olmadı. Dengbêjin sesinde, ninnide, düğünde, mutfakta yaşadı.'),
@@ -108,7 +108,7 @@
       for (let k = 0; k < 3; k++) out.push({ type: 'crack', at: T('s5', .1) + k * .4 });
       out.push({ type: 'pop', at: T('i1', .6) });
       for (const id of ['w1', 'w2']) out.push({ type: 'ding', at: T(id, .25) });
-      out.push({ type: 'stamp', at: T('w4', .45) });
+      out.push({ type: 'pop', at: T('w4', .5) }, { type: 'stamp', at: T('w4', .76) }, { type: 'boing', at: T('w4', .86) });
       out.push({ type: 'rise', at: T('r1', .1) }, { type: 'chime', at: T('r3', .55) });
       for (let k = 0; k < 4; k++) out.push({ type: 'pop', at: T('r2', .22 + k * .17) });
       for (let k = 0; k < 4; k++) out.push({ type: 'thud', at: T('r3', .05) + k * .12 });
@@ -150,7 +150,7 @@
       const T = SAFE(H), S = H.S, k = secAt(t, H), sec = SECT[k][0];
       let s = '';
       // ekran sarsıntısı (damgalar)
-      const sh = shakeAt(H, t, [T('k2', .78), T('s1', .45), T('s2', .35), T('s3', .45), T('s4', .5), T('w4', .45), T('t3', 0)].filter(x => x === x));
+      const sh = shakeAt(H, t, [T('k2', .78), T('s1', .45), T('s2', .35), T('s3', .45), T('s4', .5), T('w4', .76), T('t3', 0)].filter(x => x === x));
       s += `<g transform="translate(${sh} ${sh * .4})">`;
 
       if (sec === 'k1') { // KANCA: çocuk, "Dayê!" balonu, kırmızı X
@@ -186,7 +186,7 @@
       }
 
       if (sec === 'w1') { // DÜNYA
-        const fade = 1 - H.eio(H.seg(t, T('w4', 0) - .2, T('w4', 0) + .3));
+        const fade = 1 - H.eio(H.seg(t, T('w4', .4), T('w4', .5)));
         if (fade > 0) { const p = H.back(H.seg(t, T('w1', 0) - .4, T('w1', 0)));
           s += `<g opacity="${fade}"><g transform="translate(540 470) scale(${p})"><circle r="200" fill="#1E63B5" stroke="#9cc7ff" stroke-width="6"/>`;
           for (let i = -2; i <= 2; i++) s += `<ellipse rx="200" ry="${Math.abs(i) * 45 + 6}" cy="${i * 0}" fill="none" stroke="#9cc7ff" stroke-opacity=".35" stroke-width="3" transform="translate(0 ${i * 70}) scale(1 ${1 - Math.abs(i) * .15})"/>`;
@@ -196,10 +196,15 @@
             const u = H.eio(H.seg(t, T(id, 0), T(id, .2))); if (u <= 0) return; const x = 540 + (1 - u) * 1100, y = 800 + i * 160, irq = id === 'w3';
             s += `<g transform="translate(${x} ${y})"><rect x="-440" y="-56" width="880" height="112" rx="24" fill="${irq ? '#FFD23F' : '#fff'}"/><text x="-400" y="16" font-family="Baloo,sans-serif" font-size="50" font-weight="800" fill="${INK}">${c}</text><text x="-160" y="14" font-family="Baloo,sans-serif" font-size="36" font-weight="700" fill="#455">${l}</text><g transform="translate(${400 - tg.length * 9.5} -62) rotate(3)"><rect x="${-tg.length * 9.5 - 20}" y="-26" width="${tg.length * 19 + 40}" height="52" rx="26" fill="#E53935"/><text y="11" text-anchor="middle" font-family="Baloo,sans-serif" font-size="32" font-weight="800" fill="#fff">${tg}</text></g><circle cx="385" r="34" fill="#2E7D32"/><path d="M368 0l12 13l22 -24" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g>`; });
           s += `</g>`; }
-        if (t > T('w4', 0) - .2) { const p = H.back(H.seg(t, T('w4', 0), T('w4', .2)));
-          s += `<g transform="translate(540 640) scale(${p})"><text text-anchor="middle" font-family="Baloo,sans-serif" font-size="96" font-weight="800" fill="#fff">SORUN DİL DEĞİL</text></g>`;
-          if (t > T('w4', .45)) { const q = H.back(H.seg(t, T('w4', .45), T('w4', .6)));
-            s += `<g transform="translate(540 900) scale(${q})"><rect x="-90" y="-60" width="180" height="140" rx="20" fill="#E53935"/><path d="M-55 -60v-40a55 55 0 0 1 110 0v40" fill="none" stroke="#E53935" stroke-width="26"/><circle cy="0" r="18" fill="#fff"/><rect x="-6" y="0" width="12" height="40" fill="#fff"/></g><text x="540" y="1130" text-anchor="middle" font-family="Baloo,sans-serif" font-size="86" font-weight="800" fill="#FF5A5A" opacity="${q}">TEK DİL · TEK MİLLET</text>`; } }
+        if (t > T('w4', .5)) { // "Kardeşim!" balonu → Kurdî'ye kilit → YASAKLAR MI YAHU?
+          const p = H.back(H.seg(t, T('w4', .5), T('w4', .58))), sw = Math.sin(t * 3) * 2;
+          s += `<g transform="translate(540 560) rotate(${-3 + sw}) scale(${p})"><path d="M-80 70L-130 150L-10 70Z" fill="#fff"/><rect x="-330" y="-95" width="660" height="180" rx="60" fill="#fff"/><text y="38" text-anchor="middle" font-family="Baloo,sans-serif" font-size="110" font-weight="800" font-style="italic" fill="${INK}">“Kardeşim!”</text></g>`;
+          if (t > T('w4', .68)) { const q = H.back(H.seg(t, T('w4', .68), T('w4', .76))), lk = H.eio(H.seg(t, T('w4', .72), T('w4', .78)));
+            s += `<g transform="translate(540 930) scale(${q})"><rect x="-230" y="-80" width="460" height="160" rx="50" fill="#1F7A4C"/><text y="30" text-anchor="middle" font-family="Baloo,sans-serif" font-size="96" font-weight="800" fill="#fff">Kurdî</text></g>`;
+            s += `<g transform="translate(${540 + 190} ${930 - 60 - (1 - lk) * 400}) rotate(${-15 + lk * 15}) scale(.8)" opacity="${lk}"><rect x="-90" y="-60" width="180" height="140" rx="20" fill="#E53935"/><path d="M-55 -60v-40a55 55 0 0 1 110 0v40" fill="none" stroke="#E53935" stroke-width="26"/><circle cy="0" r="18" fill="#fff"/><rect x="-6" y="0" width="12" height="40" fill="#fff"/></g>`; }
+          if (t > T('w4', .85)) { const r = H.back(H.seg(t, T('w4', .85), T('w4', .93))), wob = Math.sin(t * 14) * 3;
+            s += `<g transform="translate(540 1170) rotate(${-4 + wob}) scale(${r})"><text text-anchor="middle" font-family="Baloo,sans-serif" font-size="100" font-weight="800" fill="#FFD23F" stroke="#0a1c36" stroke-width="10" paint-order="stroke">YASAKLAR MI YAHU?</text></g>`; }
+        }
       }
 
       if (sec === 'r1') { // KÖK VE DİRENİŞ
