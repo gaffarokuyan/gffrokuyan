@@ -17,8 +17,8 @@
 
     N('i1', 'Bunu yapanlar, en çok *"din kardeşiyiz"* diyenlerdi.', 'Bunu yapanlar, en çok din kardeşiyiz diyenlerdi.', { gap: .5 }),
 
-    N('w1', 'Oysa İsrail\'de *Arapça* okullarda eğitim dili.', 'Oysa İsrailde Arapça, okullarda eğitim dili.', { gap: .5 }),
-    N('w2', 'Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', 'Rusyada Tatarca ve Çeçence, kendi cumhuriyetlerinde resmi dil.'),
+    N('w1', 'Oysa *din kardeşimiz olmayan* İsrail\'de bile *Arapça* okullarda eğitim dili.', 'Oysa din kardeşimiz olmayan İsrailde bile, Arapça okullarda eğitim dili.', { gap: .5 }),
+    N('w2', '*Din kardeşimiz olmayan* Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', 'Din kardeşimiz olmayan Rusyada, Tatarca ve Çeçence kendi cumhuriyetlerinde resmi dil.'),
     N('w3', 'Irak\'ta bile *Kürtçe*, devletin resmi dili.', 'Irakta bile Kürtçe, devletin resmi dili.'),
     N('w4', 'Sorun dil değil; *"tek dil, tek millet"* korkusu.', 'Sorun dil değil; tek dil, tek millet korkusu.', { gap: .5 }),
 
@@ -194,8 +194,8 @@
           for (let i = 0; i < 6; i++) { const ph = ((t * .5 + i / 6) % 1) * Math.PI * 2; s += `<ellipse rx="${Math.abs(Math.cos(ph)) * 200}" ry="200" fill="none" stroke="#9cc7ff" stroke-opacity="${.15 + .25 * Math.max(0, Math.sin(ph))}" stroke-width="3"/>`; }
           s += `</g>`;
           [['w1', 'İsrail', 'Arapça · okulda eğitim dili'], ['w2', 'Rusya', 'Tatarca, Çeçence · resmi dil'], ['w3', 'Irak', 'Kurdî · devletin resmi dili']].forEach(([id, c, l], i) => {
-            const u = H.eio(H.seg(t, T(id, 0), T(id, .2))); if (u <= 0) return; const x = 540 + (1 - u) * 1100, y = 800 + i * 140, irq = id === 'w3';
-            s += `<g transform="translate(${x} ${y})"><rect x="-440" y="-56" width="880" height="112" rx="24" fill="${irq ? '#FFD23F' : '#fff'}"/><text x="-400" y="16" font-family="Baloo,sans-serif" font-size="50" font-weight="800" fill="${INK}">${c}</text><text x="-160" y="14" font-family="Baloo,sans-serif" font-size="36" font-weight="700" fill="#455">${l}</text><circle cx="385" r="34" fill="#2E7D32"/><path d="M368 0l12 13l22 -24" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g>`; });
+            const u = H.eio(H.seg(t, T(id, 0), T(id, .2))); if (u <= 0) return; const x = 540 + (1 - u) * 1100, y = 800 + i * 160, irq = id === 'w3';
+            s += `<g transform="translate(${x} ${y})"><rect x="-440" y="-56" width="880" height="112" rx="24" fill="${irq ? '#FFD23F' : '#fff'}"/><text x="-400" y="16" font-family="Baloo,sans-serif" font-size="50" font-weight="800" fill="${INK}">${c}</text><text x="-160" y="14" font-family="Baloo,sans-serif" font-size="36" font-weight="700" fill="#455">${l}</text>${irq ? '' : `<g transform="translate(250 -62) rotate(4)"><rect x="-150" y="-26" width="300" height="52" rx="26" fill="#E53935"/><text y="11" text-anchor="middle" font-family="Baloo,sans-serif" font-size="32" font-weight="800" fill="#fff">din kardeşi değil</text></g>`}<circle cx="385" r="34" fill="#2E7D32"/><path d="M368 0l12 13l22 -24" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g>`; });
           s += `</g>`; }
         if (t > T('w4', 0) - .2) { const p = H.back(H.seg(t, T('w4', 0), T('w4', .2)));
           s += `<g transform="translate(540 640) scale(${p})"><text text-anchor="middle" font-family="Baloo,sans-serif" font-size="96" font-weight="800" fill="#fff">SORUN DİL DEĞİL</text></g>`;
