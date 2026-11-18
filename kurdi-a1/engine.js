@@ -308,6 +308,31 @@
   // ---------- HTML katmanları ----------
   const hl = s => s.replace(/\*(.+?)\*/g, '<b>$1</b>');
   // Kelime kartı (yeşil-altın, numaralı, simgeli): EP.vocabIcons ile her satıra simge
+  // Abone kartı: kanal kartı kayarak gelir, el imleci "Abone ol"a basar → "Abone olundu", zil çalar.
+  // a: giriş zamanı, tap: basma zamanı; o: { x, y, sc, logo, name1, name2, handle }
+  H.subCard = function (t, a, tap, o = {}) {
+    const p = back(seg(t, a, a + .55)); if (p <= 0) return '';
+    const X = o.x ?? 540, Y = o.y ?? 860, k = o.sc ?? 1, F = 'font-family="Baloo,sans-serif" font-weight="800"';
+    const done = t >= tap, pr = seg(t, tap - .08, tap + .12), press = 1 - .08 * Math.sin(pr * Math.PI);
+    let s = `<g transform="translate(${X} ${Y + (1 - p) * 700}) scale(${k})">`;
+    s += `<rect x="-480" y="-250" width="960" height="500" rx="44" fill="#0B2A1E" stroke="#C9A227" stroke-width="5"/>`;
+    s += `<defs><clipPath id="lgc"><circle cx="-320" cy="-85" r="118"/></clipPath></defs><circle cx="-320" cy="-85" r="124" fill="#C9A227"/><image href="${o.logo ?? 'assets/logo-dirok.png'}" x="-438" y="-203" width="236" height="236" clip-path="url(#lgc)"/>`;
+    s += `<text x="-170" y="-120" ${F} font-size="62" fill="#E8FFF4">${o.name1 ?? 'Dîrok Kurdî ·'}</text><text x="-170" y="-50" ${F} font-size="62" fill="#E8FFF4">${o.name2 ?? 'Kürtçe Öğren'}</text><text x="-170" y="10" font-family="Baloo,sans-serif" font-weight="600" font-size="40" fill="#9FCFB8">${o.handle ?? '@Dirokkurdii'}</text>`;
+    // buton
+    s += `<g transform="translate(0 150) scale(${press})">`;
+    if (!done) s += `<rect x="-300" y="-58" width="600" height="116" rx="58" fill="#fff"/><text y="20" text-anchor="middle" ${F} font-size="54" fill="#0f0f0f">Abone ol</text>`;
+    else { const bw = Math.sin(clamp((t - tap) * 2.2) * Math.PI * 4) * 22 * (1 - clamp((t - tap) * 1.2));
+      s += `<rect x="-300" y="-58" width="600" height="116" rx="58" fill="#2a3a33"/><g transform="translate(-195 -4) rotate(${bw})"><path d="M-22 14v-18a22 22 0 0 1 44 0v18l8 8h-60z" fill="#fff"/><circle cy="30" r="7" fill="#fff"/></g><text x="35" y="20" text-anchor="middle" ${F} font-size="50" fill="#fff">Abone olundu ✓</text>`; }
+    s += `</g>`;
+    // dalga
+    if (pr > 0 && t < tap + .6) { const u = seg(t, tap, tap + .6); s += `<circle cx="0" cy="150" r="${40 + u * 340}" fill="none" stroke="#fff" stroke-width="${10 * (1 - u)}" opacity="${1 - u}"/>`; }
+    // ışıltılar
+    if (done && t < tap + 1.2) { const u = seg(t, tap, tap + 1.2); for (let i = 0; i < 12; i++) { const an = i * .52, d = 120 + u * 320, x = Math.cos(an) * d * 1.4, y = 150 + Math.sin(an) * d * .7; s += `<path d="M${x} ${y - 16}l5 11l11 5l-11 5l-5 11l-5 -11l-11 -5l11 -5z" fill="#FFD23F" opacity="${1 - u}"/>`; } }
+    // el imleci
+    const hm = eio(seg(t, a + .5, tap - .1)), hx = lerp(560, 120, hm), hy = lerp(560, 190, hm), hs = 1 - .12 * Math.sin(pr * Math.PI);
+    if (t < tap + 1.0) s += `<g transform="translate(${hx} ${hy}) scale(${hs}) rotate(-15)" opacity="${1 - seg(t, tap + .6, tap + 1)}"><path d="M0 0v-70a16 16 0 0 1 32 0v55l6 -2a15 15 0 0 1 18 10l2 6a15 15 0 0 1 22 8l1 5a15 15 0 0 1 21 12v40q0 40 -40 55h-50q-30 -8 -45 -45l-25 -40a14 14 0 0 1 22 -16z" fill="#fff" stroke="#111" stroke-width="5" stroke-linejoin="round"/></g>`;
+    return s + `</g>`;
+  };
   function outroPeek(t) {
     const O = TL.outro, VB = LAND ? [-420, 390, 1920, 1080] : [0, 0, W, HH];
     const pin = back(seg(t, O.a0, O.a0 + .55)), pout = eio(seg(t, O.lb + .45, O.e)), p = pin * (1 - pout), lau = O.laugh && t >= O.b + .2 && t < O.lb + .2;

@@ -40,6 +40,8 @@
     N('c3', '', '[proud, strong, stressing the word Kurdî] لِ مالێ، لِ کۆلانێ، لِ بازارێ… کوردی بئاخڤن!'),
     N('c4', 'Bütün zorluklara rağmen *dilimizi koruyalım.*', 'Bütün zorluklara rağmen dilimizi koruyalım.'),
     N('c5', '', 'Zimanê min, rûmeta min.', { gap: .5 }),
+    N('zs', 'Kürtçe öğrenmek için kanalımıza *abone olun!*', '[warm, friendly, inviting] Kürtçe öğrenmek için kanalımıza abone olun!', { gap: .7 }),
+    { id: 'zw', wait: 1.4 },
   ];
 
   // bölüm sınırları ve renkleri
@@ -93,7 +95,7 @@
 
   window.EP = {
     title: '', tag: '', noTitle: true, noClock: true, noTable: true, noVocab: true,
-    intro: .3, tail: 1.6,
+    intro: .3, tail: .6,
     seq: SEQ, bubbles: [], icons: {}, vocab: [], coverWords: [['Kurdî', 'Kürtçe'], ['ziman', 'dil'], ['rûmet', 'onur'], ['dayê', 'anne'], ['dengbêj', ''], ['Mem û Zîn', '1692']],
 
     sfx(H) {
@@ -120,6 +122,7 @@
       for (let k = 0; k < 3; k++) out.push({ type: 'pop', at: T('c2', .05 + k * .2) });
       for (let k = 0; k < 3; k++) out.push({ type: 'dum', at: T('c3', k * .26) });
       out.push({ type: 'chime', at: T('c3', .8) }, { type: 'chime', at: T('c5', .1) });
+      out.push({ type: 'whoosh', at: T('zs', 0) - .3 }, { type: 'pop', at: T('zs', .9) }, { type: 'ding', at: T('zs', .9) + .08 }, { type: 'chime', at: T('zs', .9) + .3 });
       return out;
     },
 
@@ -297,11 +300,13 @@
           // (başörtüsü kaldırıldı)
           s += man(H, t, { who: 'R', expr: 'happy', la: [150, 170], ra: [150, 170] }, H.lerp(800, 610, u), 1240, .78);
           if (u >= 1) { const hp = H.back(H.seg(t, T('c4', .45), T('c4', .65))); s += `<path transform="translate(545 ${640 - Math.sin(t * 3) * 10}) scale(${hp * 2.2})" d="M0 18C-40 -10 -28 -40 0 -22C28 -40 40 -10 0 18Z" fill="#E53935" stroke="#fff" stroke-width="3"/>`; }
-          if (t > T('c5', 0) - .1) { const q = H.back(H.seg(t, T('c5', 0), T('c5', .25)));
+          if (t > T('c5', 0) - .1 && !(t > T('zs', 0) - .4)) { const q = H.back(H.seg(t, T('c5', 0), T('c5', .25)));
             s += `<g transform="translate(540 1500) scale(${q})" text-anchor="middle" font-family="Baloo,sans-serif" font-weight="800"><text font-size="96" fill="#fff" stroke="#0f5132" stroke-width="12" paint-order="stroke">Zimanê min,</text><text y="115" font-size="96" fill="#FFD23F" stroke="#0f5132" stroke-width="12" paint-order="stroke">rûmeta min.</text><text y="190" font-size="40" fill="#fff" opacity=".9">Dilim, onurumdur.</text><text y="300" font-size="38" fill="#fff" opacity="${H.seg(t, T('c5', 1), T('c5', 1) + .5)}">@Dirokkurdii</text></g>`; }
         }
       }
 
+      // ABONE KARTI
+      if (t > T('zs', 0) - .5) { s += `<rect x="-50" y="-50" width="1200" height="2050" fill="#000" opacity="${.85 * H.seg(t, T('zs', 0) - .5, T('zs', 0))}"/>`; s += H.subCard(t, T('zs', 0) - .3, T('zs', .9)); }
       // kinetik yazı (alt bölüm, okunurluk için koyu şerit)
       const L = SEQ.find(l => l.txt && t >= H.T(l.id, 0) - .1 && t < H.T(l.id, 1) + .6);
       if (L) { const hl = { k1: '#FF5A5A', s1: '#FF5A5A', i1: '#FFD23F', w1: '#7FD1FF', r1: '#FFD23F', t1: '#FFB0B0', o1: '#FFD23F', c1: '#FFD23F' }[sec];
