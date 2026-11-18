@@ -19,7 +19,7 @@
 
     N('w1', 'Oysa *Araplarla din kardeşi olmayan* İsrail\'de bile *Arapça* okullarda eğitim dili.', 'Oysa Araplarla din kardeşi olmayan İsrailde bile, Arapça okullarda eğitim dili.', { gap: .5 }),
     N('w2', '*Müslüman olmayan* Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', 'Müslüman olmayan Rusyada, Tatarca ve Çeçence kendi cumhuriyetlerinde resmi dil.'),
-    N('w3', '*Uygurlara baskı yapan* Çin\'de bile *Uygurca*, Sincan\'da resmi dil.', '[clear, confident, natural documentary narration] Uygurlara baskı yapan Çinde bile, Uygurca, Sincanda resmi dil.'),
+    N('w3', 'Uygurlarla *ne din ne ırk kardeşi* olan Çin\'de bile, *Uygurca* Sincan\'da resmi dil.', '[clear, confident, natural documentary narration] Uygurlarla ne din ne ırk kardeşi olan Çinde bile, Uygurca, Sincanda resmi dil.'),
     N('w4', 'Din kardeşi olmayanlar bile dil yasaklamazken… insan *"kardeşim"* dediğinin dilinden korkar mı? *Onu yasaklar mı yahu?*', '[sarcastic, mocking, incredulous] Din kardeşi olmayanlar bile dil yasaklamazken… insan, kardeşim dediğinin dilinden korkar mı? Onu yasaklar mı yahu?', { gap: .5 }),
 
     N('r1', '*Ehmedê Xanî*, *Mem û Zîn*, *Melayê Cizîrî*… Bu dil, onların dili. Kökleri *binlerce yıla* uzanan bir dil.', '[proud, warm, natural narration] ئەحمەدێ خانی، مەم و زین، مەلایێ جزیری… Bu dil, onların dili. Kökleri binlerce yıla uzanan bir dil.', { gap: .5 }),
@@ -193,7 +193,7 @@
           for (let i = -2; i <= 2; i++) s += `<ellipse rx="200" ry="${Math.abs(i) * 45 + 6}" cy="${i * 0}" fill="none" stroke="#9cc7ff" stroke-opacity=".35" stroke-width="3" transform="translate(0 ${i * 70}) scale(1 ${1 - Math.abs(i) * .15})"/>`;
           for (let i = 0; i < 6; i++) { const ph = ((t * .5 + i / 6) % 1) * Math.PI * 2; s += `<ellipse rx="${Math.abs(Math.cos(ph)) * 200}" ry="200" fill="none" stroke="#9cc7ff" stroke-opacity="${.15 + .25 * Math.max(0, Math.sin(ph))}" stroke-width="3"/>`; }
           s += `</g>`;
-          [['w1', 'İsrail', 'Arapça · okulda eğitim dili', 'Araplarla din kardeşi değil'], ['w2', 'Rusya', 'Tatarca, Çeçence · resmi dil', 'Müslüman değil'], ['w3', 'Çin', 'Uygurca · Sincan\'da resmi dil', 'Uygurlara baskı yapıyor']].forEach(([id, c, l, tg], i) => {
+          [['w1', 'İsrail', 'Arapça · okulda eğitim dili', 'Araplarla din kardeşi değil'], ['w2', 'Rusya', 'Tatarca, Çeçence · resmi dil', 'Müslüman değil'], ['w3', 'Çin', 'Uygurca · Sincan\'da resmi dil', 'ne dil ne din kardeşi']].forEach(([id, c, l, tg], i) => {
             const u = H.eio(H.seg(t, T(id, 0), T(id, .2))); if (u <= 0) return; const x = 540 + (1 - u) * 1100, y = 790 + i * 155, irq = false;
             s += `<g transform="translate(${x} ${y})"><rect x="-440" y="-56" width="880" height="112" rx="24" fill="${irq ? '#FFD23F' : '#fff'}"/><text x="-400" y="16" font-family="Baloo,sans-serif" font-size="50" font-weight="800" fill="${INK}">${c}</text><text x="-160" y="14" font-family="Baloo,sans-serif" font-size="36" font-weight="700" fill="#455">${l}</text><g transform="translate(${400 - tg.length * 9.5} -62) rotate(3)"><rect x="${-tg.length * 9.5 - 20}" y="-26" width="${tg.length * 19 + 40}" height="52" rx="26" fill="#E53935"/><text y="11" text-anchor="middle" font-family="Baloo,sans-serif" font-size="32" font-weight="800" fill="#fff">${tg}</text></g><circle cx="385" r="34" fill="#2E7D32"/><path d="M368 0l12 13l22 -24" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></g>`; });
           s += `</g>`; }
