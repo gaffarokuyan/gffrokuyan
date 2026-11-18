@@ -1,9 +1,10 @@
 // "Zimanê Me" — SHORTS (dikey): Kürtçenin şeytanlaştırılması, direnişi, bugünkü tehlike, özeleştiri ve çağrı.
-// Sinematik anlatım: kinetik yazı + sahne animasyonları. Anlatıcı Berfîn'in sesi (Ülgen), anne de Ülgen, çocuk Ronî'nin sesi.
+// Sinematik anlatım: kinetik yazı + sahne animasyonları. Anlatıcı Yunus C (tempolu), anne Ülgen, çocuk Yunus C (perdesi yükseltilmiş).
 (function () {
   const INK = '#1f1b16';
   // anlatım satırları: txt = ekranda kelime kelime beliren yazı (*vurgu*), tts = seslendirme
-  const N = (id, txt, tts, o = {}) => ({ id, who: 'B', ku: '', tr: '', txt, tts, gap: .22, ...o });
+  // anlatıcı: Yunus C (who 'R'), tempolu-dramatik belgesel tonu
+  const N = (id, txt, tts, o = {}) => ({ id, who: 'R', ku: '', tr: '', txt, tts: tts.replace(/^\[/, '[fast-paced dramatic documentary narration, '), gap: .18, ...o });
   const SEQ = [
     N('k1', 'Bir dil düşün…', '[slow, serious, quiet] Bir dil düşün…', { gap: .2 }),
     N('k2', 'Annesine *"dayê"* dediği için çocuğun *cezalandırıldığı* bir dil.', '[serious, heavy] Annesine "dayê" dediği için… çocuğun cezalandırıldığı bir dil.'),
