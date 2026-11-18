@@ -27,7 +27,7 @@
     N('r3', 'Yasaklayanlar gitti… *Kürtçe kaldı.*', 'Yasaklayanlar gitti. Kürtçe kaldı.', { gap: .4 }),
 
     N('t1', 'Ama tehlike geçmedi. Kürtçe hâlâ *anadilinde eğitim* hakından yoksun.', 'Ama tehlike geçmedi. Kürtçe hâlâ anadilinde eğitim hakkından yoksun.', { gap: .5 }),
-    { id: 't2', who: 'B', ku: '', tr: '', txt: '', tts: '[elderly mother, tender, soft] Tu birçî yî, delalê min?', gap: .5 },
+    { id: 't2', who: 'B', ku: '', tr: '', txt: '', tts: '[elderly mother, gently asking, rising question intonation] دەلالێ من، تو برچی یی؟', gap: .5 },
     { id: 't3', who: 'R', ku: '', tr: '', txt: '', tts: '[confused young child] Anne, ne diyorsun? Anlamıyorum.', gap: .35 },
     N('t4', 'Annesini anlamayan çocuklar… *çocuğunu anlamayan anneler.*', 'Annesini anlamayan çocuklar. Çocuğunu anlamayan anneler.', { gap: .6 }),
 
@@ -37,7 +37,7 @@
 
     N('c1', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu *yaşatmak* için biz *daha çok* çabalamalıyız.', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu yaşatmak için biz daha çok çabalamalıyız.', { gap: .5 }),
     N('c2', '*Evde*, *sokakta*, *çarşıda*, birbirimizle Kürtçe konuşalım.', 'Evde, sokakta, çarşıda, birbirimizle Kürtçe konuşalım.'),
-    N('c3', '', '[joyful, strong, warm] لی مالێ، لی کۆلانێ، لی بازارێ: کوردی بئاخڤن!'),
+    N('c3', '', '[joyful, strong, warm] لِ مالێ، لِ کۆلانێ، لِ بازارێ: کوردی بئاخڤن!'),
     N('c4', 'Bütün zorluklara rağmen *dilimizi koruyalım.*', 'Bütün zorluklara rağmen dilimizi koruyalım.'),
     N('c5', '', 'Zimanê min, rûmeta min.', { gap: .5 }),
   ];
@@ -247,7 +247,7 @@
           const [chx, chy] = headOf(cx + split * 60, 1240, .8);
           // annenin balonu → kırılır
           if (t > T('t2', 0) && t < T('t3', 0) + .8) { const p = H.back(H.seg(t, T('t2', 0), T('t2', .2))), br = H.seg(t, T('t3', 0), T('t3', 0) + .8);
-            if (br <= 0) s += `<g transform="translate(560 ${mhy - 300}) scale(${p})"><path d="M-180 70L-230 150L-110 80Z" fill="#fff"/><rect x="-300" y="-90" width="600" height="180" rx="50" fill="#fff"/><text y="0" text-anchor="middle" font-family="Baloo,sans-serif" font-size="54" font-weight="800" fill="${INK}">Tu birçî yî, delalê min?</text><text y="56" text-anchor="middle" font-family="Baloo,sans-serif" font-size="34" font-weight="700" fill="#7a6a3a">(Acıktın mı, canım?)</text></g>`;
+            if (br <= 0) s += `<g transform="translate(560 ${mhy - 300}) scale(${p})"><path d="M-180 70L-230 150L-110 80Z" fill="#fff"/><rect x="-300" y="-90" width="600" height="180" rx="50" fill="#fff"/><text y="0" text-anchor="middle" font-family="Baloo,sans-serif" font-size="54" font-weight="800" fill="${INK}">Delalê min, tu birçî yî?</text><text y="56" text-anchor="middle" font-family="Baloo,sans-serif" font-size="34" font-weight="700" fill="#7a6a3a">(Acıktın mı, canım?)</text></g>`;
             else for (let i = 0; i < 12; i++) { const an = i * .52, d = br * 300, x = 560 + Math.cos(an) * d * 1.4, y = mhy - 300 + Math.sin(an) * d + br * br * 500; s += `<path d="M${x} ${y}l40 -14l-14 44z" fill="#fff" opacity="${1 - br}" transform="rotate(${i * 30 + br * 200} ${x} ${y})"/>`; } }
           if (t > T('t3', 0)) { const p = H.back(H.seg(t, T('t3', 0), T('t3', .2)));
             s += `<g transform="translate(${chx + 40} ${chy - 230}) scale(${p})"><rect x="-260" y="-80" width="520" height="160" rx="44" fill="#fff"/><path d="M-60 76L-100 150L0 76Z" fill="#fff"/><text y="-8" text-anchor="middle" font-family="Baloo,sans-serif" font-size="44" font-weight="800" fill="${INK}">Anne… ne diyorsun?</text><text y="48" text-anchor="middle" font-family="Baloo,sans-serif" font-size="44" font-weight="800" fill="${INK}">Anlamıyorum.</text></g>`;
