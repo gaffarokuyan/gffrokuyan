@@ -15,7 +15,7 @@
     N('s4', '*1983*\'te Kürtçe yayın *yasaklandı*.', 'Bin dokuz yüz seksen üçte, Kürtçe yayın yasaklandı.'),
     N('s5', '*Q, W, X* harfleri bile suç sayıldı.', 'Q, W, X harfleri bile suç sayıldı.'),
 
-    N('i1', 'Bunu yapanlar, en çok *"din kardeşiyiz"* diyenlerdi.', 'Bunu yapanlar, en çok din kardeşiyiz diyenlerdi.', { gap: .5 }),
+    N('i1', 'Bunu yapanlar, en çok *"din kardeşiyiz"* diyenlerdi.', '[ironic, mocking, slightly scornful] Bunu yapanlar… en çok "din kardeşiyiz" diyenlerdi.', { gap: .5 }),
 
     N('w1', 'Oysa *Araplarla din kardeşi olmayan* İsrail\'de bile *Arapça* okullarda eğitim dili.', 'Oysa Araplarla din kardeşi olmayan İsrailde bile, Arapça okullarda eğitim dili.', { gap: .5 }),
     N('w2', '*Müslüman olmayan* Rusya\'da *Tatarca* ve *Çeçence* kendi cumhuriyetlerinde resmi dil.', 'Müslüman olmayan Rusyada, Tatarca ve Çeçence kendi cumhuriyetlerinde resmi dil.'),
@@ -36,7 +36,7 @@
 
     N('c1', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu *yaşatmak* için biz *daha çok* çabalamalıyız.', 'Kürtçeyi yok etmeye çalışanlar ne kadar çabalıyorsa, onu yaşatmak için biz daha çok çabalamalıyız.', { gap: .5 }),
     N('c2', '*Evde*, *sokakta*, *çarşıda*, birbirimizle Kürtçe konuşalım.', 'Evde, sokakta, çarşıda, birbirimizle Kürtçe konuşalım.'),
-    N('c3', '', '[joyful, strong, warm] لِ مالێ، لِ کۆلانێ، لِ بازارێ: کوردی بئاخڤن!'),
+    N('c3', '', '[proud, strong, stressing the word Kurdî] لِ مالێ، لِ کۆلانێ، لِ بازارێ… کوردی بئاخڤن!'),
     N('c4', 'Bütün zorluklara rağmen *dilimizi koruyalım.*', 'Bütün zorluklara rağmen dilimizi koruyalım.'),
     N('c5', '', 'Zimanê min, rûmeta min.', { gap: .5 }),
   ];
