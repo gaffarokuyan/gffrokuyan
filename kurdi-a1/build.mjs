@@ -104,6 +104,10 @@ const SFX = {
   thud: e => add(tone(120, 50, .3, .6, 8), e.at),
   dum: e => { add(tone(95, 55, .28, .7, 7), e.at); add(tone(160, 80, .08, .2, 9, .5), e.at); },
   tek: e => add(tone(1800, 900, .05, .16, 9, .85), e.at),
+  // arka plan ses dokusu: e.f taban frekans, e.d süre, e.v ses; yumuşak giriş/çıkış
+  pad: e => { const n = Math.floor(e.d * SR), o = new Float32Array(n), fs = [e.f, e.f * 1.5, e.f * 2.005]; for (let i = 0; i < n; i++) { const tt = i / SR, env = Math.min(1, tt / 1.2) * Math.min(1, (e.d - tt) / 1.2); let v = 0; for (const f of fs) v += Math.sin(2 * Math.PI * f * tt + Math.sin(tt * .7) * .5); o[i] = v / 3 * (e.v || .03) * env; } add(o, e.at); },
+  heart: e => { add(tone(70, 45, .16, .6, 9), e.at); add(tone(65, 42, .14, .45, 9), e.at + .22); },
+  stamp: e => { add(tone(140, 50, .3, .8, 8), e.at); add(tone(600, 200, .1, .3, 7, .9), e.at); },
   cricket: e => { for (let k = 0; k < 3; k++) add(tone(4200, 4400, .045, .07, 3), e.at + k * .07); },
   wind: e => add(tone(260, 140, 1.6, .07, .5, .97), e.at),
   crack: e => { add(tone(1800, 600, .12, .25, 6, .9), e.at); add(tone(2600, 2600, .25, .08, 5), e.at + .05); },

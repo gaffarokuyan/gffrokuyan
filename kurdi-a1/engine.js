@@ -232,6 +232,8 @@
     show: () => [[20, 6], [82, 98]],
     down: () => [[40, 30], [20, 6]],
   };
+  H.POSE = POSE; H.person = person; // bölümler karakterleri serbestçe çizebilsin
+
   function poses(t) {
     let i = 0; while (i + 1 < KEYS.length && KEYS[i + 1].t <= t) i++;
     const K = KEYS[i], K0 = KEYS[Math.max(0, i - 1)], u = eio(seg(t, K.t, K.t + .22));
@@ -372,8 +374,11 @@
 
   function overlays(t) {
     const pop = back(seg(t, .1, .7));
-    let h = `<div class="title" style="font-size:${LAND ? Math.min(96, Math.round(900 / EP.title.length)) : Math.min(118, Math.round(1230 / EP.title.length))}px;transform:rotate(-3deg) scale(${pop})">${EP.title}</div>`;
-    h += `<div class="tag" style="opacity:${seg(t, .6, 1)}"><span>${EP.tag}</span></div>`;
+    let h = '';
+    if (!EP.noTitle) {
+      h += `<div class="title" style="font-size:${LAND ? Math.min(96, Math.round(900 / EP.title.length)) : Math.min(118, Math.round(1230 / EP.title.length))}px;transform:rotate(-3deg) scale(${pop})">${EP.title}</div>`;
+      h += `<div class="tag" style="opacity:${seg(t, .6, 1)}"><span>${EP.tag}</span></div>`;
+    }
     const card = TL.cards.find(c => t >= c.a && t < c.b), end = t >= TL.endAt;
     if (!card && !end) {
       const L = TL.lines.find(l => t >= l.start - .08 && t < l.start + l.dur + .3);

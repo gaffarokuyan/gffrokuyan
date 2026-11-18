@@ -5,7 +5,8 @@ P=json.load(open('prompts.json'))
 EP=None
 def kuwords(id):
     l=[x for x in SEQ if x['id']==id][0]
-    t=re.sub(r'[*!?.,…—:]',' ',l['ku']); return len(t.split())
+    src=l.get('ku') or l.get('txt') or re.sub(r'\[.*?\]','',l.get('tts',''))
+    t=re.sub(r'[*!?.,…—:"]',' ',src); return len(t.split())
 import subprocess as sp
 SEQ=json.loads(sp.run(['node','-e',"const fs=require('fs'),vm=require('vm');const w={};vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),{window:w,location:{search:''}});console.log(JSON.stringify(w.EP.seq.filter(l=>l.who)))",sys.argv[1]],capture_output=True,text=True).stdout)
 A=sys.argv[2]; os.makedirs(A,exist_ok=True)
